@@ -7,7 +7,7 @@ package mavericksoft.clinicmate;
  *
  * @author Grant Marshall
  */
-public class NonexistentRecordException extends Exception {
+class NonexistentRecordException extends Exception {
     // This is the only constructor that's really used
     NonexistentRecordException(String message) {
         super(message);

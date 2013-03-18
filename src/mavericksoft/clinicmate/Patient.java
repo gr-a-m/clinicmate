@@ -100,8 +100,46 @@ class Patient extends Person {
      * @return This indicates whether the save was successful
      */
     public boolean save() {
-        // TODO: Implement Saving
-        return false;
+        Connection conn = null;
+        boolean success = false;
+
+        try {
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+
+            // Prepare an insertion statement with spots for each property
+            PreparedStatement st = conn.prepareStatement(
+                    "INSERT INTO patients VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
+            st.setString(0, this.firstName);
+            st.setString(1, this.lastName);
+            st.setString(2, this.passwordHash);
+            st.setString(3, this.passwordSalt);
+            // Convert the internal java.util.Date to a java.sql.Date for storage
+            st.setDate(4, new java.sql.Date(this.createdAt.getTime()));
+            st.setString(5, this.patientID.toString());
+            st.setString(6, this.gender);
+            st.setString(7, this.address);
+            st.setString(8, this.insuranceProvider);
+            st.setString(9, this.primaryPhoneNumber);
+            st.setString(10, this.secondaryPhoneNumber);
+            st.setDate(11, new java.sql.Date(this.dateOfBirth.getTime()));
+
+            // Execute the insertion and record the success
+            success = st.execute();
+        } catch (SQLException sqle) {
+            System.out.println("Failed to save the Patient");
+            sqle.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException sqle) {
+                    System.out.println("The database connection could not be closed");
+                    sqle.printStackTrace();
+                }
+            }
+        }
+
+        return success;
     }
 
     /**
@@ -114,8 +152,33 @@ class Patient extends Person {
      * @return This indicates whether the delete was successful
      */
     public boolean delete() {
-        // TODO: Implement Deletion
-        return false;
+        Connection conn = null;
+        boolean success = false;
+
+        try {
+            // Get a connection for the H2 database
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+
+            // Prepare a DELETE statement
+            PreparedStatement st = conn.prepareStatement("DELETE FROM patients WHERE id='?'");
+            st.setString(0, this.patientID.toString());
+            success = st.execute();
+        } catch (SQLException sqle) {
+            System.out.println("Failed to open a connection to the database.");
+            sqle.printStackTrace();
+        } finally {
+            // Close the connection and return true
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException sqle) {
+                    System.out.println("");
+                    sqle.printStackTrace();
+                }
+            }
+        }
+
+        return success;
     }
 
     /**
@@ -131,6 +194,7 @@ class Patient extends Person {
      */
     public static Patient getById(UUID id) throws NonexistentRecordException {
         Connection conn = null;
+        Patient value = null;
 
         try {
             // Create a connection to the database
@@ -147,7 +211,7 @@ class Patient extends Person {
             if (rs.next()) {
                 // This long new statement generates a new Patient object from
                 // this result row
-                return new Patient(rs.getString("first_name"),
+                value = new Patient(rs.getString("first_name"),
                         rs.getString("last_name"),
                         rs.getString("password_hash"),
                         rs.getString("password_salt"),
@@ -160,12 +224,12 @@ class Patient extends Person {
                         rs.getString("secondary_phone_number"),
                         rs.getDate("date_of_birth"));
             } else {
+                // If the ResultSet was empty, throw an exception
                 throw new NonexistentRecordException("This Patient does not exist");
             }
         } catch (SQLException sqle) {
             System.out.println("Failed to get a Patient by id");
             sqle.printStackTrace();
-            return null;
         } finally {
             if (conn != null) {
                 try {
@@ -173,9 +237,10 @@ class Patient extends Person {
                 } catch (SQLException sqle) {
                     System.out.println("Failed to close the database.");
                     sqle.printStackTrace();
-                    return null;
                 }
             }
         }
+
+        return value;
     }
 }

@@ -14,7 +14,7 @@ import java.util.Date;
  *
  * @author Grant Marshall
  */
-abstract public class Person {
+abstract class Person {
     protected String firstName;
     protected String lastName;
     protected String passwordHash;
@@ -119,6 +119,9 @@ abstract public class Person {
                 // If it does, create a new salt and hash
                 this.passwordSalt = new BigInteger(130, new SecureRandom()).toString(32);
                 this.passwordHash = new String(md.digest((newPassword + this.passwordSalt).getBytes("UTF-8")));
+
+                // Save the new password to the database
+                this.save();
                 return true;
             } else {
                 return false;

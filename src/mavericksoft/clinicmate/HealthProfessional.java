@@ -40,8 +40,25 @@ class HealthProfessional extends Person {
         return false;
     }
 
-    // TODO
+    /**
+     * This method returns an Array of Patient objects containing all of the
+     * Patients that this HealthProfessional is assigned to.
+     *
+     * @return An array of all Patients for this HealthProfessional
+     */
     public Patient[] getPatients() {
-        return new Patient[0];
+        ArrayList<Patient> patients = new ArrayList<Patient>();
+
+        for (UUID patientID : patientIDs) {
+            try {
+                patients.add(Patient.getById(patientID));
+            } catch (NonexistentRecordException nre) {
+                System.out.println("Illegal Patient ID " + patientID +
+                        " assigned to " + this.firstName + " " + this.lastName);
+            }
+        }
+
+        // Convert the ArrayList to an Array and return it
+        return patients.toArray(new Patient[0]);
     }
 }

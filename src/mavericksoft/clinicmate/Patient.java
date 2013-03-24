@@ -68,14 +68,15 @@ class Patient extends Person {
      * @param lastName
      * @param passwordHash
      * @param passwordSalt
-     * @param createdAt
-     * @param patientID
-     * @param gender
-     * @param address
-     * @param insuranceProvider
-     * @param primaryPhoneNumber
-     * @param secondaryPhoneNumber
-     * @param dateOfBirth
+     * @param createdAt            The date the record was created at
+     * @param patientID            A UUID assigned to the patient
+     * @param gender               The patient's gender
+     * @param address              The patient's address
+     * @param insuranceProvider    The patient's insurance provider
+     * @param primaryPhoneNumber   The primary contact phone number
+     * @param secondaryPhoneNumber This is an alternate phone number to contact
+     *                             the patient at
+     * @param dateOfBirth          The patient's date of birth
      */
     public Patient(String firstName, String lastName, String passwordHash,
                    String passwordSalt, Date createdAt, UUID patientID,
@@ -106,25 +107,55 @@ class Patient extends Person {
         try {
             conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
 
-            // Prepare an insertion statement with spots for each property
-            PreparedStatement st = conn.prepareStatement(
-                    "INSERT INTO patients VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
-            st.setString(0, this.firstName);
-            st.setString(1, this.lastName);
-            st.setString(2, this.passwordHash);
-            st.setString(3, this.passwordSalt);
-            // Convert the internal java.util.Date to a java.sql.Date for storage
-            st.setDate(4, new java.sql.Date(this.createdAt.getTime()));
-            st.setString(5, this.patientID.toString());
-            st.setString(6, this.gender);
-            st.setString(7, this.address);
-            st.setString(8, this.insuranceProvider);
-            st.setString(9, this.primaryPhoneNumber);
-            st.setString(10, this.secondaryPhoneNumber);
-            st.setDate(11, new java.sql.Date(this.dateOfBirth.getTime()));
+            // If this Patient already exists, update it. Otherwise, insert it.
+            boolean exists = false;
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM patients WHERE id=?");
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                exists = true;
+            }
 
-            // Execute the insertion and record the success
-            success = st.execute();
+            // If a record does not exist with this id, create it
+            if (!exists) {
+                st = conn.prepareStatement("INSERT INTO patients VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+                st.setString(0, this.firstName);
+                st.setString(1, this.lastName);
+                st.setString(2, this.passwordHash);
+                st.setString(3, this.passwordSalt);
+                // Convert the internal java.util.Date to a java.sql.Date for storage
+                st.setDate(4, new java.sql.Date(this.createdAt.getTime()));
+                st.setString(5, this.patientID.toString());
+                st.setString(6, this.gender);
+                st.setString(7, this.address);
+                st.setString(8, this.insuranceProvider);
+                st.setString(9, this.primaryPhoneNumber);
+                st.setString(10, this.secondaryPhoneNumber);
+                st.setDate(11, new java.sql.Date(this.dateOfBirth.getTime()));
+
+                // Execute the insertion and record the success
+                success = st.execute();
+            } else {
+                // If it does already exist, update it with the current values
+                st = conn.prepareStatement("UPDATE patients SET first_name='?', last_name='?', password_hash='?', " +
+                        " password_salt='?', created_at='?', id='?', gender='?', address='?', insurance_provider='?', " +
+                        " primary_phone='?', secondary_phone='?', date_of_birth='?' WHERE id='?'");
+
+                st.setString(0, this.firstName);
+                st.setString(1, this.lastName);
+                st.setString(2, this.passwordHash);
+                st.setString(3, this.passwordSalt);
+                // Convert the internal java.util.Date to a java.sql.Date for storage
+                st.setDate(4, new java.sql.Date(this.createdAt.getTime()));
+                st.setString(5, this.patientID.toString());
+                st.setString(6, this.gender);
+                st.setString(7, this.address);
+                st.setString(8, this.insuranceProvider);
+                st.setString(9, this.primaryPhoneNumber);
+                st.setString(10, this.secondaryPhoneNumber);
+                st.setDate(11, new java.sql.Date(this.dateOfBirth.getTime()));
+                st.setString(12, this.patientID.toString());
+            }
         } catch (SQLException sqle) {
             System.out.println("Failed to save the Patient");
             sqle.printStackTrace();

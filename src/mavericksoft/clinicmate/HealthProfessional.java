@@ -110,6 +110,10 @@ class HealthProfessional extends Person {
     }
 
     // The following are a series of getters and setters
+    public ArrayList<UUID> getPatientIDs() {
+        return this.patientIDs;
+    }
+
     public boolean isNurse() {
         return this.nurse;
     }

@@ -197,6 +197,11 @@ class Patient extends Person {
             PreparedStatement st = conn.prepareStatement("DELETE FROM patients WHERE id='?'");
             st.setString(0, this.patientID.toString());
             success = st.execute();
+
+            // Delete from the mapping database as well
+            st = conn.prepareStatement("DELETE FROM person_map WHERE pat_id='?'");
+            st.setString(0, this.patientID.toString());
+            success = success & st.execute();
         } catch (SQLException sqle) {
             System.out.println("Failed to open a connection to the database.");
             sqle.printStackTrace();

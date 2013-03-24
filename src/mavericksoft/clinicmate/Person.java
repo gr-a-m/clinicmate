@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -15,11 +16,12 @@ import java.util.Date;
  * @author Grant Marshall
  */
 abstract class Person {
+    protected String username;
     protected String firstName;
     protected String lastName;
     protected String passwordHash;
     protected String passwordSalt;
-    protected Date createdAt;
+    protected Timestamp createdAt;
 
     /**
      * This constructor accepts that basic traits that define a person - the
@@ -30,17 +32,19 @@ abstract class Person {
      * exist in the database - If you want to create a Person object based on
      * a previously created Person, use the constructor that allows you to
      *
+     * @param username  The username for the person's account
      * @param firstName The person's first name
      * @param lastName  The person's last name
      * @param password  The password for this person's account
      */
-    public Person(String firstName, String lastName, String password) {
+    public Person(String username, String firstName, String lastName, String password) {
         // The first and last name are simply provided
+        this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
 
         // Created at is the current time at the instantiation of the class
-        this.createdAt = new Date();
+        this.createdAt = new Timestamp(new java.util.Date().getTime());
 
         // Create a random salt to append to the password by making a random,
         // large integer and convert it to an array of characters
@@ -69,6 +73,7 @@ abstract class Person {
      * the Person already exists in the database and needs to be turned into
      * a Java object to be manipulated.
      *
+     * @param username     The username for the Person's record
      * @param firstName    The Person's first name
      * @param lastName     The Person's last name
      * @param passwordHash The Person's password hash
@@ -76,8 +81,9 @@ abstract class Person {
      * @param createdAt    When this Person was created (usually taken from
      *                     the database)
      */
-    public Person(String firstName, String lastName, String passwordHash,
-                  String passwordSalt, Date createdAt) {
+    public Person(String username, String firstName, String lastName,
+                  String passwordHash, String passwordSalt, java.sql.Timestamp createdAt) {
+        this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.createdAt = createdAt;
@@ -135,5 +141,58 @@ abstract class Person {
             uee.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * This method checks if the provided password matches the hash and salt
+     * stored in this person's properties.
+     *
+     * @param password The password to verify
+     * @return         A boolean value representing whether the password matches
+     */
+    boolean checkPassword(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA");
+
+            // Verify the password matches the current password
+            if (this.passwordHash.equals(new String(md.digest((password + this.passwordSalt).getBytes("UTF-8"))))) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (NoSuchAlgorithmException nsae) {
+            // This should never occur as long as the Java JRE this runs on
+            // has an implementation of the SHA algorithm
+            nsae.printStackTrace();
+        } catch (UnsupportedEncodingException uee) {
+            // This should also never happen - UTF-8 works cross-platform
+            uee.printStackTrace();
+        }
+        return false;
+    }
+
+    // Basic getters and setters for properties of the Person
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public Date getCreatedAt() {
+        return new Date(createdAt.getTime());
     }
 }

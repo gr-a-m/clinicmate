@@ -30,6 +30,7 @@ class Patient extends Person {
      * intention is to create a Patient that is not already present in the
      * database.
      *
+     * @param username             The username for the Patient's account
      * @param firstName            The Patient's first name
      * @param lastName             The Patient's last name
      * @param password             The password to set for the Patient
@@ -40,12 +41,12 @@ class Patient extends Person {
      * @param secondaryPhoneNumber The Patient's secondary phone number
      * @param dateOfBirth          The Patient's date of birth
      */
-    public Patient(String firstName, String lastName, String password,
+    public Patient(String username, String firstName, String lastName, String password,
                    String gender, String address, String insuranceProvider,
                    String primaryPhoneNumber, String secondaryPhoneNumber,
                    Date dateOfBirth) {
         // Call the constructor of the Person superclass
-        super(firstName, lastName, password);
+        super(username, firstName, lastName, password);
 
         // Generate a random UUID to use for this person
         this.patientID = UUID.randomUUID();
@@ -64,10 +65,11 @@ class Patient extends Person {
      * record, one that is already in the database. If you want to create a new
      * Patient that doesn't exist already, use the other constructor.
      *
-     * @param firstName
-     * @param lastName
-     * @param passwordHash
-     * @param passwordSalt
+     * @param username             The patient's username
+     * @param firstName            The first name of the patient
+     * @param lastName             The last name of the patient
+     * @param passwordHash         The hash for the patient's password + salt
+     * @param passwordSalt         The salt for the patient's password hash
      * @param createdAt            The date the record was created at
      * @param patientID            A UUID assigned to the patient
      * @param gender               The patient's gender
@@ -78,12 +80,12 @@ class Patient extends Person {
      *                             the patient at
      * @param dateOfBirth          The patient's date of birth
      */
-    public Patient(String firstName, String lastName, String passwordHash,
-                   String passwordSalt, Date createdAt, UUID patientID,
+    public Patient(String username, String firstName, String lastName, String passwordHash,
+                   String passwordSalt, Timestamp createdAt, UUID patientID,
                    String gender, String address, String insuranceProvider,
                    String primaryPhoneNumber, String secondaryPhoneNumber,
                    Date dateOfBirth) {
-        super(firstName, lastName, passwordHash, passwordSalt, createdAt);
+        super(username, firstName, lastName, passwordHash, passwordSalt, createdAt);
 
         // The rest of the object is simple to set up
         this.patientID = patientID;
@@ -119,19 +121,20 @@ class Patient extends Person {
             if (!exists) {
                 st = conn.prepareStatement("INSERT INTO patients VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-                st.setString(0, this.firstName);
-                st.setString(1, this.lastName);
-                st.setString(2, this.passwordHash);
-                st.setString(3, this.passwordSalt);
+                st.setString(0, this.username);
+                st.setString(1, this.firstName);
+                st.setString(2, this.lastName);
+                st.setString(3, this.passwordHash);
+                st.setString(4, this.passwordSalt);
                 // Convert the internal java.util.Date to a java.sql.Date for storage
-                st.setDate(4, new java.sql.Date(this.createdAt.getTime()));
-                st.setString(5, this.patientID.toString());
-                st.setString(6, this.gender);
-                st.setString(7, this.address);
-                st.setString(8, this.insuranceProvider);
-                st.setString(9, this.primaryPhoneNumber);
-                st.setString(10, this.secondaryPhoneNumber);
-                st.setDate(11, new java.sql.Date(this.dateOfBirth.getTime()));
+                st.setDate(5, new java.sql.Date(this.createdAt.getTime()));
+                st.setString(6, this.patientID.toString());
+                st.setString(7, this.gender);
+                st.setString(8, this.address);
+                st.setString(9, this.insuranceProvider);
+                st.setString(10, this.primaryPhoneNumber);
+                st.setString(11, this.secondaryPhoneNumber);
+                st.setDate(12, new java.sql.Date(this.dateOfBirth.getTime()));
 
                 // Execute the insertion and record the success
                 success = st.execute();
@@ -242,11 +245,13 @@ class Patient extends Person {
             if (rs.next()) {
                 // This long new statement generates a new Patient object from
                 // this result row
-                value = new Patient(rs.getString("first_name"),
+                value = new Patient(
+                        rs.getString("username"),
+                        rs.getString("first_name"),
                         rs.getString("last_name"),
                         rs.getString("password_hash"),
                         rs.getString("password_salt"),
-                        rs.getDate("created_at"),
+                        rs.getTimestamp("created_at"),
                         UUID.fromString(rs.getString("id")),
                         rs.getString("gender"),
                         rs.getString("address"),
@@ -273,5 +278,116 @@ class Patient extends Person {
         }
 
         return value;
+    }
+
+    /**
+     * This method creates a full Patient object from the provided username
+     * by pulling the data from the patients database.
+     *
+     * @param username This is the username for the Patient to pull
+     * @return         The Patient object created from the username
+     * @throws NonexistentRecordException
+     */
+    public static Patient getByUsername(String username) throws NonexistentRecordException {
+        Connection conn = null;
+        Patient value = null;
+
+        try {
+            // Create a connection to the database
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+
+            // Retrieve the rows from the patients database where the id
+            // matches the UUID
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM patients WHERE id='?'");
+            st.setString(0, username);
+            ResultSet rs = st.executeQuery();
+
+            // Get a row from the ResultSet -- If there is no result, then
+            // this UUID has no saved Patient associated with it
+            if (rs.next()) {
+                // This long new statement generates a new Patient object from
+                // this result row
+                value = new Patient(
+                        rs.getString("username"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("password_hash"),
+                        rs.getString("password_salt"),
+                        rs.getTimestamp("created_at"),
+                        UUID.fromString(rs.getString("id")),
+                        rs.getString("gender"),
+                        rs.getString("address"),
+                        rs.getString("insurance_provider"),
+                        rs.getString("primary_phone_number"),
+                        rs.getString("secondary_phone_number"),
+                        rs.getDate("date_of_birth"));
+            } else {
+                // If the ResultSet was empty, throw an exception
+                throw new NonexistentRecordException("This Patient does not exist");
+            }
+        } catch (SQLException sqle) {
+            System.out.println("Failed to get a Patient by id");
+            sqle.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException sqle) {
+                    System.out.println("Failed to close the database.");
+                    sqle.printStackTrace();
+                }
+            }
+        }
+
+        return value;
+    }
+
+    // A series of getters and setters
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public UUID getPatientID() {
+        return patientID;
+    }
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getInsuranceProvider() {
+        return insuranceProvider;
+    }
+
+    public void setInsuranceProvider(String insuranceProvider) {
+        this.insuranceProvider = insuranceProvider;
+    }
+
+    public String getPrimaryPhoneNumber() {
+        return primaryPhoneNumber;
+    }
+
+    public void setPrimaryPhoneNumber(String primaryPhoneNumber) {
+        this.primaryPhoneNumber = primaryPhoneNumber;
+    }
+
+    public String getSecondaryPhoneNumber() {
+        return secondaryPhoneNumber;
+    }
+
+    public void setSecondaryPhoneNumber(String secondaryPhoneNumber) {
+        this.secondaryPhoneNumber = secondaryPhoneNumber;
     }
 }

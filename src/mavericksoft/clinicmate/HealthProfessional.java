@@ -110,6 +110,8 @@ class HealthProfessional extends Person {
                 st.setBoolean(9, this.doctor);
 
                 st.execute();
+
+                success = true;
             } else {
                 // If it does already exist, update it with the current values
                 st = conn.prepareStatement("UPDATE patients SET username='?', first_name='?', last_name='?', password_hash='?', " +
@@ -127,6 +129,8 @@ class HealthProfessional extends Person {
                 st.setObject(10, this.employeeID);
 
                 st.execute();
+
+                success = true;
             }
         } catch (SQLException sqle) {
             System.out.println("Failed to save the Professional");

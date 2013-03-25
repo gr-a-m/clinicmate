@@ -1,8 +1,8 @@
 package mavericksoft.clinicmate;
 
 import java.sql.*;
-import java.util.Date;
-import java.util.UUID;
+import java.sql.Date;
+import java.util.*;
 
 /**
  * This class represents a Patient and operates near the database level. From
@@ -394,6 +394,79 @@ class Patient extends Person {
         }
 
         return value;
+    }
+
+    /**
+     * This method gets all of the HealthRecords for this Patient
+     *
+     * @return An array of HealthRecords for this patient
+     */
+    public HealthRecord[] getHealthRecords() {
+        Person.checkTables();
+
+        Connection conn = null;
+        LinkedList<HealthRecord> records = new LinkedList<HealthRecord>();
+        HashMap<UUID, ArrayList<String>> comments = new HashMap<UUID, ArrayList<String>>();
+
+        try {
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+
+            // Get the UUIDs for the patient's records
+            PreparedStatement st = conn.prepareStatement("SELECT record_id FROM records WHERE patient_id='?'");
+            st.setObject(0, this.patientID);
+            ResultSet rs = st.executeQuery();
+
+            // Enter a UUID into the map for each record the patient has
+            while (rs.next()) {
+                comments.put((UUID) rs.getObject("patient_id"), new ArrayList<String>());
+            }
+
+            // For each record id, get the comments
+            for (UUID id : comments.keySet()) {
+                st = conn.prepareStatement("SELECT comment FROM comments WHERE record_id='?'");
+                st.setObject(0, id);
+                rs = st.executeQuery();
+
+                // Iterate through the record's comments and add them
+                while (rs.next()) {
+                    comments.get(id).add(rs.getString("comment"));
+                }
+            }
+
+            // Prepare a statement that pulls all records for this patient's id
+            st = conn.prepareStatement("SELECT * FROM records WHERE patient_id='?'");
+            st.setObject(0, this.patientID);
+            rs = st.executeQuery();
+
+            // Create a new object for each result
+            while (rs.next()) {
+                records.add(new HealthRecord(
+                        (UUID) rs.getObject("record_id"),
+                        (UUID) rs.getObject("patient_id"),
+                        rs.getDate("date"),
+                        rs.getInt("dia_blood_pressure"),
+                        rs.getInt("sys_blood_pressure"),
+                        rs.getInt("glucose"),
+                        rs.getInt("weight"),
+                        comments.get(rs.getObject("record_id")),
+                        new Date(rs.getTimestamp("created_at").getTime())
+                ));
+            }
+        } catch (SQLException sqle) {
+            System.out.println("Failed to get a Patient by id");
+            sqle.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException sqle) {
+                    System.out.println("Failed to close the database.");
+                    sqle.printStackTrace();
+                }
+            }
+        }
+
+        return records.toArray(new HealthRecord[0]);
     }
 
     // A series of getters and setters

@@ -103,6 +103,9 @@ class Patient extends Person {
      * @return This indicates whether the save was successful
      */
     public boolean save() {
+        // Make sure the tables are initialized
+        Person.checkTables();
+
         Connection conn = null;
         boolean success = false;
 
@@ -119,7 +122,7 @@ class Patient extends Person {
 
             // If a record does not exist with this id, create it
             if (!exists) {
-                st = conn.prepareStatement("INSERT INTO patients VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                st = conn.prepareStatement("INSERT INTO patients VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
                 st.setString(0, this.username);
                 st.setString(1, this.firstName);
@@ -128,7 +131,7 @@ class Patient extends Person {
                 st.setString(4, this.passwordSalt);
                 // Convert the internal java.util.Date to a java.sql.Date for storage
                 st.setDate(5, new java.sql.Date(this.createdAt.getTime()));
-                st.setString(6, this.patientID.toString());
+                st.setObject(6, this.patientID);
                 st.setString(7, this.gender);
                 st.setString(8, this.address);
                 st.setString(9, this.insuranceProvider);
@@ -140,24 +143,25 @@ class Patient extends Person {
                 success = st.execute();
             } else {
                 // If it does already exist, update it with the current values
-                st = conn.prepareStatement("UPDATE patients SET first_name='?', last_name='?', password_hash='?', " +
+                st = conn.prepareStatement("UPDATE patients SET username='?', first_name='?', last_name='?', password_hash='?', " +
                         " password_salt='?', created_at='?', id='?', gender='?', address='?', insurance_provider='?', " +
                         " primary_phone='?', secondary_phone='?', date_of_birth='?' WHERE id='?'");
 
-                st.setString(0, this.firstName);
-                st.setString(1, this.lastName);
-                st.setString(2, this.passwordHash);
-                st.setString(3, this.passwordSalt);
+                st.setString(0, this.username);
+                st.setString(1, this.firstName);
+                st.setString(2, this.lastName);
+                st.setString(3, this.passwordHash);
+                st.setString(4, this.passwordSalt);
                 // Convert the internal java.util.Date to a java.sql.Date for storage
-                st.setDate(4, new java.sql.Date(this.createdAt.getTime()));
-                st.setString(5, this.patientID.toString());
-                st.setString(6, this.gender);
-                st.setString(7, this.address);
-                st.setString(8, this.insuranceProvider);
-                st.setString(9, this.primaryPhoneNumber);
-                st.setString(10, this.secondaryPhoneNumber);
-                st.setDate(11, new java.sql.Date(this.dateOfBirth.getTime()));
-                st.setString(12, this.patientID.toString());
+                st.setTimestamp(5, this.createdAt);
+                st.setObject(6, this.patientID);
+                st.setString(7, this.gender);
+                st.setString(8, this.address);
+                st.setString(9, this.insuranceProvider);
+                st.setString(10, this.primaryPhoneNumber);
+                st.setString(11, this.secondaryPhoneNumber);
+                st.setDate(12, new java.sql.Date(this.dateOfBirth.getTime()));
+                st.setObject(13, this.patientID);
             }
         } catch (SQLException sqle) {
             System.out.println("Failed to save the Patient");
@@ -186,6 +190,9 @@ class Patient extends Person {
      * @return This indicates whether the delete was successful
      */
     public boolean delete() {
+        // Make sure the tables are initialized
+        Person.checkTables();
+
         Connection conn = null;
         boolean success = false;
 
@@ -232,6 +239,9 @@ class Patient extends Person {
      *           database record.
      */
     public static Patient getById(UUID id) throws NonexistentRecordException {
+        // Make sure the tables are initialized
+        Person.checkTables();
+
         Connection conn = null;
         Patient value = null;
 
@@ -294,6 +304,9 @@ class Patient extends Person {
      * @throws NonexistentRecordException
      */
     public static Patient getByUsername(String username) throws NonexistentRecordException {
+        // Make sure the tables are initialized for the personal records
+        Person.checkTables();
+
         Connection conn = null;
         Patient value = null;
 

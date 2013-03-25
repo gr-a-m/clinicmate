@@ -1,10 +1,14 @@
 package mavericksoft.clinicmate;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -169,6 +173,72 @@ abstract class Person {
             uee.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * This method ensures that the tables are created and correctly formed
+     * and fixes them if not.
+     */
+    protected static void checkTables() {
+        File dbFile = new File("./data/clinicmate");
+        // If the database file doesn't exist, make it
+        if (!dbFile.exists()) {
+            Connection conn = null;
+            try {
+                conn = DriverManager.getConnection(dbFile.toString());
+                String createString = "CREATE TABLE patients (" +
+                        "username VARCHAR, " +
+                        "first_name VARCHAR, " +
+                        "last_name VARCHAR, " +
+                        "password_hash VARCHAR, " +
+                        "password_salt VARCHAR, " +
+                        "created_at TIMESTAMP, " +
+                        "patient_id UUID, " +
+                        "gender VARCHAR, " +
+                        "address VARCHAR, " +
+                        "insurance_provider VARCHAR, " +
+                        "primary_phone VARCHAR, " +
+                        "secondary_phone VARCHAR, " +
+                        "date_of_birth DATE)";
+
+                // Make the patients table
+                conn.createStatement().execute(createString);
+
+                createString = "CREATE TABLE person_map (" +
+                        "pat_id UUID, " +
+                        "pro_id UUID)";
+
+                // Make the mapping table
+                conn.createStatement().execute(createString);
+
+                createString = "CREATE TABLE professionals (" +
+                        "username VARCHAR, " +
+                        "first_name VARCHAR, " +
+                        "last_name VARCHAR, " +
+                        "password_hash VARCHAR, " +
+                        "password_salt VARCHAR, " +
+                        "created_at TIMESTAMP, " +
+                        "professional_id UUID, " +
+                        "admin BOOLEAN, " +
+                        "nurse BOOLEAN, " +
+                        "doctor BOOLEAN)";
+
+                // Make the professionals table
+                conn.createStatement().execute(createString);
+            } catch (SQLException sqle) {
+                System.out.println("Failed to check database tables.");
+                sqle.printStackTrace();
+            } finally {
+                if (conn != null) {
+                    try {
+                        conn.close();
+                    } catch (SQLException sqle) {
+                        System.out.println("Failed to check database tables.");
+                        sqle.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 
     // Basic getters and setters for properties of the Person

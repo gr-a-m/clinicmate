@@ -1,6 +1,6 @@
 package mavericksoft.clinicmate;
 
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -49,19 +49,20 @@ class HealthProfessional extends Person {
     }
 
     /**
+     * This constructor creates a HealthProfessional object based on an
+     * existing database record.
      *
-     *
-     * @param username
-     * @param firstName
-     * @param lastName
-     * @param passwordHash
-     * @param passwordSalt
-     * @param createdAt
-     * @param employeeID
-     * @param admin
-     * @param nurse
-     * @param doctor
-     * @param patientIDs
+     * @param username     The professional's username
+     * @param firstName    The first name of the professional
+     * @param lastName     The last name of the professional
+     * @param passwordHash The hash of the professional's password
+     * @param passwordSalt The salt usef on the professional's password
+     * @param createdAt    When the professional's account was created
+     * @param employeeID   The professional's UUID
+     * @param admin        Whether the professional is an admin
+     * @param nurse        Whether the professional is a nurse
+     * @param doctor       Whether the professional is a doctor
+     * @param patientIDs   The ArrayList of the patients assigned to this pro
      */
     public HealthProfessional(String username, String firstName, String lastName,
                               String passwordHash, String passwordSalt, Timestamp createdAt,
@@ -82,9 +83,45 @@ class HealthProfessional extends Person {
         return false;
     }
 
-    // TODO
+    /**
+     * This method deletes the HealthProfessional from the database and removes
+     * references to it from the patient-professional mapping table.
+     *
+     * @return Whether the delete was successful
+     */
     boolean delete() {
-        return false;
+        Connection conn = null;
+        boolean success = false;
+
+        try {
+            // Get a connection for the H2 database
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+
+            // Prepare a DELETE statement
+            PreparedStatement st = conn.prepareStatement("DELETE FROM professionals WHERE id='?'");
+            st.setString(0, this.employeeID.toString());
+            success = st.execute();
+
+            // Delete from the mapping database as well
+            st = conn.prepareStatement("DELETE FROM person_map WHERE pro_id='?'");
+            st.setString(0, this.employeeID.toString());
+            success = success & st.execute();
+        } catch (SQLException sqle) {
+            System.out.println("Failed to open a connection to the database.");
+            sqle.printStackTrace();
+        } finally {
+            // Close the connection and return true
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException sqle) {
+                    System.out.println("");
+                    sqle.printStackTrace();
+                }
+            }
+        }
+
+        return success;
     }
 
     /**

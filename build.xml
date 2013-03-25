@@ -1,0 +1,36 @@
+<project name="ClinicMate" basedir="." default="dist">
+
+    <description>
+        The main build file for ClinicMate. It should be executable via any
+        good IDE or with the default ant build command.
+    </description>
+
+    <!-- Global Properties for the Build -->
+    <property name="src" location="src/" />
+    <property name="build" location="build/" />
+    <property name="dist" location="dist/" />
+    <property name="lib" location="lib/" />
+    
+    <target name="init">
+        <tstamp />
+        <mkdir dir="${build}" />
+    </target>
+
+    <target name="compile" depends="init">
+        <javac srcdir="${src}" destdir="${build}">
+            <!-- Set the classpath for the build -->
+            <classpath>
+                <pathelement location="${lib}" />
+                <pathelement location="${src}" />
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="dist" depends="compile">
+
+    </target>
+
+    <target name="clean">
+
+    </target>
+</project>

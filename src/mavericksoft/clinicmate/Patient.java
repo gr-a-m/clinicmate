@@ -114,7 +114,7 @@ class Patient extends Person {
 
             // If this Patient already exists, update it. Otherwise, insert it.
             boolean exists = false;
-            PreparedStatement st = conn.prepareStatement("SELECT * FROM patients WHERE id=?");
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM patients WHERE patient_id=?");
             st.setObject(0, this.patientID);
 
             ResultSet rs = st.executeQuery();
@@ -146,8 +146,8 @@ class Patient extends Person {
             } else {
                 // If it does already exist, update it with the current values
                 st = conn.prepareStatement("UPDATE patients SET username='?', first_name='?', last_name='?', password_hash='?', " +
-                        " password_salt='?', created_at='?', id='?', gender='?', address='?', insurance_provider='?', " +
-                        " primary_phone='?', secondary_phone='?', date_of_birth='?' WHERE id='?'");
+                        " password_salt='?', created_at='?', patient_id='?', gender='?', address='?', insurance_provider='?', " +
+                        " primary_phone='?', secondary_phone='?', date_of_birth='?' WHERE patient_id='?'");
 
                 st.setString(0, this.username);
                 st.setString(1, this.firstName);
@@ -164,6 +164,8 @@ class Patient extends Person {
                 st.setString(11, this.secondaryPhoneNumber);
                 st.setDate(12, new java.sql.Date(this.dateOfBirth.getTime()));
                 st.setObject(13, this.patientID);
+
+                st.execute();
             }
         } catch (SQLException sqle) {
             System.out.println("Failed to save the Patient");

@@ -78,9 +78,80 @@ class HealthProfessional extends Person {
         this.patientIDs = patientIDs;
     }
 
-    // TODO
+    /**
+     * This method either saves changes to the HealthProfessional or creates
+     * a new record for them if it doesn't already exist in the database.
+     *
+     * @return Whether the save was successful
+     */
     boolean save() {
-        return false;
+        // Make sure tables are initialized
+        Person.checkTables();
+
+        Connection conn = null;
+        boolean success = false;
+
+        try {
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+
+            // If this person already exists, update it, otherwise, create it
+            boolean exists = false;
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM professionals WHERE professional_id='?'");
+            st.setObject(0, this.employeeID);
+
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                exists = true;
+            }
+
+            // If a record does not exist with this id, create it
+            if (!exists) {
+                st = conn.prepareStatement("INSERT INTO patients VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                st.setString(0, this.username);
+                st.setString(1, this.firstName);
+                st.setString(2, this.lastName);
+                st.setString(3, this.passwordHash);
+                st.setString(4, this.passwordSalt);
+                st.setTimestamp(5, this.createdAt);
+                st.setObject(6, this.employeeID);
+                st.setBoolean(7, this.admin);
+                st.setBoolean(8, this.nurse);
+                st.setBoolean(9, this.doctor);
+
+                st.execute();
+            } else {
+                // If it does already exist, update it with the current values
+                st = conn.prepareStatement("UPDATE patients SET username='?', first_name='?', last_name='?', password_hash='?', " +
+                        " password_salt='?', created_at='?', id='?', admin='?', nurse='?', doctor='?' WHERE professional_id='?'");
+                st.setString(0, this.username);
+                st.setString(1, this.firstName);
+                st.setString(2, this.lastName);
+                st.setString(3, this.passwordHash);
+                st.setString(4, this.passwordSalt);
+                st.setTimestamp(5, this.createdAt);
+                st.setObject(6, this.employeeID);
+                st.setBoolean(7, this.admin);
+                st.setBoolean(8, this.nurse);
+                st.setBoolean(9, this.doctor);
+                st.setObject(10, this.employeeID);
+
+                st.execute();
+            }
+        } catch (SQLException sqle) {
+            System.out.println("Failed to save the Professional");
+            sqle.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException sqle) {
+                    System.out.println("The database connection could not be closed");
+                    sqle.printStackTrace();
+                }
+            }
+        }
+
+        return success;
     }
 
     /**
@@ -98,8 +169,8 @@ class HealthProfessional extends Person {
             conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
 
             // Prepare a DELETE statement
-            PreparedStatement st = conn.prepareStatement("DELETE FROM professionals WHERE id='?'");
-            st.setString(0, this.employeeID.toString());
+            PreparedStatement st = conn.prepareStatement("DELETE FROM professionals WHERE professional_id='?'");
+            st.setObject(0, this.employeeID);
             success = st.execute();
 
             // Delete from the mapping database as well

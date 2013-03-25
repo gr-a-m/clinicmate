@@ -97,7 +97,7 @@ class HealthProfessional extends Person {
 
             // If a record does not exist with this id, create it
             if (!this.exists()) {
-                st = conn.prepareStatement("INSERT INTO patients VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                st = conn.prepareStatement("INSERT INTO professionals VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 st.setString(1, this.username);
                 st.setString(2, this.firstName);
                 st.setString(3, this.lastName);
@@ -114,8 +114,8 @@ class HealthProfessional extends Person {
                 success = true;
             } else {
                 // If it does already exist, update it with the current values
-                st = conn.prepareStatement("UPDATE patients SET username=?, first_name=?, last_name=?, password_hash=?, " +
-                        " password_salt=?, created_at=?, id=?, admin=?, nurse=?, doctor=? WHERE professional_id=?");
+                st = conn.prepareStatement("UPDATE professionals SET username=?, first_name=?, last_name=?, password_hash=?, " +
+                        " password_salt=?, created_at=?, professional_id=?, admin=?, nurse=?, doctor=? WHERE professional_id=?");
                 st.setString(1, this.username);
                 st.setString(2, this.firstName);
                 st.setString(3, this.lastName);
@@ -205,7 +205,7 @@ class HealthProfessional extends Person {
         try {
             conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa" ,"");
 
-            PreparedStatement st = conn.prepareStatement("SELECT * FROM patients WHERE professional_id=?");
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM professionals WHERE professional_id=?");
             st.setObject(1, this.employeeID);
 
             ResultSet rs = st.executeQuery();

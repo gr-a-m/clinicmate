@@ -1,5 +1,6 @@
 package mavericksoft.clinicmate;
 
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
@@ -14,7 +15,7 @@ import java.util.UUID;
  *
  * @author Grant Marshall
  */
-public class HealthRecord {
+class HealthRecord {
     private UUID recordID;
     private UUID patientID;
     private Date date;
@@ -83,6 +84,172 @@ public class HealthRecord {
         this.weight = weight;
         this.comments = comments;
         this.createdAt = createdAt;
+    }
+
+    /**
+     * This method saves the Record to the database, including any comments.
+     *
+     * @return Whether the save was successful
+     */
+    public boolean save() {
+        Connection conn = null;
+        boolean success = false;
+        Person.checkTables();
+
+        try {
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+            PreparedStatement st = null;
+
+            // If this doesn't exist, make a new record, otherwise update
+            if (!this.exists()) {
+                st = conn.prepareStatement("INSERT INTO records VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
+                st.setObject(0, this.recordID);
+                st.setObject(1, this.patientID);
+                st.setDate(2, new java.sql.Date(this.date.getTime()));
+                st.setInt(3, this.diaBloodPressure);
+                st.setInt(4, this.sysBloodPressure);
+                st.setInt(5, this.glucose);
+                st.setInt(6, this.weight);
+                st.setTimestamp(7, new Timestamp(this.createdAt.getTime()));
+
+                st.execute();
+
+                // Now add any comments
+                for (String comment : this.comments) {
+                    st = conn.prepareStatement("INSERT INTO comments VALUES(?, ?)");
+                    st.setObject(0, this.recordID);
+                    st.setString(1, comment);
+                    st.execute();
+                }
+
+                success = true;
+            } else {
+                st = conn.prepareStatement("UPDATE records SET record_id='?', patient_id='?', " +
+                        "date='?', dia_blood_pressure='?', sys_blood_pressure='?', glucose='?', " +
+                        "weight='?', created_at='?' WHERE record_id='?'");
+                st.setObject(0, this.recordID);
+                st.setObject(1, this.patientID);
+                st.setDate(2, new java.sql.Date(this.date.getTime()));
+                st.setInt(3, this.diaBloodPressure);
+                st.setInt(4, this.sysBloodPressure);
+                st.setInt(5, this.glucose);
+                st.setInt(6, this.weight);
+                st.setTimestamp(7, new Timestamp(this.createdAt.getTime()));
+                st.setObject(8, this.recordID);
+
+                // Remove any existing comments
+                st = conn.prepareStatement("DELETE FROM comments WHERE record_id='?'");
+                st.setObject(0, this.recordID);
+                st.execute();
+
+                // Add the current comments
+                for (String comment : this.comments) {
+                    st = conn.prepareStatement("INSERT INTO comments VALUES(?, ?)");
+                    st.setObject(0, this.recordID);
+                    st.setString(1, comment);
+                    st.execute();
+                }
+
+                success = true;
+            }
+        } catch (SQLException sqle) {
+            System.out.println("Failed to delete the HealthRecord");
+            sqle.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException sqle) {
+                    System.out.println("The database connection could not be closed");
+                    sqle.printStackTrace();
+                }
+            }
+        }
+
+        return success;
+    }
+
+    /**
+     * This method deletes the record from the database
+     *
+     * @return Whether the delete was successful
+     */
+    public boolean delete() {
+        Connection conn = null;
+        boolean success = false;
+        Person.checkTables();
+
+        try {
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+
+            // If this doesn't exist, return false
+            if (!this.exists()) {
+                success = false;
+            } else {
+                // Delete this object from the database
+                PreparedStatement st = conn.prepareStatement("DELETE FROM records WHERE record_id='?'");
+                st.setObject(0, this.recordID);
+                st.execute();
+
+                // Delete any related comments
+                st = conn.prepareStatement("DELETE FROM comments WHERE record_id='?'");
+                st.setObject(0, this.recordID);
+                st.execute();
+
+                success = true;
+            }
+        } catch (SQLException sqle) {
+            System.out.println("Failed to delete the HealthRecord");
+            sqle.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException sqle) {
+                    System.out.println("The database connection could not be closed");
+                    sqle.printStackTrace();
+                }
+            }
+        }
+
+        return success;
+    }
+
+    /**
+     * This method checks to see if the record already exists in the database
+     *
+     * @return Whether the record was found in the database
+     */
+    public boolean exists() {
+        Connection conn = null;
+        boolean found = false;
+        Person.checkTables();
+
+        try {
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM records WHERE record_id='?'");
+            st.setObject(0, this.recordID);
+            ResultSet rs = st.executeQuery();
+
+            if (rs.next()) {
+                found = true;
+            }
+        } catch (SQLException sqle) {
+            System.out.println("Failed to check for a record");
+            sqle.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException sqle) {
+                    System.out.println("The database connection could not be closed");
+                    sqle.printStackTrace();
+                }
+            }
+        }
+
+        return found;
     }
 
     /**

@@ -191,7 +191,7 @@ abstract class Person {
         if (!dbFile.exists()) {
             Connection conn = null;
             try {
-                conn = DriverManager.getConnection("jdbc:h2:" + dbFile.toString());
+                conn = DriverManager.getConnection("jdbc:h2:" + dbFile.toString(), "sa", "");
                 String createString = "CREATE TABLE IF NOT EXISTS patients (" +
                         "username VARCHAR, " +
                         "first_name VARCHAR, " +

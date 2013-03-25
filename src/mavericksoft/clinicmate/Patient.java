@@ -110,7 +110,7 @@ class Patient extends Person {
         boolean success = false;
 
         try {
-            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
             PreparedStatement st = null;
 
             // If a record does not exist with this id, create it
@@ -136,9 +136,9 @@ class Patient extends Person {
                 success = st.execute();
             } else {
                 // If it does already exist, update it with the current values
-                st = conn.prepareStatement("UPDATE patients SET username='?', first_name='?', last_name='?', password_hash='?', " +
-                        " password_salt='?', created_at='?', patient_id='?', gender='?', address='?', insurance_provider='?', " +
-                        " primary_phone='?', secondary_phone='?', date_of_birth='?' WHERE patient_id='?'");
+                st = conn.prepareStatement("UPDATE patients SET username=?, first_name=?, last_name=?, password_hash=?, " +
+                        " password_salt=?, created_at=?, patient_id=?, gender=?, address=?, insurance_provider=?, " +
+                        " primary_phone=?, secondary_phone=?, date_of_birth=? WHERE patient_id=?");
 
                 st.setString(1, this.username);
                 st.setString(2, this.firstName);
@@ -193,7 +193,7 @@ class Patient extends Person {
 
         try {
             // Get a connection for the H2 database
-            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
 
             // Prepare a DELETE statement
             PreparedStatement st = conn.prepareStatement("DELETE FROM patients WHERE patient_id=?");
@@ -236,7 +236,7 @@ class Patient extends Person {
         boolean success = false;
 
         try {
-            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
 
             PreparedStatement st = conn.prepareStatement("SELECT * FROM patients WHERE patient_id=?");
             st.setObject(1, this.patientID);
@@ -283,17 +283,17 @@ class Patient extends Person {
 
         try {
             // Create a connection to the database
-            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
 
             // Retrieve the rows from the patients database where the id
             // matches the UUID
-            PreparedStatement st = conn.prepareStatement("SELECT * FROM patients WHERE patient_id='?'");
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM patients WHERE patient_id=?");
             st.setObject(1, id);
             ResultSet rs = st.executeQuery();
 
             // Get a row from the ResultSet -- If there is no result, then
             // this UUID has no saved Patient associated with it
-            if (rs.next()) {
+            while (rs.next()) {
                 // This long new statement generates a new Patient object from
                 // this result row
                 value = new Patient(
@@ -307,16 +307,17 @@ class Patient extends Person {
                         rs.getString("gender"),
                         rs.getString("address"),
                         rs.getString("insurance_provider"),
-                        rs.getString("primary_phone_number"),
-                        rs.getString("secondary_phone_number"),
+                        rs.getString("primary_phone"),
+                        rs.getString("secondary_phone"),
                         new java.util.Date(rs.getDate("date_of_birth").getTime()));
-            } else {
-                // If the ResultSet was empty, throw an exception
-                throw new NonexistentRecordException("This Patient does not exist");
+            }
+
+            if (value == null) {
+                throw new NonexistentRecordException("Failed to get Patient by ID");
             }
         } catch (SQLException sqle) {
-            System.out.println("Failed to get a Patient by id");
             sqle.printStackTrace();
+            System.out.println("Failed to get a Patient by id");
         } finally {
             if (conn != null) {
                 try {
@@ -348,17 +349,17 @@ class Patient extends Person {
 
         try {
             // Create a connection to the database
-            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
 
             // Retrieve the rows from the patients database where the id
             // matches the UUID
-            PreparedStatement st = conn.prepareStatement("SELECT * FROM patients WHERE username='?'");
-            st.setString(0, username);
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM patients WHERE username=?");
+            st.setString(1, username);
             ResultSet rs = st.executeQuery();
 
             // Get a row from the ResultSet -- If there is no result, then
             // this UUID has no saved Patient associated with it
-            if (rs.next()) {
+            while (rs.next()) {
                 // This long new statement generates a new Patient object from
                 // this result row
                 value = new Patient(
@@ -372,15 +373,16 @@ class Patient extends Person {
                         rs.getString("gender"),
                         rs.getString("address"),
                         rs.getString("insurance_provider"),
-                        rs.getString("primary_phone_number"),
-                        rs.getString("secondary_phone_number"),
+                        rs.getString("primary_phone"),
+                        rs.getString("secondary_phone"),
                         new java.util.Date(rs.getDate("date_of_birth").getTime()));
-            } else {
-                // If the ResultSet was empty, throw an exception
-                throw new NonexistentRecordException("This Patient does not exist");
+            }
+
+            if (value == null) {
+                throw new NonexistentRecordException("Failed to get Patient by username");
             }
         } catch (SQLException sqle) {
-            System.out.println("Failed to get a Patient by id");
+            System.out.println("Failed to get a Patient by username");
             sqle.printStackTrace();
         } finally {
             if (conn != null) {
@@ -409,10 +411,10 @@ class Patient extends Person {
         HashMap<UUID, ArrayList<String>> comments = new HashMap<UUID, ArrayList<String>>();
 
         try {
-            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "", "");
 
             // Get the UUIDs for the patient's records
-            PreparedStatement st = conn.prepareStatement("SELECT record_id FROM records WHERE patient_id='?'");
+            PreparedStatement st = conn.prepareStatement("SELECT record_id FROM records WHERE patient_id=?");
             st.setObject(1, this.patientID);
             ResultSet rs = st.executeQuery();
 
@@ -423,7 +425,7 @@ class Patient extends Person {
 
             // For each record id, get the comments
             for (UUID id : comments.keySet()) {
-                st = conn.prepareStatement("SELECT comment FROM comments WHERE record_id='?'");
+                st = conn.prepareStatement("SELECT comment FROM comments WHERE record_id=?");
                 st.setObject(1, id);
                 rs = st.executeQuery();
 
@@ -434,7 +436,7 @@ class Patient extends Person {
             }
 
             // Prepare a statement that pulls all records for this patient's id
-            st = conn.prepareStatement("SELECT * FROM records WHERE patient_id='?'");
+            st = conn.prepareStatement("SELECT * FROM records WHERE patient_id=?");
             st.setObject(1, this.patientID);
             rs = st.executeQuery();
 

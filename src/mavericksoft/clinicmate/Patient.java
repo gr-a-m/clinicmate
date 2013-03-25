@@ -22,7 +22,7 @@ class Patient extends Person {
     private String insuranceProvider;
     private String primaryPhoneNumber;
     private String secondaryPhoneNumber;
-    private Date dateOfBirth;
+    private java.util.Date dateOfBirth;
 
     /**
      * This is the main constructor to create a "new" Patient. It will generate
@@ -44,7 +44,7 @@ class Patient extends Person {
     public Patient(String username, String firstName, String lastName, String password,
                    String gender, String address, String insuranceProvider,
                    String primaryPhoneNumber, String secondaryPhoneNumber,
-                   Date dateOfBirth) {
+                   java.util.Date dateOfBirth) {
         // Call the constructor of the Person superclass
         super(username, firstName, lastName, password);
 
@@ -84,7 +84,7 @@ class Patient extends Person {
                    String passwordSalt, Timestamp createdAt, UUID patientID,
                    String gender, String address, String insuranceProvider,
                    String primaryPhoneNumber, String secondaryPhoneNumber,
-                   Date dateOfBirth) {
+                   java.util.Date dateOfBirth) {
         super(username, firstName, lastName, passwordHash, passwordSalt, createdAt);
 
         // The rest of the object is simple to set up
@@ -117,20 +117,20 @@ class Patient extends Person {
             if (!this.exists()) {
                 st = conn.prepareStatement("INSERT INTO patients VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-                st.setString(0, this.username);
-                st.setString(1, this.firstName);
-                st.setString(2, this.lastName);
-                st.setString(3, this.passwordHash);
-                st.setString(4, this.passwordSalt);
+                st.setString(1, this.username);
+                st.setString(2, this.firstName);
+                st.setString(3, this.lastName);
+                st.setString(4, this.passwordHash);
+                st.setString(5, this.passwordSalt);
                 // Convert the internal java.util.Date to a java.sql.Date for storage
-                st.setTimestamp(5, new Timestamp(this.createdAt.getTime()));
-                st.setObject(6, this.patientID);
-                st.setString(7, this.gender);
-                st.setString(8, this.address);
-                st.setString(9, this.insuranceProvider);
-                st.setString(10, this.primaryPhoneNumber);
-                st.setString(11, this.secondaryPhoneNumber);
-                st.setDate(12, new java.sql.Date(this.dateOfBirth.getTime()));
+                st.setTimestamp(6, new Timestamp(this.createdAt.getTime()));
+                st.setObject(7, this.patientID);
+                st.setString(8, this.gender);
+                st.setString(9, this.address);
+                st.setString(10, this.insuranceProvider);
+                st.setString(11, this.primaryPhoneNumber);
+                st.setString(12, this.secondaryPhoneNumber);
+                st.setDate(13, new java.sql.Date(this.dateOfBirth.getTime()));
 
                 // Execute the insertion and record the success
                 success = st.execute();
@@ -140,21 +140,21 @@ class Patient extends Person {
                         " password_salt='?', created_at='?', patient_id='?', gender='?', address='?', insurance_provider='?', " +
                         " primary_phone='?', secondary_phone='?', date_of_birth='?' WHERE patient_id='?'");
 
-                st.setString(0, this.username);
-                st.setString(1, this.firstName);
-                st.setString(2, this.lastName);
-                st.setString(3, this.passwordHash);
-                st.setString(4, this.passwordSalt);
+                st.setString(1, this.username);
+                st.setString(2, this.firstName);
+                st.setString(3, this.lastName);
+                st.setString(4, this.passwordHash);
+                st.setString(5, this.passwordSalt);
                 // Convert the internal java.util.Date to a java.sql.Date for storage
-                st.setTimestamp(5, new Timestamp(this.createdAt.getTime()));
-                st.setObject(6, this.patientID);
-                st.setString(7, this.gender);
-                st.setString(8, this.address);
-                st.setString(9, this.insuranceProvider);
-                st.setString(10, this.primaryPhoneNumber);
-                st.setString(11, this.secondaryPhoneNumber);
-                st.setDate(12, new java.sql.Date(this.dateOfBirth.getTime()));
-                st.setObject(13, this.patientID);
+                st.setTimestamp(6, new Timestamp(this.createdAt.getTime()));
+                st.setObject(7, this.patientID);
+                st.setString(8, this.gender);
+                st.setString(9, this.address);
+                st.setString(10, this.insuranceProvider);
+                st.setString(11, this.primaryPhoneNumber);
+                st.setString(12, this.secondaryPhoneNumber);
+                st.setDate(13, new java.sql.Date(this.dateOfBirth.getTime()));
+                st.setObject(14, this.patientID);
 
                 st.execute();
             }
@@ -196,13 +196,13 @@ class Patient extends Person {
             conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
 
             // Prepare a DELETE statement
-            PreparedStatement st = conn.prepareStatement("DELETE FROM patients WHERE patient_id='?'");
-            st.setObject(0, this.patientID);
+            PreparedStatement st = conn.prepareStatement("DELETE FROM patients WHERE patient_id=?");
+            st.setObject(1, this.patientID);
             st.execute();
 
             // Delete from the mapping database as well
-            st = conn.prepareStatement("DELETE FROM person_map WHERE pat_id='?'");
-            st.setObject(0, this.patientID);
+            st = conn.prepareStatement("DELETE FROM person_map WHERE pat_id=?");
+            st.setObject(1, this.patientID);
             st.execute();
             success = true;
         } catch (SQLException sqle) {
@@ -239,7 +239,7 @@ class Patient extends Person {
             conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
 
             PreparedStatement st = conn.prepareStatement("SELECT * FROM patients WHERE patient_id=?");
-            st.setObject(0, this.patientID);
+            st.setObject(1, this.patientID);
 
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
@@ -288,7 +288,7 @@ class Patient extends Person {
             // Retrieve the rows from the patients database where the id
             // matches the UUID
             PreparedStatement st = conn.prepareStatement("SELECT * FROM patients WHERE patient_id='?'");
-            st.setObject(0, id);
+            st.setObject(1, id);
             ResultSet rs = st.executeQuery();
 
             // Get a row from the ResultSet -- If there is no result, then
@@ -309,7 +309,7 @@ class Patient extends Person {
                         rs.getString("insurance_provider"),
                         rs.getString("primary_phone_number"),
                         rs.getString("secondary_phone_number"),
-                        rs.getDate("date_of_birth"));
+                        new java.util.Date(rs.getDate("date_of_birth").getTime()));
             } else {
                 // If the ResultSet was empty, throw an exception
                 throw new NonexistentRecordException("This Patient does not exist");
@@ -374,7 +374,7 @@ class Patient extends Person {
                         rs.getString("insurance_provider"),
                         rs.getString("primary_phone_number"),
                         rs.getString("secondary_phone_number"),
-                        rs.getDate("date_of_birth"));
+                        new java.util.Date(rs.getDate("date_of_birth").getTime()));
             } else {
                 // If the ResultSet was empty, throw an exception
                 throw new NonexistentRecordException("This Patient does not exist");
@@ -413,7 +413,7 @@ class Patient extends Person {
 
             // Get the UUIDs for the patient's records
             PreparedStatement st = conn.prepareStatement("SELECT record_id FROM records WHERE patient_id='?'");
-            st.setObject(0, this.patientID);
+            st.setObject(1, this.patientID);
             ResultSet rs = st.executeQuery();
 
             // Enter a UUID into the map for each record the patient has
@@ -424,7 +424,7 @@ class Patient extends Person {
             // For each record id, get the comments
             for (UUID id : comments.keySet()) {
                 st = conn.prepareStatement("SELECT comment FROM comments WHERE record_id='?'");
-                st.setObject(0, id);
+                st.setObject(1, id);
                 rs = st.executeQuery();
 
                 // Iterate through the record's comments and add them
@@ -435,7 +435,7 @@ class Patient extends Person {
 
             // Prepare a statement that pulls all records for this patient's id
             st = conn.prepareStatement("SELECT * FROM records WHERE patient_id='?'");
-            st.setObject(0, this.patientID);
+            st.setObject(1, this.patientID);
             rs = st.executeQuery();
 
             // Create a new object for each result
@@ -482,8 +482,8 @@ class Patient extends Person {
         return patientID;
     }
 
-    public Date getDateOfBirth() {
-        return dateOfBirth;
+    public java.util.Date getDateOfBirth() {
+        return this.dateOfBirth;
     }
 
     public String getAddress() {

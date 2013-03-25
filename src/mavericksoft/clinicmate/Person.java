@@ -191,8 +191,8 @@ abstract class Person {
         if (!dbFile.exists()) {
             Connection conn = null;
             try {
-                conn = DriverManager.getConnection(dbFile.toString());
-                String createString = "CREATE TABLE patients (" +
+                conn = DriverManager.getConnection("jdbc:h2:" + dbFile.toString());
+                String createString = "CREATE TABLE IF NOT EXISTS patients (" +
                         "username VARCHAR, " +
                         "first_name VARCHAR, " +
                         "last_name VARCHAR, " +
@@ -210,14 +210,14 @@ abstract class Person {
                 // Make the patients table
                 conn.createStatement().execute(createString);
 
-                createString = "CREATE TABLE person_map (" +
+                createString = "CREATE TABLE IF NOT EXISTS person_map (" +
                         "pat_id UUID, " +
                         "pro_id UUID)";
 
                 // Make the mapping table
                 conn.createStatement().execute(createString);
 
-                createString = "CREATE TABLE professionals (" +
+                createString = "CREATE TABLE IF NOT EXISTS professionals (" +
                         "username VARCHAR, " +
                         "first_name VARCHAR, " +
                         "last_name VARCHAR, " +
@@ -232,7 +232,7 @@ abstract class Person {
                 // Make the professionals table
                 conn.createStatement().execute(createString);
 
-                createString = "CREATE TABLE records (" +
+                createString = "CREATE TABLE IF NOT EXISTS records(" +
                         "record_id UUID, " +
                         "patient_id UUID, " +
                         "date DATE, " +
@@ -245,7 +245,7 @@ abstract class Person {
                 // Make the HealthRecords table
                 conn.createStatement().execute(createString);
 
-                createString = "CREATE TABLE comments (" +
+                createString = "CREATE TABLE IF NOT EXISTS comments (" +
                         "record_id UUID, " +
                         "comment VARCHAR)";
 

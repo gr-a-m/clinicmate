@@ -56,6 +56,9 @@ class HealthRecord {
 
         // Set the createdAt
         this.createdAt = new Date();
+
+        // Set the comments to empty initially
+        this.comments = new ArrayList<String>();
     }
 
     /**
@@ -97,56 +100,56 @@ class HealthRecord {
         Person.checkTables();
 
         try {
-            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
             PreparedStatement st = null;
 
             // If this doesn't exist, make a new record, otherwise update
             if (!this.exists()) {
                 st = conn.prepareStatement("INSERT INTO records VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
-                st.setObject(0, this.recordID);
-                st.setObject(1, this.patientID);
-                st.setDate(2, new java.sql.Date(this.date.getTime()));
-                st.setInt(3, this.diaBloodPressure);
-                st.setInt(4, this.sysBloodPressure);
-                st.setInt(5, this.glucose);
-                st.setInt(6, this.weight);
-                st.setTimestamp(7, new Timestamp(this.createdAt.getTime()));
+                st.setObject(1, this.recordID);
+                st.setObject(2, this.patientID);
+                st.setDate(3, new java.sql.Date(this.date.getTime()));
+                st.setInt(4, this.diaBloodPressure);
+                st.setInt(5, this.sysBloodPressure);
+                st.setInt(6, this.glucose);
+                st.setInt(7, this.weight);
+                st.setTimestamp(8, new Timestamp(this.createdAt.getTime()));
 
                 st.execute();
 
                 // Now add any comments
                 for (String comment : this.comments) {
                     st = conn.prepareStatement("INSERT INTO comments VALUES(?, ?)");
-                    st.setObject(0, this.recordID);
-                    st.setString(1, comment);
+                    st.setObject(1, this.recordID);
+                    st.setString(2, comment);
                     st.execute();
                 }
 
                 success = true;
             } else {
-                st = conn.prepareStatement("UPDATE records SET record_id='?', patient_id='?', " +
-                        "date='?', dia_blood_pressure='?', sys_blood_pressure='?', glucose='?', " +
-                        "weight='?', created_at='?' WHERE record_id='?'");
-                st.setObject(0, this.recordID);
-                st.setObject(1, this.patientID);
-                st.setDate(2, new java.sql.Date(this.date.getTime()));
-                st.setInt(3, this.diaBloodPressure);
-                st.setInt(4, this.sysBloodPressure);
-                st.setInt(5, this.glucose);
-                st.setInt(6, this.weight);
-                st.setTimestamp(7, new Timestamp(this.createdAt.getTime()));
-                st.setObject(8, this.recordID);
+                st = conn.prepareStatement("UPDATE records SET record_id=?, patient_id=?, " +
+                        "date=?, dia_blood_pressure=?, sys_blood_pressure=?, glucose=?, " +
+                        "weight=?, created_at=? WHERE record_id=?");
+                st.setObject(1, this.recordID);
+                st.setObject(2, this.patientID);
+                st.setDate(3, new java.sql.Date(this.date.getTime()));
+                st.setInt(4, this.diaBloodPressure);
+                st.setInt(5, this.sysBloodPressure);
+                st.setInt(6, this.glucose);
+                st.setInt(7, this.weight);
+                st.setTimestamp(8, new Timestamp(this.createdAt.getTime()));
+                st.setObject(9, this.recordID);
 
                 // Remove any existing comments
-                st = conn.prepareStatement("DELETE FROM comments WHERE record_id='?'");
-                st.setObject(0, this.recordID);
+                st = conn.prepareStatement("DELETE FROM comments WHERE record_id=?");
+                st.setObject(1, this.recordID);
                 st.execute();
 
                 // Add the current comments
                 for (String comment : this.comments) {
                     st = conn.prepareStatement("INSERT INTO comments VALUES(?, ?)");
-                    st.setObject(0, this.recordID);
-                    st.setString(1, comment);
+                    st.setObject(1, this.recordID);
+                    st.setString(2, comment);
                     st.execute();
                 }
 
@@ -180,20 +183,20 @@ class HealthRecord {
         Person.checkTables();
 
         try {
-            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
 
             // If this doesn't exist, return false
             if (!this.exists()) {
                 success = false;
             } else {
                 // Delete this object from the database
-                PreparedStatement st = conn.prepareStatement("DELETE FROM records WHERE record_id='?'");
-                st.setObject(0, this.recordID);
+                PreparedStatement st = conn.prepareStatement("DELETE FROM records WHERE record_id=?");
+                st.setObject(1, this.recordID);
                 st.execute();
 
                 // Delete any related comments
-                st = conn.prepareStatement("DELETE FROM comments WHERE record_id='?'");
-                st.setObject(0, this.recordID);
+                st = conn.prepareStatement("DELETE FROM comments WHERE record_id=?");
+                st.setObject(1, this.recordID);
                 st.execute();
 
                 success = true;
@@ -226,10 +229,10 @@ class HealthRecord {
         Person.checkTables();
 
         try {
-            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
 
-            PreparedStatement st = conn.prepareStatement("SELECT * FROM records WHERE record_id='?'");
-            st.setObject(0, this.recordID);
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM records WHERE record_id=?");
+            st.setObject(1, this.recordID);
             ResultSet rs = st.executeQuery();
 
             if (rs.next()) {

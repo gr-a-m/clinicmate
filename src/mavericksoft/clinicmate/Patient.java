@@ -411,7 +411,7 @@ class Patient extends Person {
         HashMap<UUID, ArrayList<String>> comments = new HashMap<UUID, ArrayList<String>>();
 
         try {
-            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "", "");
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
 
             // Get the UUIDs for the patient's records
             PreparedStatement st = conn.prepareStatement("SELECT record_id FROM records WHERE patient_id=?");
@@ -420,7 +420,7 @@ class Patient extends Person {
 
             // Enter a UUID into the map for each record the patient has
             while (rs.next()) {
-                comments.put((UUID) rs.getObject("patient_id"), new ArrayList<String>());
+                comments.put((UUID) rs.getObject("record_id"), new ArrayList<String>());
             }
 
             // For each record id, get the comments
@@ -455,7 +455,6 @@ class Patient extends Person {
                 ));
             }
         } catch (SQLException sqle) {
-            System.out.println("Failed to get a Patient by id");
             sqle.printStackTrace();
         } finally {
             if (conn != null) {

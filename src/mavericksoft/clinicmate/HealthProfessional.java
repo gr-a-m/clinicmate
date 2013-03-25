@@ -92,41 +92,41 @@ class HealthProfessional extends Person {
         boolean success = false;
 
         try {
-            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
             PreparedStatement st = null;
 
             // If a record does not exist with this id, create it
             if (!this.exists()) {
                 st = conn.prepareStatement("INSERT INTO patients VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                st.setString(0, this.username);
-                st.setString(1, this.firstName);
-                st.setString(2, this.lastName);
-                st.setString(3, this.passwordHash);
-                st.setString(4, this.passwordSalt);
-                st.setTimestamp(5, new Timestamp(this.createdAt.getTime()));
-                st.setObject(6, this.employeeID);
-                st.setBoolean(7, this.admin);
-                st.setBoolean(8, this.nurse);
-                st.setBoolean(9, this.doctor);
+                st.setString(1, this.username);
+                st.setString(2, this.firstName);
+                st.setString(3, this.lastName);
+                st.setString(4, this.passwordHash);
+                st.setString(5, this.passwordSalt);
+                st.setTimestamp(6, new Timestamp(this.createdAt.getTime()));
+                st.setObject(7, this.employeeID);
+                st.setBoolean(8, this.admin);
+                st.setBoolean(9, this.nurse);
+                st.setBoolean(10, this.doctor);
 
                 st.execute();
 
                 success = true;
             } else {
                 // If it does already exist, update it with the current values
-                st = conn.prepareStatement("UPDATE patients SET username='?', first_name='?', last_name='?', password_hash='?', " +
-                        " password_salt='?', created_at='?', id='?', admin='?', nurse='?', doctor='?' WHERE professional_id='?'");
-                st.setString(0, this.username);
-                st.setString(1, this.firstName);
-                st.setString(2, this.lastName);
-                st.setString(3, this.passwordHash);
-                st.setString(4, this.passwordSalt);
-                st.setTimestamp(5, new Timestamp(this.createdAt.getTime()));
-                st.setObject(6, this.employeeID);
-                st.setBoolean(7, this.admin);
-                st.setBoolean(8, this.nurse);
-                st.setBoolean(9, this.doctor);
-                st.setObject(10, this.employeeID);
+                st = conn.prepareStatement("UPDATE patients SET username=?, first_name=?, last_name=?, password_hash=?, " +
+                        " password_salt=?, created_at=?, id=?, admin=?, nurse=?, doctor=? WHERE professional_id=?");
+                st.setString(1, this.username);
+                st.setString(2, this.firstName);
+                st.setString(3, this.lastName);
+                st.setString(4, this.passwordHash);
+                st.setString(5, this.passwordSalt);
+                st.setTimestamp(6, new Timestamp(this.createdAt.getTime()));
+                st.setObject(7, this.employeeID);
+                st.setBoolean(8, this.admin);
+                st.setBoolean(9, this.nurse);
+                st.setBoolean(10, this.doctor);
+                st.setObject(11, this.employeeID);
 
                 st.execute();
 
@@ -161,16 +161,16 @@ class HealthProfessional extends Person {
 
         try {
             // Get a connection for the H2 database
-            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
 
             // Prepare a DELETE statement
-            PreparedStatement st = conn.prepareStatement("DELETE FROM professionals WHERE professional_id='?'");
-            st.setObject(0, this.employeeID);
+            PreparedStatement st = conn.prepareStatement("DELETE FROM professionals WHERE professional_id=?");
+            st.setObject(1, this.employeeID);
             success = st.execute();
 
             // Delete from the mapping database as well
-            st = conn.prepareStatement("DELETE FROM person_map WHERE pro_id='?'");
-            st.setString(0, this.employeeID.toString());
+            st = conn.prepareStatement("DELETE FROM person_map WHERE pro_id=?");
+            st.setString(1, this.employeeID.toString());
             success = success & st.execute();
         } catch (SQLException sqle) {
             System.out.println("Failed to open a connection to the database.");
@@ -203,10 +203,10 @@ class HealthProfessional extends Person {
         boolean success = false;
 
         try {
-            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa" ,"");
 
             PreparedStatement st = conn.prepareStatement("SELECT * FROM patients WHERE professional_id=?");
-            st.setObject(0, this.employeeID);
+            st.setObject(1, this.employeeID);
 
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
@@ -266,11 +266,11 @@ class HealthProfessional extends Person {
         HealthProfessional value = null;
 
         try {
-            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
 
             ArrayList<UUID> ids = new ArrayList<UUID>();
-            PreparedStatement st = conn.prepareStatement("SELECT * FROM person_map WHERE pro_id='?'");
-            st.setObject(0, id);
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM person_map WHERE pro_id=?");
+            st.setObject(1, id);
             ResultSet rs = st.executeQuery();
 
             // Iterate through each relation and add the associated patient id
@@ -279,8 +279,8 @@ class HealthProfessional extends Person {
                 ids.add((UUID) rs.getObject("pat_id"));
             }
 
-            st = conn.prepareStatement("SELECT * FROM professionals WHERE professional_id='?'");
-            st.setObject(0, id);
+            st = conn.prepareStatement("SELECT * FROM professionals WHERE professional_id=?");
+            st.setObject(1, id);
             rs = st.executeQuery();
 
             if (rs.next()) {
@@ -330,12 +330,12 @@ class HealthProfessional extends Person {
         HealthProfessional value = null;
 
         try {
-            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
 
             ArrayList<UUID> ids = new ArrayList<UUID>();
 
-            PreparedStatement st = conn.prepareStatement("SELECT professional_id FROM professionals WHERE username='?'");
-            st.setString(0, username);
+            PreparedStatement st = conn.prepareStatement("SELECT professional_id FROM professionals WHERE username=?");
+            st.setString(1, username);
             ResultSet rs = st.executeQuery();
             UUID id = null;
 
@@ -345,8 +345,8 @@ class HealthProfessional extends Person {
                 throw new NonexistentRecordException("No record found for user " + username);
             }
 
-            st = conn.prepareStatement("SELECT * FROM person_map WHERE pro_id='?'");
-            st.setObject(0, id);
+            st = conn.prepareStatement("SELECT * FROM person_map WHERE pro_id=?");
+            st.setObject(1, id);
             rs = st.executeQuery();
 
             // Iterate through each relation and add the associated patient id
@@ -355,8 +355,8 @@ class HealthProfessional extends Person {
                 ids.add((UUID) rs.getObject("pat_id"));
             }
 
-            st = conn.prepareStatement("SELECT * FROM professionals WHERE username='?'");
-            st.setString(0, username);
+            st = conn.prepareStatement("SELECT * FROM professionals WHERE username=?");
+            st.setString(1, username);
             rs = st.executeQuery();
 
             if (rs.next()) {
@@ -406,11 +406,11 @@ class HealthProfessional extends Person {
         boolean success = false;
 
         try {
-            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
 
             PreparedStatement st = conn.prepareStatement("INSERT INTO person_map VALUES (?, ?)");
-            st.setObject(0, id);
-            st.setObject(1, this.employeeID);
+            st.setObject(1, id);
+            st.setObject(2, this.employeeID);
             st.execute();
             success = true;
 

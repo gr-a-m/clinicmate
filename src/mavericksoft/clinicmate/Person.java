@@ -9,7 +9,6 @@ import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -25,7 +24,7 @@ abstract class Person {
     protected String lastName;
     protected String passwordHash;
     protected String passwordSalt;
-    protected Timestamp createdAt;
+    protected Date createdAt;
 
     /**
      * This constructor accepts that basic traits that define a person - the
@@ -48,7 +47,7 @@ abstract class Person {
         this.lastName = lastName;
 
         // Created at is the current time at the instantiation of the class
-        this.createdAt = new Timestamp(new java.util.Date().getTime());
+        this.createdAt = new Date();
 
         // Create a random salt to append to the password by making a random,
         // large integer and convert it to an array of characters
@@ -86,7 +85,7 @@ abstract class Person {
      *                     the database)
      */
     public Person(String username, String firstName, String lastName,
-                  String passwordHash, String passwordSalt, java.sql.Timestamp createdAt) {
+                  String passwordHash, String passwordSalt, Date createdAt) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;

@@ -123,7 +123,7 @@ class Patient extends Person {
                 st.setString(3, this.passwordHash);
                 st.setString(4, this.passwordSalt);
                 // Convert the internal java.util.Date to a java.sql.Date for storage
-                st.setTimestamp(5, this.createdAt);
+                st.setTimestamp(5, new Timestamp(this.createdAt.getTime()));
                 st.setObject(6, this.patientID);
                 st.setString(7, this.gender);
                 st.setString(8, this.address);
@@ -146,7 +146,7 @@ class Patient extends Person {
                 st.setString(3, this.passwordHash);
                 st.setString(4, this.passwordSalt);
                 // Convert the internal java.util.Date to a java.sql.Date for storage
-                st.setTimestamp(5, this.createdAt);
+                st.setTimestamp(5, new Timestamp(this.createdAt.getTime()));
                 st.setObject(6, this.patientID);
                 st.setString(7, this.gender);
                 st.setString(8, this.address);

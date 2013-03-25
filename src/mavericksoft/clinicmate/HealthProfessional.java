@@ -65,7 +65,7 @@ class HealthProfessional extends Person {
      * @param patientIDs   The ArrayList of the patients assigned to this pro
      */
     public HealthProfessional(String username, String firstName, String lastName,
-                              String passwordHash, String passwordSalt, Timestamp createdAt,
+                              String passwordHash, String passwordSalt, Date createdAt,
                               UUID employeeID, boolean admin, boolean nurse, boolean doctor,
                               ArrayList<UUID> patientIDs) {
         super(username, firstName, lastName, passwordHash, passwordSalt, createdAt);
@@ -103,7 +103,7 @@ class HealthProfessional extends Person {
                 st.setString(2, this.lastName);
                 st.setString(3, this.passwordHash);
                 st.setString(4, this.passwordSalt);
-                st.setTimestamp(5, this.createdAt);
+                st.setTimestamp(5, new Timestamp(this.createdAt.getTime()));
                 st.setObject(6, this.employeeID);
                 st.setBoolean(7, this.admin);
                 st.setBoolean(8, this.nurse);
@@ -119,7 +119,7 @@ class HealthProfessional extends Person {
                 st.setString(2, this.lastName);
                 st.setString(3, this.passwordHash);
                 st.setString(4, this.passwordSalt);
-                st.setTimestamp(5, this.createdAt);
+                st.setTimestamp(5, new Timestamp(this.createdAt.getTime()));
                 st.setObject(6, this.employeeID);
                 st.setBoolean(7, this.admin);
                 st.setBoolean(8, this.nurse);
@@ -286,7 +286,7 @@ class HealthProfessional extends Person {
                         rs.getString("last_name"),
                         rs.getString("password_hash"),
                         rs.getString("password_salt"),
-                        rs.getTimestamp("created_at"),
+                        new Date(rs.getTimestamp("created_at").getTime()),
                         (UUID) rs.getObject("professional_id"),
                         rs.getBoolean("admin"),
                         rs.getBoolean("nurse"),
@@ -362,7 +362,7 @@ class HealthProfessional extends Person {
                         rs.getString("last_name"),
                         rs.getString("password_hash"),
                         rs.getString("password_salt"),
-                        rs.getTimestamp("created_at"),
+                        new Date(rs.getTimestamp("created_at").getTime()),
                         (UUID) rs.getObject("professional_id"),
                         rs.getBoolean("admin"),
                         rs.getBoolean("nurse"),

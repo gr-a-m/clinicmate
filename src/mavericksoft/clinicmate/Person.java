@@ -263,6 +263,7 @@ abstract class Person {
     }
 
     public Date getCreatedAt() {
+        // Converts a java.sql.Timestamp to a java.util.Date
         return new Date(createdAt.getTime());
     }
 }

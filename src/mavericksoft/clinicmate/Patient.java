@@ -115,6 +115,8 @@ class Patient extends Person {
             // If this Patient already exists, update it. Otherwise, insert it.
             boolean exists = false;
             PreparedStatement st = conn.prepareStatement("SELECT * FROM patients WHERE id=?");
+            st.setObject(0, this.patientID);
+
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 exists = true;
@@ -130,7 +132,7 @@ class Patient extends Person {
                 st.setString(3, this.passwordHash);
                 st.setString(4, this.passwordSalt);
                 // Convert the internal java.util.Date to a java.sql.Date for storage
-                st.setDate(5, new java.sql.Date(this.createdAt.getTime()));
+                st.setTimestamp(5, this.createdAt);
                 st.setObject(6, this.patientID);
                 st.setString(7, this.gender);
                 st.setString(8, this.address);
@@ -201,14 +203,15 @@ class Patient extends Person {
             conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
 
             // Prepare a DELETE statement
-            PreparedStatement st = conn.prepareStatement("DELETE FROM patients WHERE id='?'");
-            st.setString(0, this.patientID.toString());
-            success = st.execute();
+            PreparedStatement st = conn.prepareStatement("DELETE FROM patients WHERE patient_id='?'");
+            st.setObject(0, this.patientID);
+            st.execute();
 
             // Delete from the mapping database as well
             st = conn.prepareStatement("DELETE FROM person_map WHERE pat_id='?'");
-            st.setString(0, this.patientID.toString());
-            success = success & st.execute();
+            st.setObject(0, this.patientID);
+            st.execute();
+            success = true;
         } catch (SQLException sqle) {
             System.out.println("Failed to open a connection to the database.");
             sqle.printStackTrace();
@@ -251,8 +254,8 @@ class Patient extends Person {
 
             // Retrieve the rows from the patients database where the id
             // matches the UUID
-            PreparedStatement st = conn.prepareStatement("SELECT * FROM patients WHERE id='?'");
-            st.setString(0, id.toString());
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM patients WHERE patient_id='?'");
+            st.setObject(0, id);
             ResultSet rs = st.executeQuery();
 
             // Get a row from the ResultSet -- If there is no result, then
@@ -267,7 +270,7 @@ class Patient extends Person {
                         rs.getString("password_hash"),
                         rs.getString("password_salt"),
                         rs.getTimestamp("created_at"),
-                        UUID.fromString(rs.getString("id")),
+                        (UUID) rs.getObject("patient_id"),
                         rs.getString("gender"),
                         rs.getString("address"),
                         rs.getString("insurance_provider"),
@@ -316,7 +319,7 @@ class Patient extends Person {
 
             // Retrieve the rows from the patients database where the id
             // matches the UUID
-            PreparedStatement st = conn.prepareStatement("SELECT * FROM patients WHERE id='?'");
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM patients WHERE username='?'");
             st.setString(0, username);
             ResultSet rs = st.executeQuery();
 
@@ -332,7 +335,7 @@ class Patient extends Person {
                         rs.getString("password_hash"),
                         rs.getString("password_salt"),
                         rs.getTimestamp("created_at"),
-                        UUID.fromString(rs.getString("id")),
+                        (UUID) rs.getObject("patient_id"),
                         rs.getString("gender"),
                         rs.getString("address"),
                         rs.getString("insurance_provider"),

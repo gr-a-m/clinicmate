@@ -231,6 +231,26 @@ abstract class Person {
 
                 // Make the professionals table
                 conn.createStatement().execute(createString);
+
+                createString = "CREATE TABLE records (" +
+                        "record_id UUID, " +
+                        "patient_id UUID, " +
+                        "date DATE, " +
+                        "dia_blood_pressure SMALLINT, " +
+                        "sys_blood_pressure SMALLINT, " +
+                        "glucose SMALLINT, " +
+                        "weight SMALLINT, " +
+                        "created_at TIMESTAMP)";
+
+                // Make the HealthRecords table
+                conn.createStatement().execute(createString);
+
+                createString = "CREATE TABLE comments (" +
+                        "record_id UUID, " +
+                        "comment VARCHAR)";
+
+                // Make the comments table
+                conn.createStatement().execute(createString);
             } catch (SQLException sqle) {
                 System.out.println("Failed to check database tables.");
                 sqle.printStackTrace();

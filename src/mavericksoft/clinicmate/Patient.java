@@ -111,19 +111,10 @@ class Patient extends Person {
 
         try {
             conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
-
-            // If this Patient already exists, update it. Otherwise, insert it.
-            boolean exists = false;
-            PreparedStatement st = conn.prepareStatement("SELECT * FROM patients WHERE patient_id=?");
-            st.setObject(0, this.patientID);
-
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                exists = true;
-            }
+            PreparedStatement st = null;
 
             // If a record does not exist with this id, create it
-            if (!exists) {
+            if (!this.exists()) {
                 st = conn.prepareStatement("INSERT INTO patients VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
                 st.setString(0, this.username);
@@ -223,7 +214,47 @@ class Patient extends Person {
                 try {
                     conn.close();
                 } catch (SQLException sqle) {
-                    System.out.println("");
+                    System.out.println("Failed to close the connection in delete");
+                    sqle.printStackTrace();
+                }
+            }
+        }
+
+        return success;
+    }
+
+    /**
+     * This is an implementation of the exists class. It checks the database to
+     * see if this object is present.
+     *
+     * @return Whether the object is found in the database
+     */
+     public boolean exists() {
+        Person.checkTables();
+
+        Connection conn = null;
+        boolean success = false;
+
+        try {
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM patients WHERE patient_id=?");
+            st.setObject(0, this.patientID);
+
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                success = true;
+            }
+        } catch (SQLException sqle) {
+            System.out.println("Failed to open a connection to the database.");
+            sqle.printStackTrace();
+        } finally {
+            // Close the connection and return true
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException sqle) {
+                    System.out.println("Failed to check for the existence");
                     sqle.printStackTrace();
                 }
             }

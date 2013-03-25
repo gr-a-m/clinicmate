@@ -113,6 +113,13 @@ abstract class Person {
     abstract boolean delete();
 
     /**
+     * This method checks to see if the record exists already in the database.
+     *
+     * @return Whether this Person is already in the database or not
+     */
+    abstract boolean exists();
+
+    /**
      * This method resets the password, provided the old password matches the
      * current password.
      *

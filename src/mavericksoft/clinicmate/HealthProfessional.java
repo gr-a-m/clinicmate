@@ -93,19 +93,10 @@ class HealthProfessional extends Person {
 
         try {
             conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
-
-            // If this person already exists, update it, otherwise, create it
-            boolean exists = false;
-            PreparedStatement st = conn.prepareStatement("SELECT * FROM professionals WHERE professional_id='?'");
-            st.setObject(0, this.employeeID);
-
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                exists = true;
-            }
+            PreparedStatement st = null;
 
             // If a record does not exist with this id, create it
-            if (!exists) {
+            if (!this.exists()) {
                 st = conn.prepareStatement("INSERT INTO patients VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 st.setString(0, this.username);
                 st.setString(1, this.firstName);
@@ -196,6 +187,46 @@ class HealthProfessional extends Person {
     }
 
     /**
+     * This is an implementation of the exists class. It checks the database to
+     * see if this object is present.
+     *
+     * @return Whether the object is found in the database
+     */
+    public boolean exists() {
+        Person.checkTables();
+
+        Connection conn = null;
+        boolean success = false;
+
+        try {
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM patients WHERE professional_id=?");
+            st.setObject(0, this.employeeID);
+
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                success = true;
+            }
+        } catch (SQLException sqle) {
+            System.out.println("Failed to open a connection to the database.");
+            sqle.printStackTrace();
+        } finally {
+            // Close the connection and return true
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException sqle) {
+                    System.out.println("Failed to check for the existence");
+                    sqle.printStackTrace();
+                }
+            }
+        }
+
+        return success;
+    }
+
+    /**
      * This method returns an Array of Patient objects containing all of the
      * Patients that this HealthProfessional is assigned to.
      *
@@ -215,6 +246,185 @@ class HealthProfessional extends Person {
 
         // Convert the ArrayList to an Array and return it
         return patients.toArray(new Patient[0]);
+    }
+
+    /**
+     * This method gets a HealthRecord object for the provided UUID.
+     *
+     * @param id This is the UUID to make an object from
+     * @return   The HealthRecord object for the provided UUID
+     * @throws NonexistentRecordException
+     */
+    public static HealthProfessional getById(UUID id) throws NonexistentRecordException {
+        Person.checkTables();
+
+        Connection conn = null;
+        HealthProfessional value = null;
+
+        try {
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+
+            ArrayList<UUID> ids = new ArrayList<UUID>();
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM person_map WHERE pro_id='?'");
+            st.setObject(0, id);
+            ResultSet rs = st.executeQuery();
+
+            // Iterate through each relation and add the associated patient id
+            // to the list
+            while (rs.next()) {
+                ids.add((UUID) rs.getObject("pat_id"));
+            }
+
+            st = conn.prepareStatement("SELECT * FROM professionals WHERE professional_id='?'");
+            st.setObject(0, id);
+            rs = st.executeQuery();
+
+            if (rs.next()) {
+                value = new HealthProfessional(
+                        rs.getString("username"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("password_hash"),
+                        rs.getString("password_salt"),
+                        rs.getTimestamp("created_at"),
+                        (UUID) rs.getObject("professional_id"),
+                        rs.getBoolean("admin"),
+                        rs.getBoolean("nurse"),
+                        rs.getBoolean("doctor"),
+                        ids);
+            } else {
+                throw new NonexistentRecordException("This ID has no matching HealthProfessional");
+            }
+        } catch (SQLException sqle) {
+            System.out.println("Failed to get a HealthProfessional by id");
+            sqle.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException sqle) {
+                    System.out.println("Failed to close the database.");
+                    sqle.printStackTrace();
+                }
+            }
+        }
+
+        return value;
+    }
+
+    /**
+     * This method gets a HealthRecord object for the provided username
+     *
+     * @param username The username to search the database for
+     * @return         The HealthRecord object formed from the database.
+     * @throws NonexistentRecordException
+     */
+    public static HealthProfessional getByUsername(String username) throws NonexistentRecordException {
+        Person.checkTables();
+
+        Connection conn = null;
+        HealthProfessional value = null;
+
+        try {
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+
+            ArrayList<UUID> ids = new ArrayList<UUID>();
+
+            PreparedStatement st = conn.prepareStatement("SELECT professional_id FROM professionals WHERE username='?'");
+            st.setString(0, username);
+            ResultSet rs = st.executeQuery();
+            UUID id = null;
+
+            if (rs.next()) {
+                id = (UUID) rs.getObject("professional_id");
+            } else {
+                throw new NonexistentRecordException("No record found for user " + username);
+            }
+
+            st = conn.prepareStatement("SELECT * FROM person_map WHERE pro_id='?'");
+            st.setObject(0, id);
+            rs = st.executeQuery();
+
+            // Iterate through each relation and add the associated patient id
+            // to the list
+            while (rs.next()) {
+                ids.add((UUID) rs.getObject("pat_id"));
+            }
+
+            st = conn.prepareStatement("SELECT * FROM professionals WHERE username='?'");
+            st.setString(0, username);
+            rs = st.executeQuery();
+
+            if (rs.next()) {
+                value = new HealthProfessional(
+                        rs.getString("username"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("password_hash"),
+                        rs.getString("password_salt"),
+                        rs.getTimestamp("created_at"),
+                        (UUID) rs.getObject("professional_id"),
+                        rs.getBoolean("admin"),
+                        rs.getBoolean("nurse"),
+                        rs.getBoolean("doctor"),
+                        ids);
+            } else {
+                throw new NonexistentRecordException("This ID has no matching HealthProfessional");
+            }
+        } catch (SQLException sqle) {
+            System.out.println("Failed to get a HealthProfessional by id");
+            sqle.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException sqle) {
+                    System.out.println("Failed to close the database.");
+                    sqle.printStackTrace();
+                }
+            }
+        }
+
+        return value;
+    }
+
+    /**
+     * This method adds the patient with the provided id to this
+     * HealthProfessional's list of patients.
+     *
+     * @param id The patient ID to add to the professional
+     * @return   Whether the addition was successful
+     */
+    public boolean addPatient(UUID id) {
+        Person.checkTables();
+
+        Connection conn = null;
+        boolean success = false;
+
+        try {
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate");
+
+            PreparedStatement st = conn.prepareStatement("INSERT INTO person_map VALUES (?, ?)");
+            st.setObject(0, id);
+            st.setObject(1, this.employeeID);
+            st.execute();
+            success = true;
+
+            this.patientIDs.add(id);
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException sqle) {
+                    System.out.println("Failed to close the database.");
+                    sqle.printStackTrace();
+                }
+            }
+        }
+
+        return success;
     }
 
     // The following are a series of getters and setters

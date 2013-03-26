@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="308.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml" fx:controller="mavericksoft.gui.LoginController">
+  <children>
+    <Label layoutX="150.0" layoutY="147.0" text="username" />
+    <PasswordField fx:id="passwordField" layoutX="212.0" layoutY="175.0" prefWidth="200.0" />
+    <TextField fx:id="usernameField" layoutX="212.0" layoutY="144.0" prefWidth="200.0" />
+    <Label layoutX="150.0" layoutY="178.0" text="password" />
+    <Button fx:id="loginButton" layoutX="272.0" layoutY="218.0" mnemonicParsing="false" onAction="#login" text="Login" />
+    <Label fx:id="loginTitle" layoutX="272.0" layoutY="85.0" text="Login">
+      <font>
+        <Font size="20.0" />
+      </font>
+    </Label>
+    <Label layoutX="218.0" layoutY="256.0" text="username or passoword invalid" textFill="RED" visible="false" />
+  </children>
+  <stylesheets>
+    <URL value="@login.css" />
+  </stylesheets>
+</AnchorPane>

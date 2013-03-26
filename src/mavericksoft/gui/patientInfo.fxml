@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="502.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="mavericksoft.gui.PatientInfoController">
+  <children>
+    <Label fx:id="contactInfoLabel" layoutX="211.0" layoutY="14.0" text="Contact Information">
+      <font>
+        <Font size="20.0" fx:id="x1" />
+      </font>
+    </Label>
+    <Label id="contactInfoLabel" fx:id="emergencyLabel" font="$x1" layoutX="211.0" layoutY="318.0" text="Emergency Contact" />
+    <Label id="firstNameField" fx:id="firstNameLabel" layoutX="78.0" layoutY="41.0" text="First name:" />
+    <Label id="lastNameField" fx:id="lastNameLabel" layoutX="312.0" layoutY="41.0" text="Last name:" />
+    <Label id="addressArea" fx:id="addressLabel" layoutX="78.0" layoutY="88.0" text="Address:" />
+    <Label fx:id="insuranceLabel" layoutX="78.0" layoutY="255.0" text="Insurance Provider:" />
+    <Label fx:id="passwordLabel" layoutX="312.0" layoutY="199.0" text="Password:" />
+    <Label fx:id="primaryPhoneLabel" layoutX="312.0" layoutY="88.0" text="Primary Phone:" />
+    <Label fx:id="secondaryPhoneLabel" layoutX="313.0" layoutY="144.0" text="Secondary Phone:" />
+    <Label fx:id="emailLabel" layoutX="78.0" layoutY="199.0" text="email:" />
+    <TextField fx:id="firstNameField" layoutX="78.0" layoutY="59.0" prefWidth="200.0" />
+    <TextField fx:id="lastNameField" layoutX="312.0" layoutY="59.0" prefWidth="200.0" />
+    <TextField fx:id="secondaryPhoneField" layoutX="313.0" layoutY="167.0" prefWidth="200.0" />
+    <TextField fx:id="primaryPhoneField" layoutX="312.0" layoutY="114.0" prefWidth="200.0" />
+    <TextArea fx:id="addressTextArea" layoutX="78.0" layoutY="114.0" prefHeight="75.0" prefWidth="200.0" wrapText="true" />
+    <TextField fx:id="emailField" layoutX="78.0" layoutY="222.0" prefWidth="200.0" />
+    <TextField fx:id="passwordField" layoutX="312.0" layoutY="222.0" prefWidth="200.0" />
+    <TextField fx:id="insuranceField" layoutX="78.0" layoutY="281.0" prefWidth="434.0" />
+    <TextField fx:id="emergencyNameField" layoutX="79.0" layoutY="361.0" prefWidth="433.0" />
+    <TextField fx:id="emergencyPrimaryPhoneField" layoutX="78.0" layoutY="414.0" prefWidth="200.0" />
+    <TextField fx:id="emergencySecondaryPhoneField" layoutX="312.0" layoutY="414.0" prefWidth="200.0" />
+    <Label fx:id="emergencyNameLabel" layoutX="79.0" layoutY="345.0" text="Name:" />
+    <Label fx:id="emergencyPrimaryPhoneLabel" layoutX="78.0" layoutY="391.0" text="Primary Phone:" />
+    <Label id="emergencySecondaryPhone" fx:id="emergencySecondaryPhoneLabel" layoutX="313.0" layoutY="391.0" text="Secondary Phone:" />
+    <Button fx:id="saveButton" layoutX="269.0" layoutY="458.0" mnemonicParsing="false" onAction="#saveContactInfo" text="Save" />
+    <Label id="invalidLabel" fx:id="invalidLabel1" layoutX="446.0" layoutY="88.0" text="invalid input" textFill="RED" visible="false" />
+    <Label id="invalidLabel" fx:id="invalidLabel2" layoutX="446.0" layoutY="144.0" text="invalid input" textFill="RED" visible="false" />
+    <Label id="invalidLabel" fx:id="invalidLabel3" layoutX="212.0" layoutY="199.0" text="invalid input" textFill="RED" visible="false" />
+    <Label id="invalidLabel" fx:id="invalidLabel5" layoutX="446.0" layoutY="391.0" text="invalid input" textFill="RED" visible="false" />
+    <Label id="invalidLabel" fx:id="invalidLabel4" layoutX="212.0" layoutY="391.0" text="invalid input" textFill="RED" visible="false" />
+  </children>
+</AnchorPane>

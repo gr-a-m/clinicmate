@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="487.0" prefWidth="936.0" xmlns:fx="http://javafx.com/fxml" fx:controller="mavericksoft.gui.DoctorPageController">
+  <children>
+    <TabPane fx:id="dataMetricsTabPane" layoutX="159.0" prefHeight="473.0000999999975" prefWidth="777.0" tabClosingPolicy="UNAVAILABLE">
+      <tabs>
+        <Tab fx:id="dataTab" text="Data">
+          <content>
+            <AnchorPane id="Content" fx:id="dataAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="442.0" prefWidth="777.0">
+              <children>
+                <TableView layoutX="14.0" layoutY="14.0" prefHeight="373.0" prefWidth="390.0">
+                  <columns>
+                    <TableColumn prefWidth="75.0" text="Column X" />
+                    <TableColumn prefWidth="75.0" text="Column X" />
+                  </columns>
+                </TableView>
+                <Label fx:id="addCommentsLabel" layoutX="477.0" layoutY="239.0" text="Add Comments/Prescriptions:" />
+                <Button fx:id="saveButton" layoutX="181.0" layoutY="408.0" mnemonicParsing="false" onAction="#save" text="Save" />
+                <TextArea fx:id="addCommentsArea" layoutX="476.0" layoutY="259.0" prefWidth="267.0" wrapText="true" />
+              </children>
+            </AnchorPane>
+          </content>
+        </Tab>
+        <Tab fx:id="MetricsTab" text="Metrics">
+          <content>
+            <AnchorPane id="Content" fx:id="metricsAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <children>
+                <TabPane fx:id="measurementsTabPane" layoutY="1.0" prefHeight="442.0" prefWidth="777.0" side="RIGHT" tabClosingPolicy="UNAVAILABLE">
+                  <tabs>
+                    <Tab fx:id="bloodPressureTab" text="Blood Pressure">
+                      <content>
+                        <AnchorPane id="Content" fx:id="bloodAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                          <children>
+                            <LineChart fx:id="bloodChart" layoutX="14.0" layoutY="15.0" prefHeight="357.0" prefWidth="704.0">
+                              <xAxis>
+                                <NumberAxis side="BOTTOM" />
+                              </xAxis>
+                              <yAxis>
+                                <NumberAxis side="LEFT" />
+                              </yAxis>
+                            </LineChart>
+                            <ToggleButton id="linearRegToggle" fx:id="bloodLinearRegToggle" layoutX="327.0" layoutY="407.0" mnemonicParsing="false" text="Linear Regression" />
+                          </children>
+                        </AnchorPane>
+                      </content>
+                    </Tab>
+                    <Tab fx:id="weightTab" text="Weight">
+                      <content>
+                        <AnchorPane id="Content" fx:id="weightAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                          <children>
+                            <LineChart fx:id="weightChart" layoutX="14.0" layoutY="14.0" prefHeight="357.0" prefWidth="704.0">
+                              <xAxis>
+                                <NumberAxis side="BOTTOM" />
+                              </xAxis>
+                              <yAxis>
+                                <NumberAxis side="LEFT" />
+                              </yAxis>
+                            </LineChart>
+                            <ToggleButton id="linearRegToggle" fx:id="weightLinearRegToggle" layoutX="327.0" layoutY="407.0" mnemonicParsing="false" text="Linear Regression" />
+                          </children>
+                        </AnchorPane>
+                      </content>
+                    </Tab>
+                    <Tab fx:id="glucoseLevelsTab" text="Glucose Levels">
+                      <content>
+                        <AnchorPane id="Content" fx:id="glucoseAchorPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                          <children>
+                            <LineChart fx:id="glucoseChart" layoutX="14.0" layoutY="14.0" prefHeight="362.0" prefWidth="704.0">
+                              <xAxis>
+                                <NumberAxis side="BOTTOM" />
+                              </xAxis>
+                              <yAxis>
+                                <NumberAxis side="LEFT" />
+                              </yAxis>
+                            </LineChart>
+                            <ToggleButton id="linearRegToggle" fx:id="glucoseLinearRegToggle" layoutX="316.0" layoutY="407.0" mnemonicParsing="false" text="Linear Regression" />
+                          </children>
+                        </AnchorPane>
+                      </content>
+                    </Tab>
+                  </tabs>
+                </TabPane>
+              </children>
+            </AnchorPane>
+          </content>
+        </Tab>
+      </tabs>
+    </TabPane>
+    <ScrollPane fx:id="patientsScrollPane" layoutX="14.0" layoutY="45.0" prefHeight="428.0" prefWidth="135.0">
+      <content>
+        <AnchorPane id="Content" fx:id="scrollAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="427.0" prefWidth="120.0" />
+      </content>
+    </ScrollPane>
+    <Label fx:id="patientsLabel" layoutX="15.0" layoutY="22.0" text="Patients:" />
+  </children>
+</AnchorPane>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="308.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="mavericksoft.gui.WelcomeController">
+  <children>
+    <Label layoutX="259.0" layoutY="50.0" text="Welcome">
+      <font>
+        <Font size="20.0" />
+      </font>
+    </Label>
+    <Button fx:id="dataButton" layoutX="262.0" layoutY="133.0" mnemonicParsing="false" text="Enter Data" />
+    <Button fx:id="viewMetricsButton" layoutX="256.0" layoutY="185.0" mnemonicParsing="false" text="View Metrics" />
+    <Button fx:id="contactInfoButton" layoutX="236.0" layoutY="232.0" mnemonicParsing="false" text="Update Contact Info" />
+  </children>
+</AnchorPane>

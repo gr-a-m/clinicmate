@@ -431,6 +431,21 @@ class HealthProfessional extends Person {
         return success;
     }
 
+    /**
+     * This method gets the Permissions type of this HealthProfessional. That
+     * depends on a series of boolean values of the object.
+     *
+     * @return The Permissions enum value
+     */
+    public Permissions getPermissions() {
+        if (this.isAdmin())
+            return Permissions.ADMIN;
+        else if (this.isNurse())
+            return Permissions.NURSE;
+        else
+            return Permissions.DOCTOR;
+    }
+
     // The following are a series of getters and setters
     public ArrayList<UUID> getPatientIDs() {
         return this.patientIDs;

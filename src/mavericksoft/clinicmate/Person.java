@@ -6,9 +6,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Date;
 
 /**
@@ -266,6 +264,55 @@ abstract class Person {
             }
         }
     }
+
+    /**
+     * This method checks to see if a Person exists with the provided username.
+     * This works like a generalized exists() function.
+     *
+     * @param userName The username to search for
+     * @return         Whether that username was found
+     */
+    public static boolean userExists(String userName) {
+        Person.checkTables();
+        boolean found = false;
+        Connection conn = null;
+
+        try {
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
+            PreparedStatement st = null;
+
+            st = conn.prepareStatement("SELECT * FROM patients WHERE username=?");
+            st.setString(1, userName);
+            ResultSet rs = st.executeQuery();
+
+            if (rs.next()) {
+                found = true;
+            }
+
+            st = conn.prepareStatement("SELECT * FROM professionals WHERE username=?");
+            st.setString(1, userName);
+            rs = st.executeQuery();
+
+            if (rs.next()) {
+                found = true;
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException sqle) {
+                    System.out.println("The database connection could not be closed");
+                    sqle.printStackTrace();
+                }
+            }
+        }
+
+        return found;
+    }
+
+    public abstract Permissions getPermissions();
 
     // Basic getters and setters for properties of the Person
     public String getFirstName() {

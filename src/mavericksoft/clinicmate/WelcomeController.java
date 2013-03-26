@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mavericksoft.gui;
+package mavericksoft.clinicmate;
 
 import java.awt.event.ActionEvent;
 import java.io.IOException;

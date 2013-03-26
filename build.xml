@@ -33,7 +33,7 @@
         <mkdir dir="${dist}" />
         <jar jarfile="${dist}/ClinicMate-${DSTAMP}.jar" basedir="${build}">
             <manifest>
-                <attribute name="Main-Class" value="mavericksoft.gui.ClinicMateUI" />
+                <attribute name="Main-Class" value="mavericksoft.clinicmate.ClinicMateUI" />
             </manifest>
         </jar>
     </target>

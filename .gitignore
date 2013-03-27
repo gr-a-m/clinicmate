@@ -5,3 +5,5 @@ out/
 build/
 dist/
 ./data/clinicmate.*
+manifest.mf
+nbproject/

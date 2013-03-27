@@ -1,4 +1,5 @@
-<project name="ClinicMate" basedir="." default="dist">
+<project name="ClinicMate" basedir="." default="dist"
+         xmlns:fx="javafx:com.sun.javafx.tools.ant">
 
     <description>
         The main build file for ClinicMate. It should be executable via any
@@ -6,10 +7,25 @@
     </description>
 
     <!-- Global Properties for the Build -->
+    <property environment="env" />
     <property name="src" location="src/" />
     <property name="build" location="build/" />
     <property name="dist" location="dist/" />
     <property name="lib" location="lib/" />
+    <path id="compile.classpath">
+        <pathelement location="${lib}" />
+        <pathelement location="${src}" />
+        <pathelement location="${java.home}/lib/jfxrt.jar" />
+    </path>
+
+    <taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
+             uri="javafx:com.sun.javafx.tools.ant"
+             classpath="${java.library.path}/ant-javafx.jar"/>
+
+    <fx:application name="ClinicMate"
+                    id="appTarget"
+                    mainClass="mavericksoft.clinicmate.ClinicMateUI" />
+
 
     <!-- This initializes a build directory for compiled files -->
     <target name="init">
@@ -21,22 +37,23 @@
     <target name="compile" depends="init">
         <javac srcdir="${src}" destdir="${build}">
             <!-- Set the classpath for the build -->
-            <classpath>
-                <pathelement location="${lib}" />
-                <pathelement location="${src}" />
-                <pathelement location="${java.home}/lib/jfxrt.jar" />
-            </classpath>
+            <classpath refid="compile.classpath" />
         </javac>
     </target>
 
     <!-- This creates a JAR file for the compiles srcs -->
     <target name="dist" depends="compile">
         <mkdir dir="${dist}" />
-        <jar jarfile="${dist}/ClinicMate-${DSTAMP}.jar" basedir="${build}">
+        <fx:jar destfile="${dist}/ClinicMate-${DSTAMP}.jar">
+            <fx:application refid="appTarget" />
             <manifest>
                 <attribute name="Main-Class" value="mavericksoft.clinicmate.ClinicMateUI" />
             </manifest>
-        </jar>
+            <fileset dir="${build}" />
+            <fileset dir="${src}">
+                <include name="**/*.fxml" />
+            </fileset>
+        </fx:jar>
     </target>
 
     <!-- This cleans up the build and dist directories, removing them -->

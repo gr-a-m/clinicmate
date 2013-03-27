@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="487.0" prefWidth="936.0" xmlns:fx="http://javafx.com/fxml" fx:controller="mavericksoft.gui.DoctorPageController">
+<AnchorPane id="AnchorPane" prefHeight="487.0" prefWidth="936.0" xmlns:fx="http://javafx.com/fxml" fx:controller="mavericksoft.clinicmate.DoctorPageController">
   <children>
     <TabPane fx:id="dataMetricsTabPane" layoutX="159.0" prefHeight="473.0000999999975" prefWidth="777.0" tabClosingPolicy="UNAVAILABLE">
       <tabs>

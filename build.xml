@@ -24,6 +24,7 @@
             <classpath>
                 <pathelement location="${lib}" />
                 <pathelement location="${src}" />
+                <pathelement location="${java.home}/lib/jfxrt.jar" />
             </classpath>
         </javac>
     </target>

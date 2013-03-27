@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="502.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="mavericksoft.gui.PatientInfoController">
+<AnchorPane id="AnchorPane" prefHeight="502.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="mavericksoft.clinicmate.PatientInfoController">
   <children>
     <Label fx:id="contactInfoLabel" layoutX="211.0" layoutY="14.0" text="Contact Information">
       <font>

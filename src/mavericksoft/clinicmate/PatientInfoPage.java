@@ -25,7 +25,7 @@ import javafx.stage.Stage;
  *
  * @author Mark Karlsrud
  */
-public class PatientInfoController implements Initializable
+public class PatientInfoPage implements Initializable
 {
     @FXML
     private Label contactInfoLabel;
@@ -89,6 +89,18 @@ public class PatientInfoController implements Initializable
     private Label invalidLabel5;
     @FXML
     private Label invalidLabel4;
+    @FXML
+    private Label invalidLabel6;
+    @FXML
+    private Label invalidLabel7;
+    @FXML
+    private Label invalidLabel8;
+    @FXML
+    private Label invalidLabel9;
+    @FXML
+    private Label invalidLabel10;
+    @FXML
+    private Label invalidLabel11;
 
     /**
      * Initializes the controller class.
@@ -121,103 +133,114 @@ public class PatientInfoController implements Initializable
         if(firstName.isEmpty())
         {
             noErrors=false;
+            invalidLabel1.setVisible(true);
         }
         else
         {
+            invalidLabel1.setVisible(false);
             //patient.setfirstName(firstName);
         }
         if(lastName.isEmpty())
         {
             noErrors=false;
+            invalidLabel2.setVisible(true);
         }
         else
         {
             //patient.setLastName(lastName);
+            invalidLabel2.setVisible(false);
         }
         if(secondaryPhone.length()!=10 || !isNumber(secondaryPhone))
         {
             //invalid number input
-            invalidLabel2.setVisible(true);
+            invalidLabel5.setVisible(true);
             noErrors=false;
         }
         else
         {
             //valid number input
             //patient.setSecondaryPhoneNumber(secondaryPhone);
-            invalidLabel2.setVisible(false);
+            invalidLabel5.setVisible(false);
         }
         if(primaryPhone.length()!=10 || !isNumber(primaryPhone))
         {
             //invalid number input
-            invalidLabel1.setVisible(true);
+            invalidLabel4.setVisible(true);
             noErrors=false;
         }
         else
         {
             //valid number input
             //patient.setPrimaryPhoneNumber(primaryPhone);
-            invalidLabel1.setVisible(false);
+            invalidLabel4.setVisible(false);
         }
         if(address.isEmpty())
         {
             noErrors=false;
+            invalidLabel3.setVisible(true);
         }
         else
         {
             //patient.setAddress(address);
+            invalidLabel3.setVisible(false);
         }
         if(!email.contains("@") || !email.contains("."))
         {
             //invalid email entry if there is no @ or .
-            invalidLabel3.setVisible(true);
+            invalidLabel6.setVisible(true);
             noErrors=false;
         }
         else
         {
             //patient.setEmail(email);
-            invalidLabel3.setVisible(false);
+            invalidLabel6.setVisible(false);
         }
         if(password.isEmpty())
         {
             noErrors=false;
+            invalidLabel7.setVisible(true);
         }
         else
         {
+            invalidLabel7.setVisible(false);
             //patient.setPassword(password);
         }
         if(insurance.isEmpty())
         {
             noErrors=false;
+            invalidLabel8.setVisible(true);
         }
         else
         {
+            invalidLabel8.setVisible(false);
             //patient.setInsuranceProvider(insurance);
         }
         if(emergencyName.isEmpty())
         {
             noErrors=false;
+            invalidLabel9.setVisible(true);
         }
         else
         {
-            
+            invalidLabel9.setVisible(false);
         }
         if(emergencyPrimary.length()!=10 || !isNumber(emergencyPrimary))
         {
-            invalidLabel4.setVisible(true);
+            invalidLabel10.setVisible(true);
             noErrors=false;
         }
         else
         {
-            invalidLabel4.setVisible(false);
+            invalidLabel10.setVisible(false);
         }
         if(emergencySecondary.length()!=10 || !isNumber(emergencySecondary))
         {
-            invalidLabel5.setVisible(true);
+            invalidLabel11.setVisible(true);
             noErrors=false;
         }
         else
         {
-            invalidLabel5.setVisible(false);
+            invalidLabel11.setVisible(false);
         }
         
         //Only save data if there are no data entry errors
@@ -249,7 +272,8 @@ public class PatientInfoController implements Initializable
     {
         Node node=(Node) event.getSource();
         Stage s=(Stage) node.getScene().getWindow();
-        Parent root = FXMLLoader.load(getClass().getResource("welcome.fxml"));
+        s.setTitle("Welcome");
+        Parent root = FXMLLoader.load(getClass().getResource("patientOptions.fxml"));
         Scene scene = new Scene(root);
         s.setScene(scene);
         s.show();

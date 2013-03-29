@@ -24,7 +24,7 @@ import javafx.scene.layout.AnchorPane;
  *
  * @author Mark Karlsrud
  */
-public class DoctorPageController implements Initializable {
+public class DoctorPage implements Initializable {
     @FXML
     private TabPane dataMetricsTabPane;
     @FXML
@@ -87,6 +87,7 @@ public class DoctorPageController implements Initializable {
     @FXML
     private void save(javafx.event.ActionEvent event) throws IOException
     {
+        System.out.println("Doctor saved info");
         System.out.println(addCommentsArea.getText());
         addCommentsArea.getText();
     }

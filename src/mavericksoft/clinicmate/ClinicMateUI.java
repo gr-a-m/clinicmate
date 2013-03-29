@@ -32,7 +32,7 @@ public class ClinicMateUI extends Application
     {
         try
         {
-            AnchorPane page = (AnchorPane) FXMLLoader.load(ClinicMateUI.class.getResource("login.fxml"));
+            AnchorPane page = (AnchorPane) FXMLLoader.load(ClinicMateUI.class.getResource("loginPage.fxml"));
             Scene scene = new Scene(page);
             primaryStage.setScene(scene);
             primaryStage.setTitle("MaverickSoft's ClinicMate");

@@ -22,7 +22,7 @@ import javafx.stage.Stage;
  *
  * @author Mark Karlsrud
  */
-public class WelcomeController implements Initializable{
+public class PatientOptionsPage implements Initializable{
     @FXML
     private Button dataButton;
     @FXML
@@ -42,25 +42,26 @@ public class WelcomeController implements Initializable{
     @FXML
     private void enterData(javafx.event.ActionEvent event) throws IOException
     {
-        System.out.println("1");
+        changeScene("nursePage.fxml",event,"Nurse Accessibilities");
     }
     
     @FXML
     private void viewMetrics(javafx.event.ActionEvent event) throws IOException
     {
-        changeScene("doctorPage.fxml",event);
+        changeScene("doctorPage.fxml",event,"Doctor Accessibilities");
     }
 
     @FXML
     private void updateContactInfo(javafx.event.ActionEvent event) throws IOException
     {
-        changeScene("patientInfo.fxml",event);
+        changeScene("patientInfo.fxml",event,"Contact Information");
     }
     
-    public void changeScene(String fxml, javafx.event.ActionEvent event) throws IOException
+    public void changeScene(String fxml, javafx.event.ActionEvent event, String title) throws IOException
     {
         Node node=(Node) event.getSource();
         Stage s=(Stage) node.getScene().getWindow();
+        s.setTitle(title);
         Parent root = FXMLLoader.load(getClass().getResource(fxml));
         Scene scene = new Scene(root);
         s.setScene(scene);

@@ -18,17 +18,12 @@
         <pathelement location="${java.home}/lib/jfxrt.jar" />
     </path>
 
-    <taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
-             uri="javafx:com.sun.javafx.tools.ant"
-             classpath="${java.library.path}/ant-javafx.jar"/>
-
-    <fx:application name="ClinicMate"
-                    id="appTarget"
-                    mainClass="mavericksoft.clinicmate.ClinicMateUI" />
-
-
     <!-- This initializes a build directory for compiled files -->
     <target name="init">
+        <!-- MAKE SURE THAT JAVA_HOME POINTS TO A JAVA JDK DIRECTORY > 1.7_6 -->
+        <taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
+                 uri="javafx:com.sun.javafx.tools.ant"
+                 classpath=".:${env.JAVA_HOME}/lib/ant-javafx.jar"/>
         <tstamp />
         <mkdir dir="${build}" />
     </target>
@@ -45,7 +40,7 @@
     <target name="dist" depends="compile">
         <mkdir dir="${dist}" />
         <fx:jar destfile="${dist}/ClinicMate-${DSTAMP}.jar">
-            <fx:application refid="appTarget" />
+            <fx:application name="ClinicMate" mainClass="mavericksoft.clinicmate.ClinicMateUI" />
             <manifest>
                 <attribute name="Main-Class" value="mavericksoft.clinicmate.ClinicMateUI" />
             </manifest>

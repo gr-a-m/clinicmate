@@ -312,7 +312,61 @@ abstract class Person {
         return found;
     }
 
-    public abstract Permissions getPermissions();
+    /**
+     * This method is used to get the permissions of a Person based on their
+     * username. This is needed to find out what type of Person someone is
+     * before instantiating them.
+     *
+     * @param username The Person's username
+     * @return         The Permissions associated with that Person
+     */
+    public static Permissions getPermissions(String username) {
+        Person.checkTables();
+        Connection conn = null;
+
+        try {
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
+            PreparedStatement st = null;
+
+            st = conn.prepareStatement("SELECT * FROM patients WHERE username=?");
+            st.setString(1, username);
+            ResultSet rs = st.executeQuery();
+
+            // If this person is found in the patient database, they're a patient
+            if (rs.next()) {
+                return Permissions.PATIENT;
+            }
+
+            st = conn.prepareStatement("SELECT * FROM professionals WHERE username=?");
+            st.setString(1, username);
+            rs = st.executeQuery();
+
+            // If this person is found in the pro db, they are one of three things
+            if (rs.next()) {
+                if (rs.getBoolean("nurse")) {
+                    return Permissions.NURSE;
+                } else if (rs.getBoolean("doctor")) {
+                    return Permissions.DOCTOR;
+                } else if (rs.getBoolean("admin")) {
+                    return Permissions.ADMIN;
+                }
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException sqle) {
+                    System.out.println("The database connection could not be closed");
+                    sqle.printStackTrace();
+                }
+            }
+        }
+
+        // If we reach this point, the person wasn't found and has no permissions
+        return null;
+    }
 
     // Basic getters and setters for properties of the Person
     public String getFirstName() {

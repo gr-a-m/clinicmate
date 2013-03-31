@@ -470,16 +470,6 @@ class Patient extends Person {
         return records.toArray(new HealthRecord[0]);
     }
 
-    /**
-     * The implementation for a Patient object is very simple - the only
-     * permissions a Patient has is Permissions.PATIENT
-     *
-     * @return The Permissions of the Patient
-     */
-    public Permissions getPermissions() {
-        return Permissions.PATIENT;
-    }
-
     // A series of getters and setters
     public String getGender() {
         return gender;

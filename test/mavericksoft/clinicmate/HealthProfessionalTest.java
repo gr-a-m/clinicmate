@@ -51,6 +51,25 @@ public class HealthProfessionalTest {
     }
 
     /**
+     * This method tests that the Permissions methods of Person and
+     * HealthProfessional. It also serves as an example of how to interact with
+     * the permissions of people.
+     */
+    @Test
+    public void testPermissions() {
+        pro1.save();
+        pro2.save();
+        assert(pro1.exists() && pro2.exists());
+        assert(pro1.isNurse());
+        assert(Person.getPermissions("pro1") == Permissions.NURSE);
+        assert(!pro2.isAdmin() && !pro2.isNurse());
+        assert(Person.getPermissions("pro2") == Permissions.DOCTOR);
+        assert(Person.getPermissions("pro3") == null);
+        pro1.delete();
+        assert(Person.getPermissions("pro1") == null);
+    }
+
+    /**
      * This method tests the reset password utility of the HealthProfessional
      */
     @Test

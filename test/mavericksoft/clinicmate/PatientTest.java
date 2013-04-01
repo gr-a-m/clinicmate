@@ -48,6 +48,18 @@ public class PatientTest {
     }
 
     /**
+     * This test makes sure that Permissions work correctly for the Patient.
+     */
+    @Test
+    public void testPermissions() {
+        test1.save();
+        test2.save();
+        assert (test1.exists() && test2.exists());
+        assert (Person.getPermissions("test1") == Permissions.PATIENT);
+        assert (Person.getPermissions("fake") == null);
+    }
+
+    /**
      * The patient shouldn't exist until it's saved and should cease existing
      * after deletion.
      */

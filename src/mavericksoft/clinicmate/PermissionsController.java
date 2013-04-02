@@ -16,8 +16,6 @@ package mavericksoft.clinicmate;
 public class PermissionsController 
 {
 	private static Permissions permission;
-	private HealthProfessional hp;
-	private Patient p;
 	private Person currentUser;
 	private static PermissionsController instance;
 	
@@ -32,7 +30,7 @@ public class PermissionsController
 			return instance;
 	}
 
-	// return a true if a username and password combination results in a successful login
+	// return a true if a username and password combination results in a successful login. Set current user.
 	public boolean logon(String userName, String password) throws NonexistentRecordException
 	{
 		boolean logged = false;
@@ -45,6 +43,14 @@ public class PermissionsController
 			// set current permissions of user logged in
 			permission = Person.getPermissions(userName);
 		}
+		if(permission == Permissions.ADMIN || permission == Permissions.DOCTOR || permission == Permissions.NURSE)
+		{
+			currentUser = HealthProfessional.getByUsername(userName);
+		}
+		else if(permission == Permissions.PATIENT)
+		{
+			currentUser = Patient.getByUsername(userName);
+		}
 		
 		return logged;
 		
@@ -54,5 +60,11 @@ public class PermissionsController
 	public Permissions currentUserPermissions()
 	{
 		return permission;
+	}
+	
+	// Return current user logged into the system.
+	public Person getCurrentUser()
+	{
+		return currentUser;
 	}
 }

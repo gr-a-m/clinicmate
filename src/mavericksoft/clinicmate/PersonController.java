@@ -38,7 +38,7 @@ public class PersonController
 	{
 		boolean created = false;
 		// Check if current user is granted access to create a new patient record
-		if((PermissionsController.getInstance()).currentUserPermissions()==Permissions.ADMIN || (PermissionsController.getInstance()).currentUserPermissions()==Permissions.NURSE || (PermissionsController.getInstance()).currentUserPermissions()==Permissions.DOCTOR)
+		if((PermissionsController.getInstance()).currentUserPermissions()==Permissions.ADMIN || (PermissionsController.getInstance()).currentUserPermissions()==Permissions.DOCTOR)
 		{
 			Patient newPatient = new Patient(username, firstName, lastName, password, gender, address, insuranceProvider, primaryPhone, secondaryPhone, dob);
 			created = newPatient.save();
@@ -50,7 +50,7 @@ public class PersonController
 	public boolean createNurseOrDoctor(String username, String firstName, String lastName, String password, boolean admin, boolean nurse, boolean doctor)
 	{
 		boolean created = false;
-		// Allow Nurse or Doctor to be created if current user logged in is an admin
+		// Allow Nurse or Doctor to be created if current user logged in is an Admin
 		if((PermissionsController.getInstance()).currentUserPermissions() == Permissions.ADMIN)
 		{
 			HealthProfessional healthprof = new HealthProfessional(username, firstName, lastName, password, admin, nurse, doctor);
@@ -61,53 +61,60 @@ public class PersonController
 	
 	// Find HealthProfessional using static getById method in HealthProfessional 
 	// class and add patient to the HealthProfessional's patient list if they exist
-	public boolean addPatient(UUID employeeID, UUID patientID)
+	public boolean addPatient(UUID employeeID, UUID patientID) throws NonexistentRecordException
 	{
 		boolean added = false;
-		try {
-			hp = HealthProfessional.getById(employeeID);
-		} catch (NonexistentRecordException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if(hp.exists())
+		
+		// Allow an Admin or Doctor to add a Patient to an employee's list
+		if((PermissionsController.getInstance()).currentUserPermissions() == Permissions.ADMIN || (PermissionsController.getInstance()).currentUserPermissions() == Permissions.DOCTOR)
 		{
-			added = hp.addPatient(patientID);
+			hp = HealthProfessional.getById(employeeID);
+			if(hp.exists())
+			{
+				added = hp.addPatient(patientID);
+			}
 		}
 		return added;
 	}
 	
-	// Delete a specified Patient from database using 
-	public boolean deletePatient(UUID patientID)
+	// Allow a Nurse or Doctor to delete a Patient from database if they have
+	// access to the specified Patient.
+	public boolean deletePatient(UUID patientID) throws NonexistentRecordException
 	{
 		boolean deleted = false;
-		try {
-			patient = Patient.getById(patientID);
-		} catch (NonexistentRecordException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if(patient.exists())
+		if((PermissionsController.getInstance()).currentUserPermissions() == Permissions.NURSE || (PermissionsController.getInstance()).currentUserPermissions() == Permissions.DOCTOR)
 		{
-			deleted = patient.delete();
+			/*
+			 * Must check if patient is on the current user's patient list here. Need to implement getAccessList() method in Person to determine 
+			 * which patient IDs the current Person object may access.
+			 */
+			patient = Patient.getById(patientID);
+			if(patient.exists())
+			{
+				deleted = patient.delete();
+			}
 		}
 		return deleted;
 	}
 	
-	// Delete a specified employee from the database using delete() function
-	// in HealthProfessional class.
+	// Allow an Admin to delete a specified employee from the database using delete() function
+	// in HealthProfessional class. 
 	public boolean deleteEmployee(UUID employeeID) throws NonexistentRecordException
 	{
 		boolean deleted = false;
-		hp = HealthProfessional.getById(employeeID);
-		if(hp.exists())
+		// Check if current permissions are set to ADMIN
+		if((PermissionsController.getInstance()).currentUserPermissions() == Permissions.ADMIN)
 		{
-			deleted = hp.delete();
+			hp = HealthProfessional.getById(employeeID);
+			if(hp.exists())
+			{
+				deleted = hp.delete();
+			}
 		}
 		return deleted;
 	}
 	
-	// Check if a username and password pair is valid
+	// Check if a username and password pair is valid. Return true if valid, false otherwise.
 	public boolean checkPassword(String userName, String password) throws NonexistentRecordException
 	{
 		boolean valid = false;

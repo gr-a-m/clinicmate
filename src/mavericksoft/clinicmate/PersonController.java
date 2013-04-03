@@ -65,8 +65,8 @@ public class PersonController
 	{
 		boolean added = false;
 		
-		// Allow an Admin or Doctor to add a Patient to an employee's list
-		if((PermissionsController.getInstance()).currentUserPermissions() == Permissions.ADMIN || (PermissionsController.getInstance()).currentUserPermissions() == Permissions.DOCTOR)
+		// Allow a Doctor to add a Patient to an employee's list
+		if((PermissionsController.getInstance()).currentUserPermissions() == Permissions.DOCTOR)
 		{
 			hp = HealthProfessional.getById(employeeID);
 			if(hp.exists())
@@ -79,19 +79,23 @@ public class PersonController
 	
 	// Allow a Nurse or Doctor to delete a Patient from database if they have
 	// access to the specified Patient.
+	// Return true if successfully deleted, false otherwise.
 	public boolean deletePatient(UUID patientID) throws NonexistentRecordException
 	{
 		boolean deleted = false;
 		if((PermissionsController.getInstance()).currentUserPermissions() == Permissions.NURSE || (PermissionsController.getInstance()).currentUserPermissions() == Permissions.DOCTOR)
 		{
 			/*
-			 * Must check if patient is on the current user's patient list here. Need to implement getAccessList() method in Person to determine 
-			 * which patient IDs the current Person object may access.
+			 * Check if patient is on the current user's patient list here.
 			 */
-			patient = Patient.getById(patientID);
-			if(patient.exists())
+			HealthProfessional currentProfessional = (HealthProfessional) PermissionsController.getInstance().getCurrentUser();
+			if(currentProfessional.getPatientIDs().contains(patientID))
 			{
-				deleted = patient.delete();
+				patient = Patient.getById(patientID);
+				if(patient.exists())
+				{
+					deleted = patient.delete();
+				}
 			}
 		}
 		return deleted;
@@ -99,6 +103,7 @@ public class PersonController
 	
 	// Allow an Admin to delete a specified employee from the database using delete()
 	// function in HealthProfessional class. 
+	// Return true if successfully deleted, false otherwise.
 	public boolean deleteEmployee(UUID employeeID) throws NonexistentRecordException
 	{
 		boolean deleted = false;

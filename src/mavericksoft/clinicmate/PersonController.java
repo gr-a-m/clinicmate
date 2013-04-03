@@ -119,22 +119,5 @@ public class PersonController
 		return deleted;
 	}
 	
-	// Check if a username and password pair is valid. Return true if valid, false otherwise.
-	public boolean checkPassword(String userName, String password) throws NonexistentRecordException
-	{
-		boolean valid = false;
-		permission = Person.getPermissions(userName);
-		if(permission == Permissions.ADMIN || permission == Permissions.DOCTOR || permission == Permissions.NURSE)
-		{
-			hp = HealthProfessional.getByUsername(userName);
-			valid = hp.checkPassword(password);
-		}
-		else if(permission == Permissions.PATIENT)
-		{
-			patient = Patient.getByUsername(userName);
-			valid = patient.checkPassword(password);
-		}
-		
-		return valid;
-	}
 }
+

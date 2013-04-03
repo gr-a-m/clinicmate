@@ -33,7 +33,6 @@ public class HealthProfessionalTest {
     public void setUp() throws Exception {
         // Load the H2 SQL driver
         Class.forName("org.h2.Driver");
-
         Person.checkTables();
 
         this.pat1 = new Patient("test1", "test" , "1", "password", "male",

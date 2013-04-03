@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="mavericksoft.clinicmate.NewPatientController">
+  <children>
+    <Label id="nameField" fx:id="firstNameLabel" layoutX="41.0" layoutY="49.0" text="First Name">
+      <font>
+        <Font size="13.0" fx:id="x1" />
+      </font>
+    </Label>
+    <Label fx:id="genderLabel" font="$x1" layoutX="41.0" layoutY="88.0" text="Gender" />
+    <Label fx:id="dateOfBirthLabel" font="$x1" layoutX="41.0" layoutY="110.0" text="Date of Birth" />
+    <Label fx:id="addressLabel" font="$x1" layoutX="41.0" layoutY="154.0" text="Address" />
+    <Label fx:id="emailLabel" font="$x1" layoutX="41.0" layoutY="220.0" text="Email Address" />
+    <Label fx:id="secondaryPhoneNumberLabel" font="$x1" layoutX="41.0" layoutY="198.0" text="Secondary Phone Number" />
+    <Label fx:id="primaryPhoneNumberLabel" font="$x1" layoutX="41.0" layoutY="176.0" text="Primary Phone Number" />
+    <Label fx:id="insuranceProviderLabel" font="$x1" layoutX="41.0" layoutY="132.0" text="Insurance Provider" />
+    <Label fx:id="emergencyContactPrimaryPhoneLabel" font="$x1" layoutX="41.0" layoutY="264.0" text="Emergency Contact Primary Phone" />
+    <Label fx:id="doctorLabel" font="$x1" layoutX="41.0" layoutY="330.0" text="Doctor" />
+    <Label fx:id="passwordLabel" font="$x1" layoutX="41.0" layoutY="308.0" text="Patient Login Password" />
+    <Label fx:id="EmergencyContactSecondaryPhoneLabel" font="$x1" layoutX="41.0" layoutY="286.0" text="Emergency Contact Secondary Phone" />
+    <Label fx:id="emergencyContactLabel" font="$x1" layoutX="41.0" layoutY="241.0" text="Emergency Contact" />
+    <Label id="nameField" fx:id="lastNameLabel" font="$x1" layoutX="41.0" layoutY="68.0" text="Last Name" />
+    <TextField fx:id="firstNameField" layoutX="300.0" layoutY="41.0" prefWidth="200.0" />
+    <TextField fx:id="lastNameField" layoutX="300.0" layoutY="62.0" prefWidth="200.0" />
+    <TextField fx:id="genderField" layoutX="300.0" layoutY="83.0" prefWidth="200.0" />
+    <TextField fx:id="insuranceField" layoutX="300.0" layoutY="126.0" prefWidth="200.0" />
+    <TextField fx:id="addressField" layoutX="300.0" layoutY="148.0" prefWidth="200.0" />
+    <TextField fx:id="primaryPhoneField" layoutX="300.0" layoutY="170.0" prefWidth="200.0" />
+    <TextField fx:id="SecondaryPhoneField" layoutX="300.0" layoutY="192.0" prefWidth="200.0" />
+    <TextField fx:id="emialField" layoutX="300.0" layoutY="214.0" prefWidth="200.0" />
+    <TextField fx:id="emergencyContactField" layoutX="300.0" layoutY="236.0" prefWidth="200.0" />
+    <TextField id="emergencyContactPrimaryPhoneFI" fx:id="emergencyContactPrimaryPhoneField" layoutX="300.0" layoutY="258.0" prefWidth="200.0" />
+    <TextField fx:id="emergencyContactSecondaryPhoneField" layoutX="300.0" layoutY="280.0" prefWidth="200.0" />
+    <TextField fx:id="passwordField" layoutX="300.0" layoutY="302.0" prefWidth="200.0" />
+    <MenuButton fx:id="monthMenu" layoutX="300.0" layoutY="105.0" mnemonicParsing="false" text="Month">
+      <items>
+        <MenuItem mnemonicParsing="false" text="Action 1" />
+        <MenuItem mnemonicParsing="false" text="Action 2" />
+      </items>
+    </MenuButton>
+    <MenuButton id="monthMenu" fx:id="dayMenu" layoutX="377.0" layoutY="105.0" mnemonicParsing="false" text="Day">
+      <items>
+        <MenuItem mnemonicParsing="false" text="Action 1" />
+        <MenuItem mnemonicParsing="false" text="Action 2" />
+      </items>
+    </MenuButton>
+    <MenuButton id="monthMenu" fx:id="yearMenu" layoutX="438.0" layoutY="105.0" mnemonicParsing="false" text="Year">
+      <items>
+        <MenuItem mnemonicParsing="false" text="Action 1" />
+        <MenuItem mnemonicParsing="false" text="Action 2" />
+      </items>
+    </MenuButton>
+    <MenuButton fx:id="doctorField" layoutX="300.0" layoutY="324.0" mnemonicParsing="false" prefWidth="200.0" text="Doctor">
+      <items>
+        <MenuItem mnemonicParsing="false" text="Action 1" />
+        <MenuItem mnemonicParsing="false" text="Action 2" />
+      </items>
+    </MenuButton>
+    <Button fx:id="doneButton" layoutX="256.0" layoutY="365.0" mnemonicParsing="false" text="Done" />
+  </children>
+</AnchorPane>

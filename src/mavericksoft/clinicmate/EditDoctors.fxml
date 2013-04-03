@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="mavericksoft.clinicmate.EditDoctorsController">
+  <children>
+    <TabPane prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+      <tabs>
+        <Tab fx:id="editDoctorsTab" text="Edit Doctors">
+          <content>
+            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="369.0" prefWidth="600.0">
+              <children>
+                <MenuButton fx:id="doctorMenu" layoutX="68.0" layoutY="57.0" mnemonicParsing="false" text="Doctor">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Action 1" />
+                    <MenuItem mnemonicParsing="false" text="Action 2" />
+                  </items>
+                </MenuButton>
+                <Button fx:id="deleteDoctorButton" layoutX="63.0" layoutY="163.0" mnemonicParsing="false" text="Delete Doctor" />
+                <Label fx:id="doctorPatientsLabel" layoutX="378.0" layoutY="41.0" text="Patients">
+                  <font>
+                    <Font size="13.0" fx:id="x1" />
+                  </font>
+                </Label>
+                <TextArea fx:id="doctorPatientsArea" layoutX="309.0" layoutY="78.0" prefWidth="200.0" wrapText="true" />
+              </children>
+            </AnchorPane>
+          </content>
+        </Tab>
+        <Tab fx:id="addDoctorTab" text="Add Doctor">
+          <content>
+            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <children>
+                <Button id="Create" fx:id="doctorCreateButton" layoutX="258.0" layoutY="297.0" mnemonicParsing="false" text="Create" />
+                <Label id="nameLabel" fx:id="doctorNameLabel" font="$x1" layoutX="83.0" layoutY="103.0" text="Name" />
+                <Label id="nameLabel" fx:id="doctorPasswordLabel" font="$x1" layoutX="83.0" layoutY="145.0" text="Doctor Login Password" />
+                <TextField id="nameField" fx:id="doctorNameField" layoutX="244.0" layoutY="103.0" prefWidth="200.0" />
+                <TextField id="passwordField" fx:id="doctorPasswordField" layoutX="244.0" layoutY="143.0" prefWidth="200.0" />
+              </children>
+            </AnchorPane>
+          </content>
+        </Tab>
+        <Tab fx:id="editNursesTasb" text="Edit Nurses">
+          <content>
+            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="369.0" prefWidth="600.0">
+              <children>
+                <MenuButton id="doctorMenu" fx:id="nursesMenu" layoutX="68.0" layoutY="57.0" mnemonicParsing="false" text="Nurse">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Action 1" />
+                    <MenuItem mnemonicParsing="false" text="Action 2" />
+                  </items>
+                </MenuButton>
+                <Button id="deleteDoctorButton" fx:id="deleteNurseMenu" layoutX="63.0" layoutY="164.0" mnemonicParsing="false" text="Delete Nurse" />
+                <Label id="doctorPatientsLabel" fx:id="nursePatientsLabel" font="$x1" layoutX="378.0" layoutY="41.0" text="Patients" />
+                <TextArea id="doctorPatientsArea" fx:id="nursePatientsArea" layoutX="309.0" layoutY="78.0" prefWidth="200.0" wrapText="true" />
+              </children>
+            </AnchorPane>
+          </content>
+        </Tab>
+        <Tab fx:id="addNurseTab" text="Add Nurse">
+          <content>
+            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <children>
+                <Button id="Create" fx:id="createNurseButton" layoutX="258.0" layoutY="297.0" mnemonicParsing="false" text="Create" />
+                <Label id="nameLabel" fx:id="nurseNameLabel" font="$x1" layoutX="83.0" layoutY="103.0" text="Name" />
+                <Label id="nameLabel" fx:id="nursePasswordLabel" font="$x1" layoutX="83.0" layoutY="144.0" text="Nurse Login Password" />
+                <TextField id="nameField" fx:id="nurseNameField" layoutX="244.0" layoutY="103.0" prefWidth="200.0" />
+                <TextField id="passwordField" fx:id="nursePasswordField" layoutX="244.0" layoutY="141.0" prefWidth="200.0" />
+              </children>
+            </AnchorPane>
+          </content>
+        </Tab>
+      </tabs>
+    </TabPane>
+  </children>
+</AnchorPane>

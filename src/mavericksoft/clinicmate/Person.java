@@ -348,7 +348,6 @@ abstract class Person {
      * @return         The Permissions associated with that Person
      */
     public static Permissions getPermissions(String username) {
-        Person.checkTables();
         Connection conn = null;
 
         try {

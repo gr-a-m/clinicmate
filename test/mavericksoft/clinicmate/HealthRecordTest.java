@@ -19,6 +19,7 @@ public class HealthRecordTest {
 
     @Before
     public void setUp() throws Exception {
+        Person.checkTables();
         this.pat1 = new Patient("test2", "test" , "2", "password2", "female",
                 "111 E St", "insuroco", "5555555555", "1111111111", new Date());
 

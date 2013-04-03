@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="mavericksoft.clinicmate.DailyPatientDataController">
+  <children>
+    <TextField fx:id="dateField" layoutX="304.0" layoutY="72.0" prefWidth="200.0" />
+    <TextField fx:id="bloodPressureField" layoutX="304.0" layoutY="100.0" prefWidth="200.0" />
+    <TextField fx:id="glucoseField" layoutX="304.0" layoutY="128.0" prefWidth="200.0" />
+    <TextField fx:id="weightField" layoutX="304.0" layoutY="157.0" prefWidth="200.0" />
+    <Label fx:id="dateLabel" layoutX="100.0" layoutY="76.0" prefWidth="147.0" text="Date (MM/DD/YYYY)" />
+    <Label id="dateLabel" fx:id="bloodPressureLabel" layoutX="100.0" layoutY="103.0" prefWidth="182.0" text="Blood Pressure (Systolic/Diastolic)" />
+    <Label id="dateLabel" fx:id="glucoseLabel" layoutX="100.0" layoutY="131.0" prefWidth="147.0" text="Glucose Level (mg/dL)" />
+    <Label id="dateLabel" fx:id="weightLabel" layoutX="100.0" layoutY="159.0" prefWidth="147.0" text="Weight" />
+    <Label fx:id="title" layoutX="55.0" layoutY="31.0" text="Enter the date, and your health information for the day">
+      <font>
+        <Font size="13.0" />
+      </font>
+    </Label>
+    <TextArea fx:id="observationArea" layoutX="43.0" layoutY="223.0" prefHeight="128.0" prefWidth="461.0" wrapText="true" />
+    <Label fx:id="observationsLabel" layoutX="55.0" layoutY="200.0" text="Observations:" />
+    <Button fx:id="doneButton" layoutX="272.0" layoutY="358.0" mnemonicParsing="false" text="Done" />
+  </children>
+</AnchorPane>

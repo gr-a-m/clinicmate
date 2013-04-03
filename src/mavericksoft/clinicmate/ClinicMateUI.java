@@ -24,6 +24,7 @@ public class ClinicMateUI extends Application
      */
     public static void main(String[] args)
     {
+        Person.checkTables();
         Application.launch(ClinicMateUI.class, (java.lang.String[])null);
     }
 

@@ -103,9 +103,6 @@ class Patient extends Person {
      * @return This indicates whether the save was successful
      */
     public boolean save() {
-        // Make sure the tables are initialized
-        Person.checkTables();
-
         Connection conn = null;
         boolean success = false;
 
@@ -185,9 +182,6 @@ class Patient extends Person {
      * @return This indicates whether the delete was successful
      */
     public boolean delete() {
-        // Make sure the tables are initialized
-        Person.checkTables();
-
         Connection conn = null;
         boolean success = false;
 
@@ -230,8 +224,6 @@ class Patient extends Person {
      * @return Whether the object is found in the database
      */
      public boolean exists() {
-        Person.checkTables();
-
         Connection conn = null;
         boolean success = false;
 
@@ -275,9 +267,6 @@ class Patient extends Person {
      *           database record.
      */
     public static Patient getById(UUID id) throws NonexistentRecordException {
-        // Make sure the tables are initialized
-        Person.checkTables();
-
         Connection conn = null;
         Patient value = null;
 
@@ -341,9 +330,6 @@ class Patient extends Person {
      * @throws NonexistentRecordException
      */
     public static Patient getByUsername(String username) throws NonexistentRecordException {
-        // Make sure the tables are initialized for the personal records
-        Person.checkTables();
-
         Connection conn = null;
         Patient value = null;
 
@@ -404,8 +390,6 @@ class Patient extends Person {
      * @return An array of HealthRecords for this patient
      */
     public HealthRecord[] getHealthRecords() {
-        Person.checkTables();
-
         Connection conn = null;
         LinkedList<HealthRecord> records = new LinkedList<HealthRecord>();
         HashMap<UUID, ArrayList<String>> comments = new HashMap<UUID, ArrayList<String>>();

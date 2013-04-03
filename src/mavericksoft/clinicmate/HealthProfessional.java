@@ -85,9 +85,6 @@ class HealthProfessional extends Person {
      * @return Whether the save was successful
      */
     boolean save() {
-        // Make sure tables are initialized
-        Person.checkTables();
-
         Connection conn = null;
         boolean success = false;
 
@@ -197,8 +194,6 @@ class HealthProfessional extends Person {
      * @return Whether the object is found in the database
      */
     public boolean exists() {
-        Person.checkTables();
-
         Connection conn = null;
         boolean success = false;
 
@@ -260,8 +255,6 @@ class HealthProfessional extends Person {
      * @throws NonexistentRecordException
      */
     public static HealthProfessional getById(UUID id) throws NonexistentRecordException {
-        Person.checkTables();
-
         Connection conn = null;
         HealthProfessional value = null;
 
@@ -324,8 +317,6 @@ class HealthProfessional extends Person {
      * @throws NonexistentRecordException
      */
     public static HealthProfessional getByUsername(String username) throws NonexistentRecordException {
-        Person.checkTables();
-
         Connection conn = null;
         HealthProfessional value = null;
 
@@ -400,8 +391,6 @@ class HealthProfessional extends Person {
      * @return   Whether the addition was successful
      */
     public boolean addPatient(UUID id) {
-        Person.checkTables();
-
         Connection conn = null;
         boolean success = false;
 

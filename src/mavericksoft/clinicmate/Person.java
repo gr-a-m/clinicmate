@@ -185,6 +185,7 @@ abstract class Person {
      */
     protected static void checkTables() {
         File dbFile = new File("./data/clinicmate");
+
         // If the database file doesn't exist, make it
         if (!dbFile.exists()) {
             Connection conn = null;
@@ -249,6 +250,32 @@ abstract class Person {
 
                 // Make the comments table
                 conn.createStatement().execute(createString);
+
+                // If the users are empty, make a default admin
+                createString = "SELECT count(*) FROM professionals";
+                boolean empty = false;
+
+                ResultSet rs = conn.createStatement().executeQuery(createString);
+                if (rs.next()) {
+                    if (rs.getInt("count(*)") == 0) {
+                        empty = true;
+                    }
+                }
+
+                // If there are no people in the database (it's new), create a
+                // default admin
+                if (empty) {
+                    HealthProfessional defaultAdmin = new HealthProfessional(
+                            "admin",
+                            "default",
+                            "admin",
+                            "admin",
+                            true,
+                            false,
+                            false
+                    );
+                    defaultAdmin.save();
+                }
             } catch (SQLException sqle) {
                 System.out.println("Failed to check database tables.");
                 sqle.printStackTrace();

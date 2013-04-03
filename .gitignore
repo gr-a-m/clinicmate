@@ -4,6 +4,7 @@
 out/
 build/
 dist/
+data/
 ./data/clinicmate.*
 manifest.mf
 nbproject/

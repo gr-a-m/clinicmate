@@ -97,7 +97,6 @@ class HealthRecord {
     public boolean save() {
         Connection conn = null;
         boolean success = false;
-        Person.checkTables();
 
         try {
             conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
@@ -180,7 +179,6 @@ class HealthRecord {
     public boolean delete() {
         Connection conn = null;
         boolean success = false;
-        Person.checkTables();
 
         try {
             conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
@@ -226,7 +224,6 @@ class HealthRecord {
     public boolean exists() {
         Connection conn = null;
         boolean found = false;
-        Person.checkTables();
 
         try {
             conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");

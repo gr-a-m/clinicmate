@@ -62,7 +62,7 @@ public class PermissionsController
 		return permission;
 	}
 	
-	// Return current user logged into the system.
+	// Return current user Person object logged into the system.
 	public Person getCurrentUser()
 	{
 		return currentUser;

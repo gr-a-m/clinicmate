@@ -97,8 +97,8 @@ public class PersonController
 		return deleted;
 	}
 	
-	// Allow an Admin to delete a specified employee from the database using delete() function
-	// in HealthProfessional class. 
+	// Allow an Admin to delete a specified employee from the database using delete()
+	// function in HealthProfessional class. 
 	public boolean deleteEmployee(UUID employeeID) throws NonexistentRecordException
 	{
 		boolean deleted = false;

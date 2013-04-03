@@ -35,7 +35,7 @@ public class HealthRecordController
 			return instance;
 	}
 	
-	// Allow nurse or doctor to create a new patient record if the patient is on their patient list.
+	// Allow nurse or doctor to create a new patient record if they have permission to access the patient's records.
 	// Return true if successfully created, false otherwise.
 	public boolean createPatientRecord(UUID patientID, int dia, int sys, Date date, int glucose, int weight, String comment)
 	{

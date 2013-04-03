@@ -42,13 +42,24 @@ public class HealthRecordController
 		boolean created = false;
 		if((PermissionsController.getInstance()).currentUserPermissions() == Permissions.NURSE || (PermissionsController.getInstance()).currentUserPermissions() == Permissions.DOCTOR)
 		{
-			/*
-			 * Must check if patient is on the current user's patient list here. Need to implement getAccessList() method in Person to determine 
-			 * which patient IDs the current Person object may access.
-			 */
-			HealthRecord hr = new HealthRecord(patientID, date, dia, sys, glucose, weight);
-			hr.addComment(comment);
-			created = hr.save();
+
+			HealthProfessional currentProfessional = (HealthProfessional) PermissionsController.getInstance().getCurrentUser();
+			if(currentProfessional.getPatientIDs().contains(patientID))
+			{
+				HealthRecord hr = new HealthRecord(patientID, date, dia, sys, glucose, weight);
+				hr.addComment(comment);
+				created = hr.save();
+			}
+			else if((PermissionsController.getInstance()).currentUserPermissions() == Permissions.PATIENT)
+			{
+				Patient patient = (Patient) PermissionsController.getInstance().getCurrentUser();
+				if(patient.getPatientID().equals(patientID))
+				{
+					HealthRecord hr = new HealthRecord(patientID, date, dia, sys, glucose, weight);
+					hr.addComment(comment);
+					created = hr.save();
+				}
+			}
 		}
 		
 		return created;
@@ -65,16 +76,19 @@ public class HealthRecordController
 			if((PermissionsController.getInstance()).currentUserPermissions() == Permissions.NURSE || (PermissionsController.getInstance()).currentUserPermissions() == Permissions.DOCTOR)
 			{
 				/*
-				 * Must check if patient is on the current user's patient list here. Need to implement getAccessList() method in Person to determine 
-				 * which patient IDs the current Person object may access.
+				 * Check if patient is on the current user's patient list here.
 				 */
-				HealthRecord[] patientRecords = patient.getHealthRecords();
-				for(int i=0; i<patientRecords.length; i++)
+				HealthProfessional currentProfessional = (HealthProfessional) PermissionsController.getInstance().getCurrentUser();
+				if(currentProfessional.getPatientIDs().contains(patientID))
 				{
-					if(patientRecords[i].getRecordID() == recordID)
+					HealthRecord[] patientRecords = patient.getHealthRecords();
+					for(int i=0; i<patientRecords.length; i++)
 					{
-						deleted = patientRecords[i].delete();
-						return deleted;
+						if(patientRecords[i].getRecordID().equals(recordID))
+						{
+							deleted = patientRecords[i].delete();
+							return deleted;
+						}
 					}
 				}
 			}
@@ -85,6 +99,7 @@ public class HealthRecordController
 	
 	// Allow nurse or doctor to update patient's record if they are allowed access to the patient's files. 
 	// Return true if successfully updated, false otherwise.
+	// *Should never be used. Only accessed internally*
 	public boolean updatePatientRecord(UUID recordID, UUID patientID, Date date, int diaBloodPressure, int sysBloodPressure, int glucose, int weight, ArrayList<String> comments, Date createdAt) throws NonexistentRecordException
 	{
 		boolean updated = false;
@@ -93,17 +108,47 @@ public class HealthRecordController
 			//If current logged in user is a nurse or doctor, allow them to update patient record if the patient is on their patient list.
 			if((PermissionsController.getInstance()).currentUserPermissions() == Permissions.NURSE || (PermissionsController.getInstance()).currentUserPermissions() == Permissions.DOCTOR)
 			{
-				/*
-				 * Must check if patient is on the current user's patient list here. Need to implement getAccessList() method in Person to determine 
-				 * which patient IDs the current Person object may access.
-				 */
-				HealthRecord hr = new HealthRecord(recordID, patientID, date, diaBloodPressure, sysBloodPressure, glucose, weight, comments, createdAt);
-				hr.save();
-				updated = true;
+				HealthProfessional currentProfessional = (HealthProfessional) PermissionsController.getInstance().getCurrentUser();
+				if(currentProfessional.getPatientIDs().contains(patientID))
+				{
+					HealthRecord hr = new HealthRecord(recordID, patientID, date, diaBloodPressure, sysBloodPressure, glucose, weight, comments, createdAt);
+					hr.save();
+					updated = true;
+				}
+			}
+			else if((PermissionsController.getInstance()).currentUserPermissions() == Permissions.PATIENT)
+			{
+				Patient patient = (Patient) PermissionsController.getInstance().getCurrentUser();
+				if(patient.getPatientID().equals(patientID))
+				{
+					HealthRecord hr = new HealthRecord(recordID, patientID, date, diaBloodPressure, sysBloodPressure, glucose, weight, comments, createdAt);
+					hr.save();
+					updated = true;
+				}
 			}
 		}
 		
+		
 		return updated;
+	}
+	
+	// Add comment to previously existing patient record
+	public boolean addComment(UUID recordID, String comment)
+	{
+		boolean added = false;
+		
+		if((PermissionsController.getInstance()).currentUserPermissions() == Permissions.NURSE || (PermissionsController.getInstance()).currentUserPermissions() == Permissions.DOCTOR)
+		{
+			HealthProfessional currentProfessional = (HealthProfessional) PermissionsController.getInstance().getCurrentUser();
+			HealthRecord hr = HealthRecord.getById(recordID);
+			if(currentProfessional.getPatientIDs().contains(hr.getPatientID()))
+			{
+				hr.addComment(comment);
+				added = hr.save();
+			}
+		}
+		
+		return added;
 	}
 
 }

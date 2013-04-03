@@ -257,7 +257,7 @@ abstract class Person {
 
                 ResultSet rs = conn.createStatement().executeQuery(createString);
                 if (rs.next()) {
-                    if (rs.getInt(0) == 0) {
+                    if (rs.getInt("count(*)") == 0) {
                         empty = true;
                     }
                 }

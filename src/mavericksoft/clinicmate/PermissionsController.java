@@ -30,26 +30,39 @@ public class PermissionsController
 			return instance;
 	}
 
-	// return a true if a username and password combination results in a successful login. Set current user.
+	// Return a true if a username and password combination results in a successful login. Set current user and permissions.
 	public boolean logon(String userName, String password) throws NonexistentRecordException
 	{
 		boolean logged = false;
 		
-		//if username and password pair is valid, set logged to true and set current user's permissions
-		if((PersonController.getInstance()).checkPassword(userName, password))
-		{
-			logged = true;
-			
-			// set current permissions of user logged in
-			permission = Person.getPermissions(userName);
-		}
+		//if username and password pair is valid, set logged to true and set current user and current user's permissions
+
+		permission = Person.getPermissions(userName);
 		if(permission == Permissions.ADMIN || permission == Permissions.DOCTOR || permission == Permissions.NURSE)
 		{
-			currentUser = HealthProfessional.getByUsername(userName);
+			try
+			{
+				currentUser = HealthProfessional.getByUsername(userName);
+				HealthProfessional hp = HealthProfessional.getByUsername(userName);
+				logged = hp.checkPassword(password);
+			}
+			catch(NonexistentRecordException e)
+			{
+				return false;
+			}
 		}
 		else if(permission == Permissions.PATIENT)
 		{
-			currentUser = Patient.getByUsername(userName);
+			try
+			{
+				currentUser = Patient.getByUsername(userName);
+				Patient patient = Patient.getByUsername(userName);
+				logged = patient.checkPassword(password);
+			}
+			catch(NonexistentRecordException e)
+			{
+				return false;
+			}
 		}
 		
 		return logged;

@@ -252,6 +252,57 @@ class HealthRecord {
         return found;
     }
 
+    public static HealthRecord getById (UUID recordID) {
+        Connection conn = null;
+        HealthRecord result = null;
+
+        try {
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
+
+            ArrayList<String> comments = new ArrayList<String>();
+
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM comments WHERE record_id=?");
+            st.setObject(1, recordID);
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                comments.add(rs.getString("comment"));
+            }
+
+            st = conn.prepareStatement("SELECT * FROM records WHERE record_id=?");
+            st.setObject(1, recordID);
+            rs = st.executeQuery();
+
+            if (rs.next()) {
+                result = new HealthRecord(
+                    (UUID) rs.getObject("patient_id"),
+                    (UUID) rs.getObject("record_id"),
+                    rs.getDate("date"),
+                    rs.getInt("dia_blood_pressure"),
+                    rs.getInt("sys_blood_pressure"),
+                    rs.getInt("glucose"),
+                    rs.getInt("weight"),
+                    comments,
+                    new Date(rs.getTime("created_at").getTime())
+                );
+            }
+        } catch (SQLException sqle) {
+            System.out.println("Failed to check for a record");
+            sqle.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException sqle) {
+                    System.out.println("The database connection could not be closed");
+                    sqle.printStackTrace();
+                }
+            }
+        }
+
+        return result;
+    }
+
     /**
      * This method adds a comment to this record's list of comments.
      *

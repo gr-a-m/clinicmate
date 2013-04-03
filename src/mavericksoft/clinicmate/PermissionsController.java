@@ -35,38 +35,50 @@ public class PermissionsController
 	{
 		boolean logged = false;
 		
-		//if username and password pair is valid, set logged to true and set current user and current user's permissions
-
-		permission = Person.getPermissions(userName);
-		if(permission == Permissions.ADMIN || permission == Permissions.DOCTOR || permission == Permissions.NURSE)
+		// Only allow a new user to log in if the previous user has logged out.
+		if(currentUser == null && permission == null)
 		{
-			try
+			//if username and password pair is valid, set logged to true and set current user and current user's permissions
+	
+			permission = Person.getPermissions(userName);
+			if(permission == Permissions.ADMIN || permission == Permissions.DOCTOR || permission == Permissions.NURSE)
 			{
-				currentUser = HealthProfessional.getByUsername(userName);
-				HealthProfessional hp = HealthProfessional.getByUsername(userName);
-				logged = hp.checkPassword(password);
+				try
+				{
+					currentUser = HealthProfessional.getByUsername(userName);
+					HealthProfessional hp = HealthProfessional.getByUsername(userName);
+					logged = hp.checkPassword(password);
+				}
+				catch(NonexistentRecordException e)
+				{
+					return false;
+				}
 			}
-			catch(NonexistentRecordException e)
+			else if(permission == Permissions.PATIENT)
 			{
-				return false;
+				try
+				{
+					currentUser = Patient.getByUsername(userName);
+					Patient patient = Patient.getByUsername(userName);
+					logged = patient.checkPassword(password);
+				}
+				catch(NonexistentRecordException e)
+				{
+					return false;
+				}
 			}
-		}
-		else if(permission == Permissions.PATIENT)
-		{
-			try
-			{
-				currentUser = Patient.getByUsername(userName);
-				Patient patient = Patient.getByUsername(userName);
-				logged = patient.checkPassword(password);
-			}
-			catch(NonexistentRecordException e)
-			{
-				return false;
-			}
-		}
+		} // end of logging new user in
 		
 		return logged;
 		
+	}
+	
+	
+	// Log the current user out of the system by setting permissions and current user to NULL
+	public void logout()
+	{
+		currentUser = null;
+		permission = null;
 	}
 	
 	// Return permissions of the current user logged in. Permissions were set when the user logged in.

@@ -22,8 +22,9 @@ public class ClinicMateUI extends Application
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args)
+    public static void main(String[] args) throws ClassNotFoundException
     {
+        Class.forName("org.h2.Driver");
         Person.checkTables();
         Application.launch(ClinicMateUI.class, (java.lang.String[])null);
     }

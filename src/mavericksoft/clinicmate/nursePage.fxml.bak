@@ -26,6 +26,5 @@
     <Label fx:id="weightLabel" layoutX="175.0" layoutY="161.0" text="Weight (lbs)" />
     <Label fx:id="observationsLabel" layoutX="175.0" layoutY="192.0" text="Observations/Notes:" />
     <Button id="addPatient" fx:id="addPatientButton" layoutX="53.0" layoutY="365.0" mnemonicParsing="false" onAction="#addPatient" text="Add Patient" />
-    <Button fx:id="logOutButton" layoutX="530.0" layoutY="365.0" mnemonicParsing="false" onAction="#logOut" text="Log Out" />
   </children>
 </AnchorPane>

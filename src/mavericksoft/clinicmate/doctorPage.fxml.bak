@@ -32,7 +32,7 @@
           <content>
             <AnchorPane id="Content" fx:id="metricsAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
               <children>
-                <TabPane fx:id="measurementsTabPane" layoutY="1.0" prefHeight="442.0" prefWidth="777.0" side="RIGHT" tabClosingPolicy="UNAVAILABLE">
+                <TabPane fx:id="measurementsTabPane" prefHeight="443.0" prefWidth="777.0" side="RIGHT" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                   <tabs>
                     <Tab fx:id="bloodPressureTab" text="Blood Pressure">
                       <content>

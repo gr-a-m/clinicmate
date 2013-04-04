@@ -114,8 +114,8 @@ public class NewPatientPage implements Initializable {
         
         //Create new patient
         try{
-        PersonController.getInstance().createPatient(
-                "patientUsername",
+        if(PersonController.getInstance().createPatient(
+                "patient",          //username not in place yet
                 firstNameField.getText(),
                 lastNameField.getText(),
                 passwordField.getText(),
@@ -124,9 +124,15 @@ public class NewPatientPage implements Initializable {
                 insuranceField.getText(),
                 primaryPhoneField.getText(),
                 SecondaryPhoneField.getText(),
-                new Date()); //date not in place yet
-        System.out.println("success");
+                new Date())) //date not in place yet
+        {
+            System.out.println("success");
         }
+        else
+        {
+            System.out.println("failed");
+        }
+        }//end try
         catch(Exception e){System.out.println("failed to create patient");}
         
         new ClinicMatePage("nursePage.fxml",event,"Nurse Accessibilities");

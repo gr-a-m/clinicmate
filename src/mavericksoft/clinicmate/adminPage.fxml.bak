@@ -77,6 +77,6 @@
         </Tab>
       </tabs>
     </TabPane>
-    <Button id="doneButton" fx:id="logOutButton" layoutX="272.0" layoutY="365.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
+    <Button id="doneButton" fx:id="logOutButton" layoutX="272.0" layoutY="365.0" mnemonicParsing="false" onAction="#done" text="Log out" />
   </children>
 </AnchorPane>

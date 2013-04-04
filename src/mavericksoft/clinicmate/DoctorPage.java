@@ -32,8 +32,6 @@ public class DoctorPage implements Initializable {
     @FXML
     private AnchorPane dataAnchorPane;
     @FXML
-    private ScrollPane addCommentsScrollPane;
-    @FXML
     private TextArea addCommentsArea;
     @FXML
     private Label addCommentsLabel;
@@ -75,6 +73,8 @@ public class DoctorPage implements Initializable {
     private AnchorPane scrollAnchorPane;
     @FXML
     private Label patientsLabel;
+    @FXML
+    private Button logOutButton;
 
     /**
      * Initializes the controller class.
@@ -90,5 +90,12 @@ public class DoctorPage implements Initializable {
         System.out.println("Doctor saved info");
         System.out.println(addCommentsArea.getText());
         addCommentsArea.getText();
+    }
+    
+    @FXML
+    public void logOut(javafx.event.ActionEvent event) throws IOException
+    {
+        PermissionsController.getInstance().logout();
+        new ClinicMatePage("loginPage.fxml",event,"Login");
     }
 }

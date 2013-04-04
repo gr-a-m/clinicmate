@@ -90,6 +90,6 @@
         </Tab>
       </tabs>
     </TabPane>
-    <Button fx:id="doneButton" layoutX="272.0" layoutY="365.0" mnemonicParsing="false" text="Done" />
+    <Button fx:id="doneButton" layoutX="272.0" layoutY="365.0" mnemonicParsing="false" onAction="#done" text="Done" />
   </children>
 </AnchorPane>

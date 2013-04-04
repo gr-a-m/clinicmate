@@ -24,6 +24,6 @@
     </Label>
     <TextArea fx:id="observationArea" layoutX="43.0" layoutY="223.0" prefHeight="128.0" prefWidth="461.0" wrapText="true" />
     <Label fx:id="observationsLabel" layoutX="55.0" layoutY="200.0" text="Observations:" />
-    <Button fx:id="doneButton" layoutX="272.0" layoutY="358.0" mnemonicParsing="false" onAction="#done" text="Done" />
+    <Button fx:id="doneButton" layoutX="272.0" layoutY="358.0" mnemonicParsing="false" text="Done" />
   </children>
 </AnchorPane>

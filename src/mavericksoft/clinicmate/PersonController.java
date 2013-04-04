@@ -38,7 +38,7 @@ public class PersonController
 	{
 		boolean created = false;
 		// Check if current user is granted access to create a new patient record
-		if((PermissionsController.getInstance()).currentUserPermissions()==Permissions.ADMIN || (PermissionsController.getInstance()).currentUserPermissions()==Permissions.DOCTOR)
+		if((PermissionsController.getInstance()).currentUserPermissions()==Permissions.ADMIN || (PermissionsController.getInstance()).currentUserPermissions()==Permissions.NURSE)
 		{
 			Patient newPatient = new Patient(username, firstName, lastName, password, gender, address, insuranceProvider, primaryPhone, secondaryPhone, dob);
 			created = newPatient.save();

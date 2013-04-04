@@ -69,6 +69,8 @@ public class AdminPage implements Initializable {
     private TextField nurseNameField;
     @FXML
     private TextField nursePasswordField;
+    @FXML
+    private Button logOutButton;
 
     /**
      * Initializes the controller class.
@@ -83,8 +85,8 @@ public class AdminPage implements Initializable {
     public void addDoctor(javafx.event.ActionEvent event) throws IOException
     {
         try{
-            if( PersonController.getInstance().createNurseOrDoctor(
-                    "doctorUsername",
+            if(PersonController.getInstance().createNurseOrDoctor(
+                    doctorNameField.getText(), //username not in place yet
                     doctorNameField.getText(), //need to make first name field
                     doctorNameField.getText(), //need to make last name field
                     doctorPasswordField.getText(),
@@ -95,23 +97,30 @@ public class AdminPage implements Initializable {
             }
         }
         catch(Exception e){System.out.println("doctor not created");}
-        new ClinicMatePage("loginPage.fxml",event,"Login");
     }
     
     @FXML
     public void addNurse(javafx.event.ActionEvent event) throws IOException
     {
         try{
-            PersonController.getInstance().createNurseOrDoctor(
-                    "nurseUsername",
+            if(PersonController.getInstance().createNurseOrDoctor(
+                    nurseNameField.getText(), // username not in place yet
                     nurseNameField.getText(), //need to make first name field
                     nurseNameField.getText(), //need to make last name field
                     nursePasswordField.getText(),
-                    false,true,false);
-        //doctorPatientsArea.getText();
-        System.out.println("nurse created!");
+                    false,true,false))
+            {
+                //doctorPatientsArea.getText();
+                System.out.println("nurse created!");
+            }
         }
         catch(Exception e){System.out.println("nurse not created");}
+    }
+    
+    @FXML
+    public void logOut(javafx.event.ActionEvent event) throws IOException
+    {
+        PermissionsController.getInstance().logout();
         new ClinicMatePage("loginPage.fxml",event,"Login");
     }
 }

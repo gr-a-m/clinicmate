@@ -53,6 +53,8 @@ public class NursePage implements Initializable {
     private TextField weightField;
     @FXML
     private TextArea observationArea;
+    @FXML
+    private Button logOutButton;
 
     /**
      * Initializes the controller class.
@@ -80,6 +82,13 @@ public class NursePage implements Initializable {
     public void addPatient(javafx.event.ActionEvent event) throws IOException
     {
         System.out.println("nurse to add patient");
-        //changeScene("addPatient.fxml",event);
+        new ClinicMatePage("newPatient.fxml",event,"Add New Patient");
+    }
+    
+    @FXML
+    public void logOut(javafx.event.ActionEvent event) throws IOException
+    {
+        PermissionsController.getInstance().logout();
+        new ClinicMatePage("loginPage.fxml",event,"Login");
     }
 }

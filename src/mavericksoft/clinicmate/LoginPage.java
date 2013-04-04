@@ -8,11 +8,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -42,6 +38,7 @@ public class LoginPage implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
+        Person.checkTables();
         // TODO
     }
 
@@ -50,28 +47,42 @@ public class LoginPage implements Initializable {
     @FXML
     private void login(javafx.event.ActionEvent event) throws IOException 
     {
-        if(usernameField.getText().equals("1") && passwordField.getText().equals("2"))
+        try
         {
-            // successfull login
-            invalidLoginLabel.setVisible(false);
-            changeScene("patientOptions.fxml",event,"Welcome");
+            if(PermissionsController.getInstance().logon(usernameField.getText(),passwordField.getText()))
+            {
+                // successfull login
+                invalidLoginLabel.setVisible(false);
+                if(PermissionsController.getInstance().currentUserPermissions()==Permissions.ADMIN)
+                {
+                    //changeScene("NewPatient.fxml",event,"Doctor Accessibilities");
+                    new ClinicMatePage("adminPage.fxml",event,"Admin Accessibilities");
+                }
+                else if(PermissionsController.getInstance().currentUserPermissions()==Permissions.DOCTOR)
+                {
+                    new ClinicMatePage("doctorPage.fxml",event,"Doctor Accessibilities");
+                }
+                else if(PermissionsController.getInstance().currentUserPermissions()==Permissions.PATIENT)
+                {
+                    new ClinicMatePage("patientOptions.fxml",event,"Welcome");
+                }
+                else //nurse
+                {
+                    new ClinicMatePage("nursePage.fxml",event,"Nurse Accessibilities");
+                }
+            }
+            else
+            {
+                //login failed
+                invalidLoginLabel.setVisible(true);
+                System.out.println("failed login");
+            }
         }
-        else
+        catch(NonexistentRecordException e)
         {
             //login failed
             invalidLoginLabel.setVisible(true);
-            System.out.println("failed login");
+            System.out.println("failed login error");
         }
-    }
-    
-    public void changeScene(String fxml, javafx.event.ActionEvent event, String title) throws IOException
-    {
-        Node node=(Node) event.getSource();
-        Stage s=(Stage) node.getScene().getWindow();
-        s.setTitle(title);
-        Parent root = FXMLLoader.load(getClass().getResource(fxml));
-        Scene scene = new Scene(root);
-        s.setScene(scene);
-        s.show();
     }
 }

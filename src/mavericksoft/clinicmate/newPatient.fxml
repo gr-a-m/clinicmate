@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="mavericksoft.clinicmate.NewPatientController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="mavericksoft.clinicmate.NewPatientPage">
   <children>
     <Label id="nameField" fx:id="firstNameLabel" layoutX="41.0" layoutY="49.0" text="First Name">
       <font>
@@ -63,6 +63,6 @@
         <MenuItem mnemonicParsing="false" text="Action 2" />
       </items>
     </MenuButton>
-    <Button fx:id="doneButton" layoutX="256.0" layoutY="365.0" mnemonicParsing="false" text="Done" />
+    <Button fx:id="doneButton" layoutX="256.0" layoutY="365.0" mnemonicParsing="false" onAction="#done" text="Done" />
   </children>
 </AnchorPane>

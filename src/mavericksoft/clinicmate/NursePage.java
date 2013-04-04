@@ -8,18 +8,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 
     
 /**
@@ -86,16 +81,5 @@ public class NursePage implements Initializable {
     {
         System.out.println("nurse to add patient");
         //changeScene("addPatient.fxml",event);
-    }
-    
-    public void changeScene(String fxml, javafx.event.ActionEvent event) throws IOException
-    {
-        Node node=(Node) event.getSource();
-        Stage s=(Stage) node.getScene().getWindow();
-        //s.setTitle("Add Patient");
-        Parent root = FXMLLoader.load(getClass().getResource(fxml));
-        Scene scene = new Scene(root);
-        s.setScene(scene);
-        s.show();
     }
 }

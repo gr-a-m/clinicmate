@@ -4,6 +4,7 @@
  */
 package mavericksoft.clinicmate;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -21,7 +22,7 @@ import javafx.scene.text.Font;
  *
  * @author Dan
  */
-public class EditDoctorsController implements Initializable {
+public class AdminPage implements Initializable {
     @FXML
     private Tab editDoctorsTab;
     @FXML
@@ -73,7 +74,44 @@ public class EditDoctorsController implements Initializable {
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb)
+    {
         // TODO
-    }    
+    }
+    
+    @FXML
+    public void addDoctor(javafx.event.ActionEvent event) throws IOException
+    {
+        try{
+            if( PersonController.getInstance().createNurseOrDoctor(
+                    "doctorUsername",
+                    doctorNameField.getText(), //need to make first name field
+                    doctorNameField.getText(), //need to make last name field
+                    doctorPasswordField.getText(),
+                    false,false,true))
+            {
+                //doctorPatientsArea.getText();
+                System.out.println("doctor created!");
+            }
+        }
+        catch(Exception e){System.out.println("doctor not created");}
+        new ClinicMatePage("loginPage.fxml",event,"Login");
+    }
+    
+    @FXML
+    public void addNurse(javafx.event.ActionEvent event) throws IOException
+    {
+        try{
+            PersonController.getInstance().createNurseOrDoctor(
+                    "nurseUsername",
+                    nurseNameField.getText(), //need to make first name field
+                    nurseNameField.getText(), //need to make last name field
+                    nursePasswordField.getText(),
+                    false,true,false);
+        //doctorPatientsArea.getText();
+        System.out.println("nurse created!");
+        }
+        catch(Exception e){System.out.println("nurse not created");}
+        new ClinicMatePage("loginPage.fxml",event,"Login");
+    }
 }

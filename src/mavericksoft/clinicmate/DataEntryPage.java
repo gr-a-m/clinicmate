@@ -18,7 +18,7 @@ import javafx.scene.control.TextField;
  *
  * @author Dan
  */
-public class DailyPatientDataController implements Initializable {
+public class DataEntryPage implements Initializable {
     @FXML
     private TextField dateField;
     @FXML
@@ -48,7 +48,8 @@ public class DailyPatientDataController implements Initializable {
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb)
+    {
         // TODO
-    }    
+    }
 }

@@ -4,6 +4,7 @@
  */
 package mavericksoft.clinicmate;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -13,13 +14,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
+import java.util.Date;
 
 /**
  * FXML Controller class
  *
  * @author Dan
  */
-public class NewPatientController implements Initializable {
+public class NewPatientPage implements Initializable {
     @FXML
     private Label firstNameLabel;
     @FXML
@@ -89,7 +91,44 @@ public class NewPatientController implements Initializable {
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb) 
+    {
         // TODO
-    }    
+    }
+    
+    @FXML
+    public void done(javafx.event.ActionEvent event) throws IOException
+    {
+        emialField.getText();
+        emergencyContactField.getText();
+        emergencyContactPrimaryPhoneField.getText();
+        emergencyContactSecondaryPhoneField.getText();
+        passwordField.getText();
+        
+        /*
+        private MenuButton monthMenu;
+        private MenuButton dayMenu;
+        private MenuButton yearMenu;
+        private MenuButton doctorField;
+        */
+        
+        //Create new patient
+        try{
+        PersonController.getInstance().createPatient(
+                "patientUsername",
+                firstNameField.getText(),
+                lastNameField.getText(),
+                passwordField.getText(),
+                genderField.getText(),
+                addressField.getText(),
+                insuranceField.getText(),
+                primaryPhoneField.getText(),
+                SecondaryPhoneField.getText(),
+                new Date()); //date not in place yet
+        System.out.println("success");
+        }
+        catch(Exception e){System.out.println("failed to create patient");}
+        
+        new ClinicMatePage("nursePage.fxml",event,"Nurse Accessibilities");
+    }
 }

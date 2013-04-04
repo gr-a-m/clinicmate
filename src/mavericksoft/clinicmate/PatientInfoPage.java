@@ -108,7 +108,20 @@ public class PatientInfoPage implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        // TODO
+        Person person = PermissionsController.getInstance().getCurrentUser();
+        firstNameField.setText(person.getFirstName());
+        lastNameField.setText(person.getLastName());
+        /*
+        primaryPhoneField.setText();
+        secondaryPhoneField.setText();
+        addressTextArea.setText();
+        emailField.setText();
+        insuranceField.setText();
+        passwordField.setText();
+        emergencyNameField.setText();
+        emergencyPrimaryPhoneField.setText();
+        emergencySecondaryPhoneField.setText();
+        * */
     }
     
     @FXML
@@ -270,12 +283,6 @@ public class PatientInfoPage implements Initializable
     
     public void backToWelcome(javafx.event.ActionEvent event) throws IOException
     {
-        Node node=(Node) event.getSource();
-        Stage s=(Stage) node.getScene().getWindow();
-        s.setTitle("Welcome");
-        Parent root = FXMLLoader.load(getClass().getResource("patientOptions.fxml"));
-        Scene scene = new Scene(root);
-        s.setScene(scene);
-        s.show();
+        new ClinicMatePage("patientOptions.fxml",event,"Welcome");
     }
 }

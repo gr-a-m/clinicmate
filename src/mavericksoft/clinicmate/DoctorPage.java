@@ -6,12 +6,16 @@ package mavericksoft.clinicmate;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -68,20 +72,29 @@ public class DoctorPage implements Initializable {
     @FXML
     private ToggleButton glucoseLinearRegToggle;
     @FXML
-    private ScrollPane patientsScrollPane;
-    @FXML
-    private AnchorPane scrollAnchorPane;
-    @FXML
     private Label patientsLabel;
     @FXML
     private Button logOutButton;
+    @FXML
+    private ListView<?> patientList;
 
     /**
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+    public void initialize(URL url, ResourceBundle rb)
+    {
+        Patient[] patients= ((HealthProfessional)PermissionsController.getInstance().getCurrentUser()).getPatients();
+        ArrayList<String> patientArray=new ArrayList<String>();
+        //System.out.println("numOfPatients:"+patients.length);
+        
+        for(int i=0;i<patients.length;i++)
+        {
+            patientArray.add(patients[i].getLastName() + ", " + patients[i].getFirstName());
+        }
+        
+        ObservableList items=FXCollections.observableArrayList(patientArray);
+        patientList.setItems(items);
     }
     
     @FXML

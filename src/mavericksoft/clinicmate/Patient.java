@@ -130,7 +130,9 @@ class Patient extends Person {
                 st.setDate(13, new java.sql.Date(this.dateOfBirth.getTime()));
 
                 // Execute the insertion and record the success
-                success = st.execute();
+                st.execute();
+                
+                success = true;
             } else {
                 // If it does already exist, update it with the current values
                 st = conn.prepareStatement("UPDATE patients SET username=?, first_name=?, last_name=?, password_hash=?, " +

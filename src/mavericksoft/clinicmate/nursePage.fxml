@@ -8,11 +8,6 @@
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="mavericksoft.clinicmate.NursePage">
   <children>
-    <ScrollPane fx:id="patientScrollPane" layoutX="14.0" layoutY="43.0" prefHeight="310.0" prefWidth="147.0">
-      <content>
-        <AnchorPane id="Content" fx:id="patientAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="309.0" prefWidth="132.0" />
-      </content>
-    </ScrollPane>
     <Label fx:id="patientsLabel" layoutX="15.0" layoutY="14.0" text="Patients:" />
     <TextField fx:id="dateField" layoutX="386.0" layoutY="40.0" prefWidth="200.0" />
     <TextField fx:id="bloodField" layoutX="386.0" layoutY="80.0" prefWidth="200.0" />
@@ -27,5 +22,6 @@
     <Label fx:id="observationsLabel" layoutX="175.0" layoutY="192.0" text="Observations/Notes:" />
     <Button id="addPatient" fx:id="addPatientButton" layoutX="53.0" layoutY="365.0" mnemonicParsing="false" onAction="#addPatient" text="Add Patient" />
     <Button fx:id="logOutButton" layoutX="530.0" layoutY="365.0" mnemonicParsing="false" onAction="#logOut" text="Log Out" />
+    <ListView fx:id="patientList" layoutX="15.0" layoutY="43.0" prefHeight="310.0" prefWidth="132.0" />
   </children>
 </AnchorPane>

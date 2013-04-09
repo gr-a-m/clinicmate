@@ -2,6 +2,7 @@
 
 <?import java.lang.*?>
 <?import java.util.*?>
+<?import javafx.collections.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -39,30 +40,13 @@
     <TextField id="emergencyContactPrimaryPhoneFI" fx:id="emergencyContactPrimaryPhoneField" layoutX="300.0" layoutY="258.0" prefWidth="200.0" />
     <TextField fx:id="emergencyContactSecondaryPhoneField" layoutX="300.0" layoutY="280.0" prefWidth="200.0" />
     <TextField fx:id="passwordField" layoutX="300.0" layoutY="302.0" prefWidth="200.0" />
-    <MenuButton fx:id="monthMenu" layoutX="300.0" layoutY="105.0" mnemonicParsing="false" text="Month">
-      <items>
-        <MenuItem mnemonicParsing="false" text="Action 1" />
-        <MenuItem mnemonicParsing="false" text="Action 2" />
-      </items>
-    </MenuButton>
-    <MenuButton id="monthMenu" fx:id="dayMenu" layoutX="377.0" layoutY="105.0" mnemonicParsing="false" text="Day">
-      <items>
-        <MenuItem mnemonicParsing="false" text="Action 1" />
-        <MenuItem mnemonicParsing="false" text="Action 2" />
-      </items>
-    </MenuButton>
-    <MenuButton id="monthMenu" fx:id="yearMenu" layoutX="438.0" layoutY="105.0" mnemonicParsing="false" text="Year">
-      <items>
-        <MenuItem mnemonicParsing="false" text="Action 1" />
-        <MenuItem mnemonicParsing="false" text="Action 2" />
-      </items>
-    </MenuButton>
-    <MenuButton fx:id="doctorField" layoutX="300.0" layoutY="324.0" mnemonicParsing="false" prefWidth="200.0" text="Doctor">
-      <items>
-        <MenuItem mnemonicParsing="false" text="Action 1" />
-        <MenuItem mnemonicParsing="false" text="Action 2" />
-      </items>
-    </MenuButton>
     <Button fx:id="doneButton" layoutX="256.0" layoutY="365.0" mnemonicParsing="false" onAction="#done" text="Done" />
+    <Label fx:id="usernameLabel" font="$x1" layoutX="41.0" layoutY="25.0" text="Username" />
+    <TextField fx:id="usernameField" layoutX="300.0" layoutY="19.0" prefWidth="200.0" />
+    <ComboBox fx:id="monthComboBox" layoutX="300.0" layoutY="105.0" prefHeight="21.0" prefWidth="73.0" promptText="Month" visibleRowCount="12" />
+    <ComboBox fx:id="dayComboBox" layoutX="375.0" layoutY="105.0" prefHeight="21.0" prefWidth="61.0" promptText="Day" />
+    <ComboBox fx:id="yearComboBox" layoutX="438.0" layoutY="105.0" prefHeight="21.0" prefWidth="62.0" promptText="Year" />
+    <ComboBox fx:id="doctorComboBox" layoutX="300.0" layoutY="323.0" prefHeight="21.0" prefWidth="199.0" promptText="Doctor" />
+    <Label fx:id="errorLabel" layoutX="372.0" layoutY="368.0" text="Not filled out correctly" textFill="RED" />
   </children>
 </AnchorPane>

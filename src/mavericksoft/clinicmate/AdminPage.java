@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -71,6 +72,14 @@ public class AdminPage implements Initializable {
     private TextField nursePasswordField;
     @FXML
     private Button logOutButton;
+    @FXML
+    private TextField doctorUsernameField;
+    @FXML
+    private Label docUsernameLabel;
+    @FXML
+    private Label nurseUsernameLabel;
+    @FXML
+    private TextField nurseUsernameField;
 
     /**
      * Initializes the controller class.
@@ -78,7 +87,9 @@ public class AdminPage implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        // TODO
+        //add nurses and doctors to MenuButtons
+        nursesMenu.getItems().addAll(new MenuItem("nurse1"), new MenuItem("nurse2"), new MenuItem("nurse3"));
+        doctorMenu.getItems().addAll(new MenuItem("doc1"), new MenuItem("doc2"));
     }
     
     @FXML
@@ -86,7 +97,7 @@ public class AdminPage implements Initializable {
     {
         try{
             if(PersonController.getInstance().createNurseOrDoctor(
-                    doctorNameField.getText(), //username not in place yet
+                    doctorUsernameField.getText(),
                     doctorNameField.getText(), //need to make first name field
                     doctorNameField.getText(), //need to make last name field
                     doctorPasswordField.getText(),
@@ -104,7 +115,7 @@ public class AdminPage implements Initializable {
     {
         try{
             if(PersonController.getInstance().createNurseOrDoctor(
-                    nurseNameField.getText(), // username not in place yet
+                    nurseUsernameField.getText(),
                     nurseNameField.getText(), //need to make first name field
                     nurseNameField.getText(), //need to make last name field
                     nursePasswordField.getText(),

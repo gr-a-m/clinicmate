@@ -11,10 +11,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
 import java.util.Date;
+import java.util.Hashtable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.MenuItem;
 
 /**
  * FXML Controller class
@@ -77,64 +83,141 @@ public class NewPatientPage implements Initializable {
     @FXML
     private TextField passwordField;
     @FXML
-    private MenuButton monthMenu;
-    @FXML
-    private MenuButton dayMenu;
-    @FXML
-    private MenuButton yearMenu;
-    @FXML
-    private MenuButton doctorField;
-    @FXML
     private Button doneButton;
-
+    @FXML
+    private Label usernameLabel;
+    @FXML
+    private TextField usernameField;
+    @FXML
+    private ComboBox<String> monthComboBox;
+    
+    private Hashtable daysInMonth= new Hashtable();
+    private ObservableList<String> months;
+    @FXML
+    private ComboBox<?> dayComboBox;
+    @FXML
+    private ComboBox<?> yearComboBox;
+    @FXML
+    private ComboBox<?> doctorComboBox;
+    @FXML
+    private Label errorLabel;
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-        // TODO
+        errorLabel.setVisible(false);
+        
+        //add doctors to MenuButton
+        doctorComboBox.getItems().addAll(new MenuItem("doc1"), new MenuItem("doc2"));
+        //add months to combobox
+        months=FXCollections.observableArrayList(
+                "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
+        monthComboBox.setItems(months);
+
+        //add years to MenuButton
+        //yearMenu.getItems().addAll(new MenuItem("1980"));
+        for(int i=2013;i>=1900;i--)
+        {
+            yearComboBox.getItems().addAll(i);
+        }
+        //add days to hashtable
+        daysInMonth.put("Jan","31");
+        daysInMonth.put("Feb","28"); //need to make this dependent on year
+        daysInMonth.put("Mar","31");
+        daysInMonth.put("Apr","30");
+        daysInMonth.put("May","31");
+        daysInMonth.put("Jun","30");
+        daysInMonth.put("Jul","31");
+        daysInMonth.put("Aug","31");
+        daysInMonth.put("Sep","30");
+        daysInMonth.put("Oct","31");
+        daysInMonth.put("Nov","30");
+        daysInMonth.put("Dec","31");
+        
+        //get days in month
+        monthComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends String> selected, String oldString, String newString)
+            {
+                System.out.println("days:"+daysInMonth.get(newString));
+                for(int i=1;i<=Integer.parseInt(daysInMonth.get(newString).toString());i++)
+                {
+                    dayComboBox.getItems().addAll(i);
+                }
+          }
+        });
     }
     
     @FXML
     public void done(javafx.event.ActionEvent event) throws IOException
     {
-        emialField.getText();
-        emergencyContactField.getText();
-        emergencyContactPrimaryPhoneField.getText();
-        emergencyContactSecondaryPhoneField.getText();
-        passwordField.getText();
-        
-        /*
-        private MenuButton monthMenu;
-        private MenuButton dayMenu;
-        private MenuButton yearMenu;
-        private MenuButton doctorField;
-        */
-        
-        //Create new patient
-        try{
-        if(PersonController.getInstance().createPatient(
-                "patient",          //username not in place yet
-                firstNameField.getText(),
-                lastNameField.getText(),
-                passwordField.getText(),
-                genderField.getText(),
-                addressField.getText(),
-                insuranceField.getText(),
-                primaryPhoneField.getText(),
-                SecondaryPhoneField.getText(),
-                new Date())) //date not in place yet
+        //get Date
+        boolean dateError=false;
+        Date date=null;
+        try
         {
-            System.out.println("success");
+            int month=months.indexOf(monthComboBox.getSelectionModel().selectedItemProperty().getValue());
+            int day=Integer.parseInt(dayComboBox.getSelectionModel().selectedItemProperty().getValue().toString());
+            int year=Integer.parseInt(yearComboBox.getSelectionModel().selectedItemProperty().getValue().toString())-1900;
+            date = new Date(year,month,day);
+            //System.out.println(month + "/" + day + "/" + year);
+        }
+        catch(Exception ex)
+        {
+            dateError=true;
+        }
+        
+        if(emialField.getText().isEmpty() ||
+            emergencyContactField.getText().isEmpty() ||
+            emergencyContactPrimaryPhoneField.getText().isEmpty() ||
+            emergencyContactSecondaryPhoneField.getText().isEmpty() ||
+            passwordField.getText().isEmpty() ||
+            usernameField.getText().isEmpty() ||
+            firstNameField.getText().isEmpty() ||
+            lastNameField.getText().isEmpty() ||
+            passwordField.getText().isEmpty() ||
+            genderField.getText().isEmpty() ||
+            addressField.getText().isEmpty() ||
+            insuranceField.getText().isEmpty() ||
+            primaryPhoneField.getText().isEmpty() ||
+            SecondaryPhoneField.getText().isEmpty() ||
+            dateError)
+        {
+            errorLabel.setVisible(true);
         }
         else
         {
-            System.out.println("failed");
+            //Create new patient
+            Patient patient= PersonController.getInstance().createPatient(
+                    usernameField.getText(),
+                    firstNameField.getText(),
+                    lastNameField.getText(),
+                    passwordField.getText(),
+                    genderField.getText(),
+                    addressField.getText(),
+                    insuranceField.getText(),
+                    primaryPhoneField.getText(),
+                    SecondaryPhoneField.getText(),
+                    date);
+            
+            try{
+            if(patient!=null)
+            {
+                System.out.println("success");
+                //add patient to nurse
+                ((HealthProfessional)PermissionsController.getInstance().getCurrentUser()).addPatient(patient.getPatientID());
+                new ClinicMatePage("nursePage.fxml",event,"Nurse Accessibilities");     
+            }
+            else
+            {
+                errorLabel.setVisible(true);
+                System.out.println("failed");
+            }
+            }//end try
+            catch(Exception e){System.out.println("failed to create patient");}
         }
-        }//end try
-        catch(Exception e){System.out.println("failed to create patient");}
-        
-        new ClinicMatePage("nursePage.fxml",event,"Nurse Accessibilities");
     }
 }

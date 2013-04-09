@@ -101,6 +101,8 @@ public class PatientInfoPage implements Initializable
     private Label invalidLabel10;
     @FXML
     private Label invalidLabel11;
+    
+    private Patient patient;
 
     /**
      * Initializes the controller class.
@@ -108,15 +110,15 @@ public class PatientInfoPage implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        Person person = PermissionsController.getInstance().getCurrentUser();
-        firstNameField.setText(person.getFirstName());
-        lastNameField.setText(person.getLastName());
+        patient = (Patient)PermissionsController.getInstance().getCurrentUser();
+        firstNameField.setText(patient.getFirstName());
+        lastNameField.setText(patient.getLastName());
+        primaryPhoneField.setText(patient.getPrimaryPhoneNumber());
+        secondaryPhoneField.setText(patient.getSecondaryPhoneNumber());
+        addressTextArea.setText(patient.getAddress());
+        insuranceField.setText(patient.getInsuranceProvider());
         /*
-        primaryPhoneField.setText();
-        secondaryPhoneField.setText();
-        addressTextArea.setText();
         emailField.setText();
-        insuranceField.setText();
         passwordField.setText();
         emergencyNameField.setText();
         emergencyPrimaryPhoneField.setText();
@@ -151,7 +153,7 @@ public class PatientInfoPage implements Initializable
         else
         {
             invalidLabel1.setVisible(false);
-            //patient.setfirstName(firstName);
+            patient.setFirstName(firstName);
         }
         if(lastName.isEmpty())
         {
@@ -160,7 +162,7 @@ public class PatientInfoPage implements Initializable
         }
         else
         {
-            //patient.setLastName(lastName);
+            patient.setLastName(lastName);
             invalidLabel2.setVisible(false);
         }
         if(secondaryPhone.length()!=10 || !isNumber(secondaryPhone))
@@ -172,7 +174,7 @@ public class PatientInfoPage implements Initializable
         else
         {
             //valid number input
-            //patient.setSecondaryPhoneNumber(secondaryPhone);
+            patient.setSecondaryPhoneNumber(secondaryPhone);
             invalidLabel5.setVisible(false);
         }
         if(primaryPhone.length()!=10 || !isNumber(primaryPhone))
@@ -184,7 +186,7 @@ public class PatientInfoPage implements Initializable
         else
         {
             //valid number input
-            //patient.setPrimaryPhoneNumber(primaryPhone);
+            patient.setPrimaryPhoneNumber(primaryPhone);
             invalidLabel4.setVisible(false);
         }
         if(address.isEmpty())
@@ -194,7 +196,7 @@ public class PatientInfoPage implements Initializable
         }
         else
         {
-            //patient.setAddress(address);
+            patient.setAddress(address);
             invalidLabel3.setVisible(false);
         }
         if(!email.contains("@") || !email.contains("."))
@@ -216,7 +218,8 @@ public class PatientInfoPage implements Initializable
         else
         {
             invalidLabel7.setVisible(false);
-            //patient.setPassword(password);
+            // need field for old password
+            //patient.resetPassword("string",password);
         }
         if(insurance.isEmpty())
         {
@@ -226,7 +229,7 @@ public class PatientInfoPage implements Initializable
         else
         {
             invalidLabel8.setVisible(false);
-            //patient.setInsuranceProvider(insurance);
+            patient.setInsuranceProvider(insurance);
         }
         if(emergencyName.isEmpty())
         {
@@ -260,7 +263,6 @@ public class PatientInfoPage implements Initializable
         if(noErrors)
         {
             System.out.println("saved");
-            //store info...to be done
             backToWelcome(event);
         }
     }

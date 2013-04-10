@@ -6,11 +6,15 @@ package mavericksoft.clinicmate;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -23,10 +27,6 @@ import javafx.scene.layout.AnchorPane;
  * @author Mark Karlsrud
  */
 public class NursePage implements Initializable {
-    @FXML
-    private ScrollPane patientScrollPane;
-    @FXML
-    private AnchorPane patientAnchorPane;
     @FXML
     private Label patientsLabel;
     @FXML
@@ -53,6 +53,10 @@ public class NursePage implements Initializable {
     private TextField weightField;
     @FXML
     private TextArea observationArea;
+    @FXML
+    private Button logOutButton;
+    @FXML
+    private ListView<?> patientList;
 
     /**
      * Initializes the controller class.
@@ -60,7 +64,18 @@ public class NursePage implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        // TODO
+        Patient[] patients= ((HealthProfessional)PermissionsController.getInstance().getCurrentUser()).getPatients();
+        ArrayList<String> patientArray=new ArrayList<String>();
+        //System.out.println("numOfPatients:"+patients.length);
+        
+        for(int i=0;i<patients.length;i++)
+        {
+            patientArray.add(patients[i].getLastName() + ", " + patients[i].getFirstName());
+            //System.out.println(i+":"+patients[i].getLastName() + ", " + patients[i].getFirstName());
+        }
+        
+        ObservableList items=FXCollections.observableArrayList(patientArray);
+        patientList.setItems(items);
     }
     
     @FXML
@@ -80,6 +95,13 @@ public class NursePage implements Initializable {
     public void addPatient(javafx.event.ActionEvent event) throws IOException
     {
         System.out.println("nurse to add patient");
-        //changeScene("addPatient.fxml",event);
+        new ClinicMatePage("newPatient.fxml",event,"Add New Patient");
+    }
+    
+    @FXML
+    public void logOut(javafx.event.ActionEvent event) throws IOException
+    {
+        PermissionsController.getInstance().logout();
+        new ClinicMatePage("loginPage.fxml",event,"Login");
     }
 }

@@ -4,6 +4,7 @@
  */
 package mavericksoft.clinicmate;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -51,5 +52,12 @@ public class DataEntryPage implements Initializable {
     public void initialize(URL url, ResourceBundle rb)
     {
         // TODO
+    }
+    
+    @FXML
+    public void done(javafx.event.ActionEvent event) throws IOException
+    {
+        PermissionsController.getInstance().logout();
+        new ClinicMatePage("patientOptions.fxml",event,"Welcome");
     }
 }

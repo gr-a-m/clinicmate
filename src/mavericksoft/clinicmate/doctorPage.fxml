@@ -93,11 +93,8 @@
         </Tab>
       </tabs>
     </TabPane>
-    <ScrollPane fx:id="patientsScrollPane" layoutX="14.0" layoutY="45.0" prefHeight="428.0" prefWidth="135.0">
-      <content>
-        <AnchorPane id="Content" fx:id="scrollAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="427.0" prefWidth="120.0" />
-      </content>
-    </ScrollPane>
     <Label fx:id="patientsLabel" layoutX="15.0" layoutY="22.0" text="Patients:" />
+    <Button fx:id="logOutButton" layoutX="47.0" layoutY="442.0" mnemonicParsing="false" onAction="#logOut" text="Log Out" />
+    <ListView fx:id="patientList" layoutX="15.0" layoutY="44.0" prefHeight="373.0" prefWidth="144.0" />
   </children>
 </AnchorPane>

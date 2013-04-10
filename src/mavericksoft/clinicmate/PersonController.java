@@ -34,16 +34,18 @@ public class PersonController
 	}
 	
 	// Create a new Patient object with specified parameters by calling constructor of Patient class
-	public boolean createPatient(String username, String firstName, String lastName, String password, String gender, String address, String insuranceProvider, String primaryPhone, String secondaryPhone, Date dob)
+	public Patient createPatient(String username, String firstName, String lastName, String password, String gender, String address, String insuranceProvider, String primaryPhone, String secondaryPhone, Date dob)
 	{
 		boolean created = false;
+                Patient newPatient=null;
 		// Check if current user is granted access to create a new patient record
-		if((PermissionsController.getInstance()).currentUserPermissions()==Permissions.ADMIN || (PermissionsController.getInstance()).currentUserPermissions()==Permissions.DOCTOR)
+		if((PermissionsController.getInstance()).currentUserPermissions()==Permissions.ADMIN || (PermissionsController.getInstance()).currentUserPermissions()==Permissions.NURSE)
 		{
-			Patient newPatient = new Patient(username, firstName, lastName, password, gender, address, insuranceProvider, primaryPhone, secondaryPhone, dob);
+			newPatient = new Patient(username, firstName, lastName, password, gender, address, insuranceProvider, primaryPhone, secondaryPhone, dob);
 			created = newPatient.save();
 		}
-		return created;
+                return newPatient;
+		//return created;
 	}
 	
 	// Create new Doctor or Nurse by calling constructor of HealthProfessional class

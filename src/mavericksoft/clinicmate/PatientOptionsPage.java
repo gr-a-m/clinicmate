@@ -42,12 +42,19 @@ public class PatientOptionsPage implements Initializable{
     @FXML
     private void viewMetrics(javafx.event.ActionEvent event) throws IOException
     {
-        //new ClinicMatePage("doctorPage.fxml",event,"Doctor Accessibilities");
+        new ClinicMatePage("patientMetrics.fxml",event,"Patient Metrics");
     }
 
     @FXML
     private void updateContactInfo(javafx.event.ActionEvent event) throws IOException
     {
         new ClinicMatePage("patientInfo.fxml",event,"Contact Information");
+    }
+    
+    @FXML
+    public void logOut(javafx.event.ActionEvent event) throws IOException
+    {
+        PermissionsController.getInstance().logout();
+        new ClinicMatePage("loginPage.fxml",event,"Login");
     }
 }

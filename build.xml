@@ -23,6 +23,7 @@
         <mapper>
             <chainedmapper>
                 <flattenmapper />
+                <globmapper from="*.jar" to="lib/*.jar" />
             </chainedmapper>
         </mapper>
     </pathconvert>
@@ -47,6 +48,7 @@
 
     <!-- This creates a JAR file for the compiles srcs -->
     <target name="dist" depends="compile">
+        <copydir src="${lib}" dest="${dist}/lib" />
         <mkdir dir="${dist}" />
         <fx:jar destfile="${dist}/ClinicMate-${DSTAMP}.jar">
             <fx:application name="ClinicMate" mainClass="mavericksoft.clinicmate.ClinicMateUI" />
@@ -57,9 +59,6 @@
             <fileset dir="${build}" />
             <fileset dir="${src}">
                 <include name="**/*.fxml" />
-            </fileset>
-            <fileset dir="${lib}">
-                <include name="*.jar" />
             </fileset>
         </fx:jar>
     </target>

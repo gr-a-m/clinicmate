@@ -231,7 +231,7 @@ abstract class Person {
                 // Make the professionals table
                 conn.createStatement().execute(createString);
 
-                createString = "CREATE TABLE IF NOT EXISTS records(" +
+                createString = "CREATE TABLE IF NOT EXISTS records (" +
                         "record_id UUID, " +
                         "patient_id UUID, " +
                         "date DATE, " +

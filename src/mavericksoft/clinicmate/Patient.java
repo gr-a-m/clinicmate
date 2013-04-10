@@ -454,6 +454,54 @@ class Patient extends Person {
         return records.toArray(new HealthRecord[0]);
     }
 
+    /**
+     * This method gets the HealthProfessionals that are allowed to interact
+     * with this patient. Try to avoid this method if possible -- it is
+     * preferential to look up patients from their HealthProfessionals and
+     * not the other way around.
+     *
+     * @return An array of HealthProfessionals
+     */
+    public HealthProfessional[] getProfessionals() {
+        // Make an ArrayList to hold the HealthProfessionals as they're retrieved
+        ArrayList<HealthProfessional> pros = new ArrayList<HealthProfessional>();
+
+        // Make a call to the database to pull all associated Professionals
+        Connection conn = null;
+
+        try {
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
+            PreparedStatement st = null;
+
+            st = conn.prepareStatement("SELECT * FROM person_map WHERE pat_id=?");
+            st.setObject(1, this.patientID);
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                try {
+                    pros.add(HealthProfessional.getById((UUID) rs.getObject("pro_id")));
+                } catch (NonexistentRecordException nre) {
+                    System.out.println("Illegal Patient ID " + rs.getString("pro_id") +
+                            " assigned to " + this.firstName + " " + this.lastName);
+                }
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException sqle) {
+                    System.out.println("The database connection could not be closed");
+                    sqle.printStackTrace();
+                }
+            }
+        }
+
+        // Convert the ArrayList to an Array and return it
+        return pros.toArray(new HealthProfessional[0]);
+    }
+
     // A series of getters and setters
     public String getGender() {
         return gender;

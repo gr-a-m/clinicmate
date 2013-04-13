@@ -48,7 +48,11 @@
 
     <!-- This creates a JAR file for the compiles srcs -->
     <target name="dist" depends="compile">
-        <copydir src="${lib}" dest="${dist}/lib" />
+        <copy todir="${dist}/lib">
+            <fileset dir="${lib}">
+                <include name="**/*.jar" />
+            </fileset>
+        </copy>
         <mkdir dir="${dist}" />
         <fx:jar destfile="${dist}/ClinicMate-${DSTAMP}.jar">
             <fx:application name="ClinicMate" mainClass="mavericksoft.clinicmate.ClinicMateUI" />

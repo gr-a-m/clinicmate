@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.util.Date;
-import java.util.UUID;
 
 /**
  * This class is a test class for HealthRecordController.java. Though it uses
@@ -111,22 +110,33 @@ public class HealthRecordControllerTest {
 
     /**
      * This method tests that records are added to the database successfully.
+     * At the same time, this method tests getRecordsForPatient in validation.
      *
      * @throws Exception
      */
     @Test
     public void testAddRecord() throws Exception {
+        // Save pat1
+        pat1.save();
 
-    }
+        // pat1 should start with no records
+        assert (pat1.getHealthRecords().length == 0);
 
-    /**
-     * This method assures that the getRecords() method on a patient works
-     * correctly
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testGetRecordsForPatient() throws Exception {
+        // Add one health record
+        HealthRecordController.getInstance().addRecord(pat1.getPatientID(), new Date(), 1, 1, 1, 1);
+        assert (pat1.getHealthRecords().length == 1);
 
+        // Add another health record
+        HealthRecordController.getInstance().addRecord(pat1.getPatientID(), new Date(), 2, 2, 2, 2);
+        assert (pat1.getHealthRecords().length == 2);
+
+        // Delete them both
+        HealthRecord[] hrs = HealthRecordController.getInstance().getRecordsForPatient(pat1.getPatientID());
+        for (HealthRecord hr : hrs) {
+            hr.delete();
+        }
+
+        // Now this patient should have no HealthRecords
+        assert (pat1.getHealthRecords().length == 0);
     }
 }

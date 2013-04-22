@@ -420,6 +420,51 @@ class HealthProfessional extends Person {
         return success;
     }
 
+    public static HealthProfessional[] getAllDoctors() throws NonexistentRecordException {
+        Connection conn = null;
+        // By default, return an empty array of HealthProfessionals
+        HealthProfessional[] doctors = new HealthProfessional[0];
+
+        try {
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
+
+            // Get the IDs of all of the doctors
+            PreparedStatement st = conn.prepareStatement("SELECT professional_id FROM professionals WHERE doctor=?");
+            st.setBoolean(1, true);
+            ResultSet rs = st.executeQuery();
+
+            // Get the size of the array needed
+            int rowCount = 0;
+
+            if (rs.last()) {
+                // Get the row number of the last row and return to the
+                // beginning of the set.
+                rowCount = rs.getRow();
+                rs.beforeFirst();
+            }
+
+            int i = 0;
+            doctors = new HealthProfessional[rowCount];
+            while (rs.next()) {
+                doctors[i] = HealthProfessional.getById((UUID)rs.getObject("professional_id"));
+                i++;
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException sqle) {
+                    System.out.println("Failed to close the database.");
+                    sqle.printStackTrace();
+                }
+            }
+        }
+
+        return doctors;
+    }
+
     // The following are a series of getters and setters
     public ArrayList<UUID> getPatientIDs() {
         return this.patientIDs;

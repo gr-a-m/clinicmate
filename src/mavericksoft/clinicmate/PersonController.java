@@ -120,6 +120,23 @@ public class PersonController
 		}
 		return deleted;
 	}
+
+    /**
+     * This method gets all of the Doctors from the database.
+     *
+     * @return An array of HealthProfessionals representing the doctors in the
+     *         system. If there are no doctors in the database, or an error
+     *         occurs, it returns an empty array.
+     */
+    public HealthProfessional[] getAllDoctors() {
+        try {
+            return HealthProfessional.getAllDoctors();
+        } catch (NonexistentRecordException nre) {
+            nre.printStackTrace();
+            System.out.println("Failed to get all of the doctors.");
+            return new HealthProfessional[0];
+        }
+    }
 	
 }
 

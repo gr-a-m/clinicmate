@@ -12,14 +12,10 @@ import java.util.UUID;
  * PersonController interacts with Patient, HealthProfessional, Permissions and PermissionsController.
  * 
  * @author Amy Baldwin
- *
  */
 
 public class PersonController 
 {
-	private HealthProfessional hp;
-	private Patient patient;
-	private Permissions permission;
 	private static PersonController instance;
 	
 	public static PersonController getInstance()
@@ -70,7 +66,7 @@ public class PersonController
 		// Allow a Doctor to add a Patient to an employee's list
 		if((PermissionsController.getInstance()).currentUserPermissions() == Permissions.DOCTOR)
 		{
-			hp = HealthProfessional.getById(employeeID);
+			HealthProfessional hp = HealthProfessional.getById(employeeID);
 			if(hp.exists())
 			{
 				added = hp.addPatient(patientID);
@@ -93,7 +89,7 @@ public class PersonController
 			HealthProfessional currentProfessional = (HealthProfessional) PermissionsController.getInstance().getCurrentUser();
 			if(currentProfessional.getPatientIDs().contains(patientID))
 			{
-				patient = Patient.getById(patientID);
+				Patient patient = Patient.getById(patientID);
 				if(patient.exists())
 				{
 					deleted = patient.delete();
@@ -112,7 +108,7 @@ public class PersonController
 		// Check if current permissions are set to ADMIN
 		if((PermissionsController.getInstance()).currentUserPermissions() == Permissions.ADMIN)
 		{
-			hp = HealthProfessional.getById(employeeID);
+			HealthProfessional hp = HealthProfessional.getById(employeeID);
 			if(hp.exists())
 			{
 				deleted = hp.delete();
@@ -138,4 +134,3 @@ public class PersonController
         }
     }
 }
-

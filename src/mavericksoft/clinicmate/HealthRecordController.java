@@ -61,4 +61,62 @@ public class HealthRecordController
 
         return added;
     }
+
+    /**
+     * This method creates a new HealthRecord with the provided information
+     * and returns the resulting object if successful.
+     *
+     * @param patientID        The ID of the Patient these measurements are for
+     * @param diaBloodPressure The diastolic blood pressure on this day
+     * @param sysBloodPressure The systolic blood pressure on this day
+     * @param glucose          The glucose levels on this day
+     * @param weight           The patient's weight on this day
+     * @return                 The new HealthRecord if successful, null otherwise
+     */
+    public HealthRecord addRecord(UUID patientID, Date date, int diaBloodPressure,
+                             int sysBloodPressure, int glucose, int weight) {
+        HealthRecord added = null;
+
+        Permissions permissions = PermissionsController.getInstance().currentUserPermissions();
+
+        // Handle the method depending on who's logged in
+        switch (permissions) {
+            // Make sure this record is for this Patient
+            case PATIENT:
+                Patient patient = (Patient) PermissionsController.getInstance().getCurrentUser();
+                if (patient.getPatientID().equals(patientID)) {
+                    HealthRecord newRecord = new HealthRecord(patientID, date, diaBloodPressure,
+                            sysBloodPressure, glucose, weight);
+                    newRecord.save();
+                    added = newRecord;
+                }
+                break;
+            // A nurse can make records for any Patient
+            case NURSE:
+                added = new HealthRecord(patientID, date, diaBloodPressure,
+                        sysBloodPressure, glucose, weight);
+                added.save();
+                break;
+            // A doctor should only add records for their own patients (it should usually be a nurse)
+            case DOCTOR:
+                HealthProfessional doctor = (HealthProfessional) PermissionsController.getInstance().getCurrentUser();
+                ArrayList<UUID> patientList = doctor.getPatientIDs();
+
+                // Go through the list of Patients and add the record if the patient is found
+                for (UUID id : patientList) {
+                    if (id.equals(patientID)) {
+                        added = new HealthRecord(patientID, date, diaBloodPressure,
+                                sysBloodPressure, glucose, weight);
+                        added.save();
+                        break;
+                    }
+                }
+                break;
+            default:
+                System.out.println("User does not possess the correct permissions to add a record.");
+                break;
+        }
+
+        return added;
+    }
 }

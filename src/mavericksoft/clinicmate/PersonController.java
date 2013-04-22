@@ -137,6 +137,5 @@ public class PersonController
             return new HealthProfessional[0];
         }
     }
-	
 }
 

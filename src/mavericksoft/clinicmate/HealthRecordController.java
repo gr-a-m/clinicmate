@@ -177,10 +177,13 @@ class HealthRecordController {
             switch (type) {
                 case GLUCOSE:
                     regression.addData(day, record.getGlucose());
+                    break;
                 case SYS:
                     regression.addData(day, record.getSysBloodPressure());
+                    break;
                 case DIA:
                     regression.addData(day, record.getDiaBloodPressure());
+                    break;
                 default:
                     System.out.println("[ERROR]: Invalid regression type " +
                             "requested.");

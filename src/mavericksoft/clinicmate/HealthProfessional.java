@@ -498,4 +498,8 @@ class HealthProfessional extends Person {
     public UUID getEmployeeID() {
         return this.employeeID;
     }
+    
+    public String getName() {
+        return this.lastName + ", " + this.firstName;
+    }
 }

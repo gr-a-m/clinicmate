@@ -10,9 +10,8 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -27,8 +26,6 @@ public class AdminPage implements Initializable {
     @FXML
     private Tab editDoctorsTab;
     @FXML
-    private MenuButton doctorMenu;
-    @FXML
     private Button deleteDoctorButton;
     @FXML
     private Label doctorPatientsLabel;
@@ -41,17 +38,11 @@ public class AdminPage implements Initializable {
     @FXML
     private Button doctorCreateButton;
     @FXML
-    private Label doctorNameLabel;
-    @FXML
     private Label doctorPasswordLabel;
-    @FXML
-    private TextField doctorNameField;
     @FXML
     private TextField doctorPasswordField;
     @FXML
     private Tab editNursesTasb;
-    @FXML
-    private MenuButton nursesMenu;
     @FXML
     private Button deleteNurseMenu;
     @FXML
@@ -63,11 +54,7 @@ public class AdminPage implements Initializable {
     @FXML
     private Button createNurseButton;
     @FXML
-    private Label nurseNameLabel;
-    @FXML
     private Label nursePasswordLabel;
-    @FXML
-    private TextField nurseNameField;
     @FXML
     private TextField nursePasswordField;
     @FXML
@@ -80,6 +67,30 @@ public class AdminPage implements Initializable {
     private Label nurseUsernameLabel;
     @FXML
     private TextField nurseUsernameField;
+    @FXML
+    private ComboBox<?> doctorComboBox;
+    @FXML
+    private ComboBox<?> nurseComboBox;
+    @FXML
+    private Label doctorFirstNameLabel;
+    @FXML
+    private TextField doctorFirstNameField;
+    @FXML
+    private Label doctorLastNameLabel;
+    @FXML
+    private TextField doctorLastNameField;
+    @FXML
+    private Label nurseFirstNameLabel;
+    @FXML
+    private TextField nurseFirstNameField;
+    @FXML
+    private Label nurseLastNameLabel;
+    @FXML
+    private TextField nurseLastNameField;
+    @FXML
+    private Label errorLabel;
+    @FXML
+    private Label successLabel;
 
     /**
      * Initializes the controller class.
@@ -87,9 +98,19 @@ public class AdminPage implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        //add nurses and doctors to MenuButtons
-        nursesMenu.getItems().addAll(new MenuItem("nurse1"), new MenuItem("nurse2"), new MenuItem("nurse3"));
-        doctorMenu.getItems().addAll(new MenuItem("doc1"), new MenuItem("doc2"));
+        //add nurses and doctors to ComboBoxes
+        HealthProfessional[] nurses;
+        HealthProfessional[] doctors;
+        try
+        {
+            doctors= ((HealthProfessional)PermissionsController.getInstance().getCurrentUser()).getAllDoctors();
+            for(int i=0;i<doctors.length;i++)
+            {
+                HealthProfessional doc=doctors[i];
+                doctorComboBox.getItems().addAll(doc.getName());
+            }
+        }
+        catch(Exception ex){System.out.println("No doctors found.");}
     }
     
     @FXML
@@ -98,16 +119,22 @@ public class AdminPage implements Initializable {
         try{
             if(PersonController.getInstance().createNurseOrDoctor(
                     doctorUsernameField.getText(),
-                    doctorNameField.getText(), //need to make first name field
-                    doctorNameField.getText(), //need to make last name field
+                    doctorFirstNameField.getText(),
+                    doctorLastNameField.getText(),
                     doctorPasswordField.getText(),
                     false,false,true))
             {
-                //doctorPatientsArea.getText();
                 System.out.println("doctor created!");
+                errorLabel.setVisible(false);
+                successLabel.setVisible(true);
             }
         }
-        catch(Exception e){System.out.println("doctor not created");}
+        catch(Exception e)
+        {
+            System.out.println("doctor not created");
+            errorLabel.setVisible(true);
+            successLabel.setVisible(false);
+        }
     }
     
     @FXML
@@ -116,16 +143,34 @@ public class AdminPage implements Initializable {
         try{
             if(PersonController.getInstance().createNurseOrDoctor(
                     nurseUsernameField.getText(),
-                    nurseNameField.getText(), //need to make first name field
-                    nurseNameField.getText(), //need to make last name field
+                    nurseFirstNameField.getText(),
+                    nurseLastNameField.getText(),
                     nursePasswordField.getText(),
                     false,true,false))
             {
-                //doctorPatientsArea.getText();
                 System.out.println("nurse created!");
+                errorLabel.setVisible(false);
+                successLabel.setVisible(true);
             }
         }
-        catch(Exception e){System.out.println("nurse not created");}
+        catch(Exception e)
+        {
+            System.out.println("nurse not created");
+            errorLabel.setVisible(true);
+            successLabel.setVisible(false);
+        }
+    }
+    
+    @FXML
+    public void deleteDoctor(javafx.event.ActionEvent event) throws IOException
+    {
+        System.out.println("to be deleted");
+    }
+    
+    @FXML
+    public void deleteNurse(javafx.event.ActionEvent event) throws IOException
+    {
+        System.out.println("to be deleted");
     }
     
     @FXML

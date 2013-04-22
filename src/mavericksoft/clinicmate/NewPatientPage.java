@@ -20,7 +20,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.MenuItem;
 
 /**
  * FXML Controller class
@@ -110,7 +109,18 @@ public class NewPatientPage implements Initializable {
         errorLabel.setVisible(false);
         
         //add doctors to MenuButton
-        doctorComboBox.getItems().addAll(new MenuItem("doc1"), new MenuItem("doc2"));
+        HealthProfessional[] doctors;
+        try
+        {
+            doctors= ((HealthProfessional)PermissionsController.getInstance().getCurrentUser()).getAllDoctors();
+            for(int i=0;i<doctors.length;i++)
+            {
+                HealthProfessional doc=doctors[i];
+                doctorComboBox.getItems().addAll(doc.getName());
+            }
+            //doctorComboBox.getItems().addAll(doctors.getName());
+        }
+        catch(Exception ex){System.out.println("No doctors found.");}
         //add months to combobox
         months=FXCollections.observableArrayList(
                 "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");

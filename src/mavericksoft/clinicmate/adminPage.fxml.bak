@@ -2,27 +2,29 @@
 
 <?import java.lang.*?>
 <?import java.util.*?>
+<?import javafx.collections.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="mavericksoft.clinicmate.AdminPage">
   <children>
-    <TabPane prefHeight="349.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+    <TabPane prefHeight="298.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
       <tabs>
         <Tab fx:id="editDoctorsTab" text="Edit Doctors">
           <content>
             <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="369.0" prefWidth="600.0">
               <children>
-                <MenuButton fx:id="doctorMenu" layoutX="68.0" layoutY="57.0" mnemonicParsing="false" text="Doctor" />
                 <Button fx:id="deleteDoctorButton" layoutX="63.0" layoutY="163.0" mnemonicParsing="false" text="Delete Doctor" />
                 <Label fx:id="doctorPatientsLabel" layoutX="378.0" layoutY="41.0" text="Patients">
                   <font>
                     <Font size="13.0" fx:id="x1" />
                   </font>
                 </Label>
-                <TextArea fx:id="doctorPatientsArea" layoutX="309.0" layoutY="78.0" prefWidth="200.0" wrapText="true" />
+                <ComboBox fx:id="doctorComboBox" layoutX="63.0" layoutY="79.0" prefHeight="21.0" prefWidth="94.0" promptText="Doctor" />
+                <ListView fx:id="doctorListView" layoutX="301.0" layoutY="63.0" prefHeight="200.0" prefWidth="200.0" />
               </children>
             </AnchorPane>
           </content>
@@ -31,13 +33,15 @@
           <content>
             <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
               <children>
-                <Button id="Create" fx:id="doctorCreateButton" layoutX="273.0" layoutY="204.0" mnemonicParsing="false" onAction="#addDoctor" text="Create" />
-                <Label id="nameLabel" fx:id="doctorNameLabel" font="$x1" layoutX="83.0" layoutY="103.0" text="Name" />
-                <Label id="nameLabel" fx:id="doctorPasswordLabel" font="$x1" layoutX="83.0" layoutY="145.0" text="Doctor Login Password" />
-                <TextField id="nameField" fx:id="doctorNameField" layoutX="244.0" layoutY="103.0" prefWidth="200.0" />
-                <TextField id="passwordField" fx:id="doctorPasswordField" layoutX="244.0" layoutY="143.0" prefWidth="200.0" />
-                <TextField fx:id="doctorUsernameField" layoutX="244.0" layoutY="64.0" prefWidth="200.0" />
-                <Label id="userNameLabel" fx:id="docUsernameLabel" layoutX="83.0" layoutY="67.0" text="Username" />
+                <Button id="Create" fx:id="doctorCreateButton" layoutX="273.0" layoutY="222.0" mnemonicParsing="false" onAction="#addDoctor" text="Create" />
+                <Label id="nameLabel" fx:id="doctorFirstNameLabel" font="$x1" layoutX="83.0" layoutY="80.0" text="First Name" />
+                <Label id="nameLabel" fx:id="doctorPasswordLabel" font="$x1" layoutX="83.0" layoutY="175.0" text="Password" />
+                <TextField id="nameField" fx:id="doctorFirstNameField" layoutX="244.0" layoutY="78.0" prefWidth="200.0" />
+                <TextField id="passwordField" fx:id="doctorPasswordField" layoutX="244.0" layoutY="173.0" prefWidth="200.0" />
+                <TextField fx:id="doctorUsernameField" layoutX="244.0" layoutY="33.0" prefWidth="200.0" />
+                <Label id="userNameLabel" fx:id="docUsernameLabel" font="$x1" layoutX="83.0" layoutY="35.0" text="Username" />
+                <Label fx:id="doctorLastNameLabel" font="$x1" layoutX="83.0" layoutY="126.0" text="Last Name" />
+                <TextField fx:id="doctorLastNameField" layoutX="244.0" layoutY="125.0" prefWidth="200.0" />
               </children>
             </AnchorPane>
           </content>
@@ -46,25 +50,27 @@
           <content>
             <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="369.0" prefWidth="600.0">
               <children>
-                <MenuButton id="doctorMenu" fx:id="nursesMenu" layoutX="68.0" layoutY="57.0" mnemonicParsing="false" text="Nurse" />
                 <Button id="deleteDoctorButton" fx:id="deleteNurseMenu" layoutX="63.0" layoutY="164.0" mnemonicParsing="false" text="Delete Nurse" />
                 <Label id="doctorPatientsLabel" fx:id="nursePatientsLabel" font="$x1" layoutX="378.0" layoutY="41.0" text="Patients" />
-                <TextArea id="doctorPatientsArea" fx:id="nursePatientsArea" layoutX="309.0" layoutY="78.0" prefWidth="200.0" wrapText="true" />
+                <ComboBox fx:id="nurseComboBox" layoutX="63.0" layoutY="78.0" prefHeight="21.0" prefWidth="89.0" promptText="Nurse" />
+                <ListView fx:id="nurseListView" layoutX="301.0" layoutY="59.0" prefHeight="200.0" prefWidth="200.0" />
               </children>
             </AnchorPane>
           </content>
         </Tab>
         <Tab fx:id="addNurseTab" text="Add Nurse">
           <content>
-            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="280.0" prefWidth="600.0">
               <children>
-                <Button id="Create" fx:id="createNurseButton" layoutX="273.0" layoutY="204.0" mnemonicParsing="false" onAction="#addNurse" text="Create" />
-                <Label id="nameLabel" fx:id="nurseNameLabel" font="$x1" layoutX="83.0" layoutY="103.0" text="Name" />
-                <Label id="nameLabel" fx:id="nursePasswordLabel" font="$x1" layoutX="83.0" layoutY="144.0" text="Nurse Login Password" />
-                <TextField id="nameField" fx:id="nurseNameField" layoutX="244.0" layoutY="103.0" prefWidth="200.0" />
-                <TextField id="passwordField" fx:id="nursePasswordField" layoutX="244.0" layoutY="141.0" prefWidth="200.0" />
-                <Label fx:id="nurseUsernameLabel" layoutX="83.0" layoutY="68.0" text="Username" />
-                <TextField fx:id="nurseUsernameField" layoutX="244.0" layoutY="65.0" prefWidth="200.0" />
+                <Button id="Create" fx:id="createNurseButton" layoutX="273.0" layoutY="221.0" mnemonicParsing="false" onAction="#addNurse" text="Create" />
+                <Label id="nameLabel" fx:id="nurseFirstNameLabel" font="$x1" layoutX="83.0" layoutY="92.0" text="First Name" />
+                <Label id="nameLabel" fx:id="nursePasswordLabel" font="$x1" layoutX="81.0" layoutY="176.0" text="Password" />
+                <TextField id="nameField" fx:id="nurseFirstNameField" layoutX="244.0" layoutY="90.0" prefWidth="200.0" />
+                <TextField id="passwordField" fx:id="nursePasswordField" layoutX="244.0" layoutY="174.0" prefWidth="200.0" />
+                <Label fx:id="nurseUsernameLabel" font="$x1" layoutX="83.0" layoutY="49.0" text="Username" />
+                <TextField fx:id="nurseUsernameField" layoutX="244.0" layoutY="46.0" prefWidth="200.0" />
+                <Label fx:id="nurseLastNameLabel" font="$x1" layoutX="81.0" layoutY="134.0" text="Last Name" />
+                <TextField fx:id="nurseLastNameField" layoutX="244.0" layoutY="132.0" prefWidth="200.0" />
               </children>
             </AnchorPane>
           </content>
@@ -72,5 +78,13 @@
       </tabs>
     </TabPane>
     <Button id="doneButton" fx:id="logOutButton" layoutX="272.0" layoutY="365.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
+    <Label fx:id="errorLabel" layoutX="239.0" layoutY="312.0" text="Professional not created" visible="false">
+      <textFill>
+        <Color blue="0.200" green="0.200" red="1.000" fx:id="x2" />
+      </textFill>
+    </Label>
+    <Label fx:id="successLabel" layoutX="247.0" layoutY="315.0" text="Professional created" visible="false" />
+    <Label fx:id="notDeletedLabel" layoutX="236.0" layoutY="333.0" text="Professional not deleted" textFill="$x2" visible="false" />
+    <Label fx:id="deletedLabel" layoutX="246.0" layoutY="332.0" text="Professional deleted" visible="false" />
   </children>
 </AnchorPane>

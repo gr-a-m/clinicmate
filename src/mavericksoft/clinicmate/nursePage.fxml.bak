@@ -22,6 +22,6 @@
     <Label fx:id="observationsLabel" layoutX="175.0" layoutY="192.0" text="Observations/Notes:" />
     <Button id="addPatient" fx:id="addPatientButton" layoutX="53.0" layoutY="365.0" mnemonicParsing="false" onAction="#addPatient" text="Add Patient" />
     <Button fx:id="logOutButton" layoutX="530.0" layoutY="365.0" mnemonicParsing="false" onAction="#logOut" text="Log Out" />
-    <ListView fx:id="patientList" layoutX="15.0" layoutY="43.0" prefHeight="37.0" prefWidth="132.0" />
+    <ListView fx:id="patientList" layoutX="15.0" layoutY="43.0" prefHeight="310.0" prefWidth="132.0" />
   </children>
 </AnchorPane>

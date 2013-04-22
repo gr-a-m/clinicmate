@@ -7,7 +7,9 @@ package mavericksoft.clinicmate;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -34,8 +36,6 @@ public class NursePage implements Initializable {
     @FXML
     private Label dateLabel;
     @FXML
-    private Label bloodLabel;
-    @FXML
     private Label glucoseLabel;
     @FXML
     private Label weightLabel;
@@ -46,8 +46,6 @@ public class NursePage implements Initializable {
     @FXML
     private TextField dateField;
     @FXML
-    private TextField bloodField;
-    @FXML
     private TextField glucoseField;
     @FXML
     private TextField weightField;
@@ -57,6 +55,16 @@ public class NursePage implements Initializable {
     private Button logOutButton;
     @FXML
     private ListView<?> patientList;
+    
+    private Patient[] patients;
+    @FXML
+    private TextField systolicField;
+    @FXML
+    private Label systolicLabel;
+    @FXML
+    private Label diastolicLabel;
+    @FXML
+    private TextField diastolicField;
 
     /**
      * Initializes the controller class.
@@ -64,7 +72,7 @@ public class NursePage implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        Patient[] patients= ((HealthProfessional)PermissionsController.getInstance().getCurrentUser()).getPatients();
+        patients= ((HealthProfessional)PermissionsController.getInstance().getCurrentUser()).getPatients();
         ArrayList<String> patientArray=new ArrayList<String>();
         //System.out.println("numOfPatients:"+patients.length);
         
@@ -81,14 +89,27 @@ public class NursePage implements Initializable {
     @FXML
     public void save(javafx.event.ActionEvent event) throws IOException
     {
-        String date=dateField.getText();
-        String blood=bloodField.getText();
-        String glucose=glucoseField.getText();
-        String weight=weightField.getText();
+        //String date=dateField.getText();
+        Date date=new Date();
+        int diastolic=Integer.parseInt(diastolicField.getText());
+        int systolic=Integer.parseInt(systolicField.getText());
+        int glucose=Integer.parseInt(glucoseField.getText());
+        int weight=Integer.parseInt(weightField.getText());
         String observations=observationArea.getText();
         
+        int index=patientList.getSelectionModel().getSelectedIndex();
+        Patient selectedPatient=patients[index];
+        UUID id=selectedPatient.getPatientID();
+        //System.out.println("selected:"+selectedPatient.getFirstName());
+        
+        HealthRecordController.getInstance().addRecord(id,date,diastolic,systolic,glucose,weight);
+        try{
+            HealthRecord[] records=HealthRecordController.getInstance().getRecordsForPatient(id);
+            UUID recordID = records[records.length-1].getRecordID();
+            HealthRecordController.getInstance().addComment(recordID,observations);
+        }catch(Exception ex){System.out.println("NonExistantRecordException");}
+        
         System.out.println("nurse saved patient info");
-        //changeScene(".fxml",event);
     }
     
     @FXML

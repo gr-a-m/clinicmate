@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.UUID;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -100,6 +101,8 @@ public class NewPatientPage implements Initializable {
     private ComboBox<?> doctorComboBox;
     @FXML
     private Label errorLabel;
+    
+    private HealthProfessional[] doctors;
     /**
      * Initializes the controller class.
      */
@@ -109,7 +112,6 @@ public class NewPatientPage implements Initializable {
         errorLabel.setVisible(false);
         
         //add doctors to MenuButton
-        HealthProfessional[] doctors;
         try
         {
             doctors= ((HealthProfessional)PermissionsController.getInstance().getCurrentUser()).getAllDoctors();
@@ -212,6 +214,22 @@ public class NewPatientPage implements Initializable {
                     primaryPhoneField.getText(),
                     SecondaryPhoneField.getText(),
                     date);
+            UUID id=patient.getPatientID();
+            String selected = doctorComboBox.getValue().toString();
+            int i;
+            for(i=0;i<doctors.length;i++)
+            {
+                if(doctors[i].getName().equals(selected))
+                {
+                    break;
+                }
+            }
+            try{
+            HealthProfessional doc=doctors[i];
+            //add patient to selected doctor
+            doc.addPatient(id);
+            System.out.println("patient added to doctor "+doc.getName());
+            }catch(Exception ex){System.out.println("doc not found");}
             
             try{
             if(patient!=null)

@@ -420,6 +420,62 @@ class HealthProfessional extends Person {
         return success;
     }
 
+    /**
+     *
+     * @return
+     * @throws NonexistentRecordException
+     */
+    public static HealthProfessional[] getAllNurses() throws NonexistentRecordException {
+        Connection conn = null;
+        // By default, return an empty array of HealthProfessionals
+        HealthProfessional[] nurses = new HealthProfessional[0];
+
+        try {
+            conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
+
+            // Get the number of doctors
+            int rowCount = 0;
+
+            PreparedStatement st = conn.prepareStatement("SELECT count(*) FROM professionals WHERE doctor=?");
+            st.setBoolean(1, true);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                rowCount = rs.getInt("count(*)");
+            }
+
+            // Get the IDs of all of the doctors
+            st = conn.prepareStatement("SELECT professional_id FROM professionals WHERE nurse=?");
+            st.setBoolean(1, true);
+            rs = st.executeQuery();
+
+            // Iterate through the IDs and generate doctors for each one
+            int i = 0;
+            nurses = new HealthProfessional[rowCount];
+            while (rs.next()) {
+                nurses[i] = HealthProfessional.getById((UUID)rs.getObject("professional_id"));
+                i++;
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException sqle) {
+                    System.out.println("Failed to close the database.");
+                    sqle.printStackTrace();
+                }
+            }
+        }
+
+        return nurses;
+    }
+
+    /**
+     *
+     * @return
+     * @throws NonexistentRecordException
+     */
     public static HealthProfessional[] getAllDoctors() throws NonexistentRecordException {
         Connection conn = null;
         // By default, return an empty array of HealthProfessionals
@@ -439,7 +495,7 @@ class HealthProfessional extends Person {
             }
 
             // Get the IDs of all of the doctors
-            st = conn.prepareStatement("SELECT professional_id FROM professionals WHERE doctor=?", ResultSet.TYPE_SCROLL_INSENSITIVE);
+            st = conn.prepareStatement("SELECT professional_id FROM professionals WHERE doctor=?");
             st.setBoolean(1, true);
             rs = st.executeQuery();
 

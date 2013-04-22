@@ -133,4 +133,14 @@ public class PersonController
             return new HealthProfessional[0];
         }
     }
+
+    public HealthProfessional[] getAllNurses() {
+        try {
+            return HealthProfessional.getAllNurses();
+        } catch (NonexistentRecordException nre) {
+            nre.printStackTrace();
+            System.out.println("Failed to get all of the nurses.");
+            return new HealthProfessional[0];
+        }
+    }
 }

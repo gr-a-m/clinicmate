@@ -428,21 +428,22 @@ class HealthProfessional extends Person {
         try {
             conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
 
-            // Get the IDs of all of the doctors
-            PreparedStatement st = conn.prepareStatement("SELECT professional_id FROM professionals WHERE doctor=?");
-            st.setBoolean(1, true);
-            ResultSet rs = st.executeQuery();
-
-            // Get the size of the array needed
+            // Get the number of doctors
             int rowCount = 0;
 
-            if (rs.last()) {
-                // Get the row number of the last row and return to the
-                // beginning of the set.
-                rowCount = rs.getRow();
-                rs.beforeFirst();
+            PreparedStatement st = conn.prepareStatement("SELECT count(*) FROM professionals WHERE doctor=?");
+            st.setBoolean(1, true);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                rowCount = rs.getInt("count(*)");
             }
 
+            // Get the IDs of all of the doctors
+            st = conn.prepareStatement("SELECT professional_id FROM professionals WHERE doctor=?", ResultSet.TYPE_SCROLL_INSENSITIVE);
+            st.setBoolean(1, true);
+            rs = st.executeQuery();
+
+            // Iterate through the IDs and generate doctors for each one
             int i = 0;
             doctors = new HealthProfessional[rowCount];
             while (rs.next()) {

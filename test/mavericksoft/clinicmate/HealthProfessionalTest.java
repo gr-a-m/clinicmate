@@ -149,6 +149,34 @@ public class HealthProfessionalTest {
     }
 
     /**
+     * This method tests the getAllDoctors() static method of HealthProfessional
+     * to ensure it returns the correct number of doctors.
+     */
+    @Test
+    public void testAllDoctors() {
+        assert(!pro1.exists());
+        pro1.save();
+        try {
+            // pro1 isn't a doctor, so it shouldn't be returned
+            assert(HealthProfessional.getAllDoctors().length == 0);
+            pro2.save();
+
+            // pro2 is though
+            assert(HealthProfessional.getAllDoctors().length == 1);
+
+            // If we add another doctor, it should continue to increase
+            HealthProfessional pro3 = new HealthProfessional("pro3", "Pro",
+                    "3", "pass3", false, false, true);
+            pro3.save();
+            assert(HealthProfessional.getAllDoctors().length == 2);
+        } catch (NonexistentRecordException nre) {
+            nre.printStackTrace();
+            System.out.println("All Doctors Test Failed.");
+            assert(false);
+        }
+    }
+
+    /**
      * This method deletes the database created during setUp.
      *
      * @throws Exception

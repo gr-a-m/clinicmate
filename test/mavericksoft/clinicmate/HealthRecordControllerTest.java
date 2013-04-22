@@ -141,4 +141,34 @@ public class HealthRecordControllerTest {
         // Now this patient should have no HealthRecords
         assert (pat1.getHealthRecords().length == 0);
     }
+
+    /**
+     * This method tests the validity of the linear regression models generated
+     * by HealthRecordController.linearRegression().
+     */
+    @Test
+    public void testLinearRegression() {
+        pat1.save();
+
+        // We need to create three HealthRecords for the patient with
+        // different slopes and intercepts for each stat
+        HealthRecordController.getInstance().addRecord(pat1.getPatientID(), new Date(2000, 1, 1), 50, 70, 100, 120);
+        HealthRecordController.getInstance().addRecord(pat1.getPatientID(), new Date(2000, 1, 2), 60, 90, 130, 120);
+        HealthRecordController.getInstance().addRecord(pat1.getPatientID(), new Date(2000, 1, 3), 70, 110, 160, 120);
+
+        try {
+            SimpleRegression reg = HealthRecordController.getInstance().linearRegression(pat1.getPatientID(),
+                    new Date(2000, 1, 1), new Date(2000, 1, 3), RegressionTypes.DIA);
+            assert (reg.getIntercept() == 50.0 && reg.getSlope() == 10.0);
+            reg = HealthRecordController.getInstance().linearRegression(pat1.getPatientID(),
+                    new Date(2000, 1, 1), new Date(2000, 1, 3), RegressionTypes.SYS);
+            assert (reg.getIntercept() == 70.0 && reg.getSlope() == 20.0);
+            reg = HealthRecordController.getInstance().linearRegression(pat1.getPatientID(),
+                    new Date(2000, 1, 1), new Date(2000, 1, 3), RegressionTypes.GLUCOSE);
+            assert (reg.getIntercept() == 100.0 && reg.getSlope() == 30.0);
+        } catch (NonexistentRecordException nre) {
+            nre.printStackTrace();
+            System.out.println("[ERROR]: Failed to test linear regression.");
+        }
+    }
 }

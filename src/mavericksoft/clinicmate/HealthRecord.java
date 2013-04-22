@@ -121,7 +121,6 @@ class HealthRecord {
                     st.setObject(1, this.recordID);
                     st.setString(2, comment);
                     st.execute();
-                    System.out.println("[DEBUG]: Saving comment " + comment);
                 }
 
                 success = true;
@@ -150,7 +149,6 @@ class HealthRecord {
                     st.setObject(1, this.recordID);
                     st.setString(2, comment);
                     st.execute();
-                    System.out.println("[DEBUG]: Saving comment " + comment);
                 }
 
                 success = true;
@@ -269,7 +267,6 @@ class HealthRecord {
 
             while (rs.next()) {
                 comments.add(rs.getString("comment"));
-                System.out.println("[DEBUG]: Comment for " + recordID + ": " + rs.getString("comment"));
             }
 
             st = conn.prepareStatement("SELECT * FROM records WHERE record_id=?");

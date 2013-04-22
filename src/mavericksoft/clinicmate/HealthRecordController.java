@@ -95,7 +95,6 @@ class HealthRecordController {
                 added = new HealthRecord(patientID, date, diaBloodPressure,
                         sysBloodPressure, glucose, weight);
                 added.save();
-                System.out.println("[DEBUG]: Saved Record.");
                 break;
             // A doctor should only add records for their own patients (it should usually be a nurse)
             case DOCTOR:
@@ -136,7 +135,10 @@ class HealthRecordController {
     }
 
     /**
-     * This method generates a linear regression model for the given patient
+     * This method generates a linear regression model for the given patient.
+     * The resulting model will have x=0 represent the day that is given for
+     * startDate and each increment of x represent 1 day. The y value is the
+     * measurement of that metric for a given day.
      *
      * @param patientID The ID of the patient to generate a regression for.
      * @param startDate The beginning date of the model generated.
@@ -153,14 +155,17 @@ class HealthRecordController {
         // Create an apache commons regression object
         SimpleRegression regression = new SimpleRegression();
 
+        Calendar beginDay = Calendar.getInstance();
+        beginDay.setTime(startDate);
+
         // Get the HealthRecords, then only pick the ones between the start and
         // end dates for the regression.
         HealthRecord[] records = getInstance().getRecordsForPatient(patientID);
         ArrayList<HealthRecord> validRecords = new ArrayList<HealthRecord>();
 
         for (HealthRecord record : records) {
-            if (record.getDate().getTime() > startDate.getTime() &&
-                record.getDate().getTime() < endDate.getTime()) {
+            if (record.getDate().getTime() >= startDate.getTime() &&
+                record.getDate().getTime() <= endDate.getTime()) {
                 validRecords.add(record);
             }
         }
@@ -176,13 +181,13 @@ class HealthRecordController {
             // needed
             switch (type) {
                 case GLUCOSE:
-                    regression.addData(day, record.getGlucose());
+                    regression.addData(day - beginDay.get(Calendar.DAY_OF_YEAR), record.getGlucose());
                     break;
                 case SYS:
-                    regression.addData(day, record.getSysBloodPressure());
+                    regression.addData(day - beginDay.get(Calendar.DAY_OF_YEAR), record.getSysBloodPressure());
                     break;
                 case DIA:
-                    regression.addData(day, record.getDiaBloodPressure());
+                    regression.addData(day - beginDay.get(Calendar.DAY_OF_YEAR), record.getDiaBloodPressure());
                     break;
                 default:
                     System.out.println("[ERROR]: Invalid regression type " +

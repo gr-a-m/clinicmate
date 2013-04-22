@@ -15,8 +15,7 @@ import java.util.UUID;
  * @author Amy Baldwin, Grant Marshall
  */
 
-public class HealthRecordController 
-{
+class HealthRecordController {
 	// The static instance object
     private static HealthRecordController instance;
 
@@ -26,15 +25,13 @@ public class HealthRecordController
      *
      * @return The static instance of the class
      */
-	public static HealthRecordController getInstance()
-	{
-		if(instance == null)
-		{
+	public static HealthRecordController getInstance() {
+		if(instance == null) {
 			instance = new HealthRecordController();
 			return instance;
-		}
-		else
+		} else {
 			return instance;
+        }
 	}
 
     /**
@@ -50,10 +47,12 @@ public class HealthRecordController
 
         if((PermissionsController.getInstance()).currentUserPermissions() == Permissions.NURSE || (PermissionsController.getInstance()).currentUserPermissions() == Permissions.DOCTOR)
         {
+            System.out.println("1");
             HealthProfessional currentProfessional = (HealthProfessional) PermissionsController.getInstance().getCurrentUser();
             HealthRecord hr = HealthRecord.getById(recordID);
             if(currentProfessional.getPatientIDs().contains(hr.getPatientID()))
             {
+                System.out.println("2");
                 hr.addComment(comment);
                 added = hr.save();
             }
@@ -112,11 +111,26 @@ public class HealthRecordController
                     }
                 }
                 break;
+            // If the currently logged in person doesn't match any of the
+            // previous types, they may not add a HealthRecord to this patient.
             default:
-                System.out.println("User does not possess the correct permissions to add a record.");
+                System.out.println("User does not possess the correct " +
+                                   "permissions to add a record.");
                 break;
         }
 
         return added;
+    }
+
+    /**
+     * This method gets all of the HealthRecords for a given Patient (based on
+     * the patient's ID) and returns them in an array.
+     *
+     * @param patientID The ID of the patient to pull up records for
+     * @return          An array containing that patient's HealthRecords
+     */
+    public HealthRecord[] getRecordsForPatient(UUID patientID) throws NonexistentRecordException {
+        Patient patient = Patient.getById(patientID);
+        return patient.getHealthRecords();
     }
 }

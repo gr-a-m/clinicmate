@@ -1,5 +1,8 @@
 package mavericksoft.clinicmate;
+import org.apache.commons.math3.stat.regression.SimpleRegression;
+
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -130,5 +133,61 @@ class HealthRecordController {
     public HealthRecord[] getRecordsForPatient(UUID patientID) throws NonexistentRecordException {
         Patient patient = Patient.getById(patientID);
         return patient.getHealthRecords();
+    }
+
+    /**
+     * This method generates a linear regression model for the given patient
+     *
+     * @param patientID The ID of the patient to generate a regression for.
+     * @param startDate The beginning date of the model generated.
+     * @param endDate   The end date of the model generated.
+     * @param type      The variable to generate the regression based on.
+     * @return          A SimpleRegression model that can be displayed by the
+     *                  UI in graphical form.
+     */
+    public SimpleRegression linearRegression(UUID patientID,
+                                             Date startDate,
+                                             Date endDate,
+                                             RegressionTypes type)
+            throws NonexistentRecordException {
+        // Create an apache commons regression object
+        SimpleRegression regression = new SimpleRegression();
+
+        // Get the HealthRecords, then only pick the ones between the start and
+        // end dates for the regression.
+        HealthRecord[] records = getInstance().getRecordsForPatient(patientID);
+        ArrayList<HealthRecord> validRecords = new ArrayList<HealthRecord>();
+
+        for (HealthRecord record : records) {
+            if (record.getDate().getTime() > startDate.getTime() &&
+                record.getDate().getTime() < endDate.getTime()) {
+                validRecords.add(record);
+            }
+        }
+
+        // Add the records to the model, with x being the number of days past
+        // the start and y being the measurement of the specified record.
+        for (HealthRecord record : validRecords) {
+            Calendar recCalendar = Calendar.getInstance();
+            recCalendar.setTime(record.getDate());
+            int day = recCalendar.get(Calendar.DAY_OF_YEAR);
+
+            // Add different values depending on what type of regression is
+            // needed
+            switch (type) {
+                case GLUCOSE:
+                    regression.addData(day, record.getGlucose());
+                case SYS:
+                    regression.addData(day, record.getSysBloodPressure());
+                case DIA:
+                    regression.addData(day, record.getDiaBloodPressure());
+                default:
+                    System.out.println("[ERROR]: Invalid regression type " +
+                            "requested.");
+                    break;
+            }
+        }
+
+        return regression;
     }
 }

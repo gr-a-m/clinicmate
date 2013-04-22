@@ -1,5 +1,5 @@
 package mavericksoft.clinicmate;
-import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -134,6 +134,12 @@ public class PersonController
         }
     }
 
+    /**
+     * This method gets all of the nurses from the database.
+     *
+     * @return An array of nurse HealthProfessionals, representing all of the
+     *         nurses in the database.
+     */
     public HealthProfessional[] getAllNurses() {
         try {
             return HealthProfessional.getAllNurses();

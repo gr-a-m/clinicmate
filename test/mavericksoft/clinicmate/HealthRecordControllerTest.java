@@ -1,5 +1,6 @@
 package mavericksoft.clinicmate;
 
+import org.apache.commons.math3.stat.regression.SimpleRegression;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -7,6 +8,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * This class is a test class for HealthRecordController.java. Though it uses

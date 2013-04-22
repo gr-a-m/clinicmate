@@ -1,9 +1,8 @@
 package mavericksoft.clinicmate;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.UUID;
+import java.sql.Date;
+import java.util.*;
 
 /**
  * The HealthRecord class represents the measurements for one day. Each
@@ -18,13 +17,13 @@ import java.util.UUID;
 class HealthRecord {
     private UUID recordID;
     private UUID patientID;
-    private Date date;
+    private java.util.Date date;
     private int diaBloodPressure;
     private int sysBloodPressure;
     private int glucose;
     private int weight;
     private ArrayList<String> comments;
-    private Date createdAt;
+    private java.util.Date createdAt;
 
     /**
      * This constructor should be used when creating a new record that doesn't
@@ -41,7 +40,7 @@ class HealthRecord {
      * @param glucose           The glucose levels of the Patient on this date
      * @param weight            The patient's weight on this date
      */
-    public HealthRecord(UUID patientID, Date date, int diaBloodPressure,
+    public HealthRecord(UUID patientID, java.util.Date date, int diaBloodPressure,
                         int sysBloodPressure, int glucose, int weight) {
         // Generate a UUID for this record
         this.recordID = UUID.randomUUID();
@@ -55,7 +54,7 @@ class HealthRecord {
         this.weight = weight;
 
         // Set the createdAt
-        this.createdAt = new Date();
+        this.createdAt = new java.util.Date();
 
         // Set the comments to empty initially
         this.comments = new ArrayList<String>();
@@ -75,7 +74,7 @@ class HealthRecord {
      * @param comments         Any comments on this particular measurement
      * @param createdAt        When this record was created
      */
-    public HealthRecord(UUID recordID, UUID patientID, Date date, int diaBloodPressure,
+    public HealthRecord(UUID recordID, UUID patientID, java.util.Date date, int diaBloodPressure,
                         int sysBloodPressure, int glucose, int weight,
                         ArrayList<String> comments, Date createdAt) {
         this.recordID = recordID;
@@ -122,6 +121,7 @@ class HealthRecord {
                     st.setObject(1, this.recordID);
                     st.setString(2, comment);
                     st.execute();
+                    System.out.println("[DEBUG]: Saving comment " + comment);
                 }
 
                 success = true;
@@ -150,6 +150,7 @@ class HealthRecord {
                     st.setObject(1, this.recordID);
                     st.setString(2, comment);
                     st.execute();
+                    System.out.println("[DEBUG]: Saving comment " + comment);
                 }
 
                 success = true;
@@ -259,7 +260,8 @@ class HealthRecord {
         try {
             conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
 
-            ArrayList<String> comments = new ArrayList<String>();
+            // Implement the comments as a HashSet to avoid adding any preexisting comments
+            HashSet<String> comments = new HashSet<String>();
 
             PreparedStatement st = conn.prepareStatement("SELECT * FROM comments WHERE record_id=?");
             st.setObject(1, recordID);
@@ -267,6 +269,7 @@ class HealthRecord {
 
             while (rs.next()) {
                 comments.add(rs.getString("comment"));
+                System.out.println("[DEBUG]: Comment for " + recordID + ": " + rs.getString("comment"));
             }
 
             st = conn.prepareStatement("SELECT * FROM records WHERE record_id=?");
@@ -275,14 +278,14 @@ class HealthRecord {
 
             if (rs.next()) {
                 result = new HealthRecord(
-                    (UUID) rs.getObject("patient_id"),
                     (UUID) rs.getObject("record_id"),
+                    (UUID) rs.getObject("patient_id"),
                     rs.getDate("date"),
                     rs.getInt("dia_blood_pressure"),
                     rs.getInt("sys_blood_pressure"),
                     rs.getInt("glucose"),
                     rs.getInt("weight"),
-                    comments,
+                    new ArrayList<String>(comments),
                     new Date(rs.getTime("created_at").getTime())
                 );
             }
@@ -321,7 +324,7 @@ class HealthRecord {
         return patientID;
     }
 
-    public Date getDate() {
+    public java.util.Date getDate() {
         return date;
     }
 
@@ -345,7 +348,7 @@ class HealthRecord {
         return comments;
     }
 
-    public Date getCreatedAt() {
+    public java.util.Date getCreatedAt() {
         return createdAt;
     }
 }

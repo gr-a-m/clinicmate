@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * This class is a test class for HealthRecordController.java. Though it uses
@@ -84,24 +85,28 @@ public class HealthRecordControllerTest {
      */
     @Test
     public void testAddComment() throws Exception {
-        pat1.save();
-        HealthRecord hr = new HealthRecord(pat1.getPatientID(), new Date(), 1, 1, 1, 1);
-        hr.save();
-        HealthRecord hrCopy = pat1.getHealthRecords()[0];
-        HealthRecordController hrc = HealthRecordController.getInstance();
-
-        // Make sure the correct permissions are in order (Nurse should work)
-        hp1.addPatient(pat1.getPatientID());
+        // Save the nurse and login as that person
         hp1.save();
         assert (PermissionsController.getInstance().logon("pro1", "pass1"));
         assert (PermissionsController.getInstance().currentUserPermissions() ==
                 Permissions.NURSE);
 
-        // Add the comments to the created HealthRecord
-        hrc.addComment(hrCopy.getRecordID(), "Hi There!");
-        hrc.addComment(hrCopy.getRecordID(), "Second!");
+        // Save patient 1 and add a HealthRecord to them
+        pat1.save();
+        HealthRecord hr = HealthRecordController.getInstance().addRecord(pat1.getPatientID(), new Date(), 1, 1, 1, 1);
 
-        assert (pat1.getHealthRecords()[0].getComments().size() == 2);
+        HealthRecordController hrc = HealthRecordController.getInstance();
+
+        // Add the patient to the nurse
+        hp1.addPatient(pat1.getPatientID());
+        hp1.save();
+
+        // Add the comments to the created HealthRecord
+        hrc.addComment(hr.getRecordID(), "Hi There!");
+        hrc.addComment(hr.getRecordID(), "Second!");
+
+        // The HealthRecord associated with pat1 should have 2 comments
+        assert (((HealthProfessional)PermissionsController.getInstance().getCurrentUser()).getPatients()[0].getHealthRecords()[0].getComments().size() == 2);
     }
 
     /**

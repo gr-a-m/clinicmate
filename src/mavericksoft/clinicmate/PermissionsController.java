@@ -86,10 +86,36 @@ public class PermissionsController
 	{
 		return permission;
 	}
-	
-	// Return current user Person object logged into the system.
+
+    /**
+     * This method gets the person currently logged into the system. It will
+     * get the newest information about that person from the database to
+     * ensure it is using the most current data.
+     *
+     * @return The Person currently logged in.
+     */
 	public Person getCurrentUser()
 	{
-		return currentUser;
+        try {
+            switch (currentUserPermissions()) {
+                case PATIENT:
+                    currentUser = Patient.getById(((Patient) currentUser).getPatientID());
+                    break;
+                case DOCTOR:
+                case NURSE:
+                case ADMIN:
+                    currentUser = HealthProfessional.getById(((HealthProfessional) currentUser).getEmployeeID());
+                    break;
+                default:
+                    currentUser = null;
+                    break;
+            }
+        } catch (NonexistentRecordException nre) {
+            nre.printStackTrace();
+            System.out.println("[ERROR]: Failed to get current user.");
+            currentUser = null;
+        }
+
+        return currentUser;
 	}
 }

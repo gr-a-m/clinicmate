@@ -45,17 +45,14 @@ class HealthRecordController {
     {
         boolean added = false;
 
+        // Only nurses and doctors can comment on a patient's record
         if((PermissionsController.getInstance()).currentUserPermissions() == Permissions.NURSE || (PermissionsController.getInstance()).currentUserPermissions() == Permissions.DOCTOR)
         {
-            System.out.println("1");
-            HealthProfessional currentProfessional = (HealthProfessional) PermissionsController.getInstance().getCurrentUser();
             HealthRecord hr = HealthRecord.getById(recordID);
-            if(currentProfessional.getPatientIDs().contains(hr.getPatientID()))
-            {
-                System.out.println("2");
-                hr.addComment(comment);
-                added = hr.save();
-            }
+
+            hr.addComment(comment);
+            hr.save();
+            added = true;
         }
 
         return added;
@@ -95,6 +92,7 @@ class HealthRecordController {
                 added = new HealthRecord(patientID, date, diaBloodPressure,
                         sysBloodPressure, glucose, weight);
                 added.save();
+                System.out.println("[DEBUG]: Saved Record.");
                 break;
             // A doctor should only add records for their own patients (it should usually be a nurse)
             case DOCTOR:

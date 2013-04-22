@@ -246,7 +246,7 @@ abstract class Person {
 
                 createString = "CREATE TABLE IF NOT EXISTS comments (" +
                         "record_id UUID, " +
-                        "comment VARCHAR)";
+                        "comment TEXT)";
 
                 // Make the comments table
                 conn.createStatement().execute(createString);

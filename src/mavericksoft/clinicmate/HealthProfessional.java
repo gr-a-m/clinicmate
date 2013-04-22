@@ -421,8 +421,11 @@ class HealthProfessional extends Person {
     }
 
     /**
+     * This method retrieves all of the records from the database that are
+     * marked as a nurse.
      *
-     * @return
+     * @return An array of HealthProfessional objects representing all of the
+     *         nurses in the database.
      * @throws NonexistentRecordException
      */
     public static HealthProfessional[] getAllNurses() throws NonexistentRecordException {
@@ -433,7 +436,7 @@ class HealthProfessional extends Person {
         try {
             conn = DriverManager.getConnection("jdbc:h2:./data/clinicmate", "sa", "");
 
-            // Get the number of doctors
+            // Get the number of nurses
             int rowCount = 0;
 
             PreparedStatement st = conn.prepareStatement("SELECT count(*) FROM professionals WHERE doctor=?");
@@ -443,12 +446,12 @@ class HealthProfessional extends Person {
                 rowCount = rs.getInt("count(*)");
             }
 
-            // Get the IDs of all of the doctors
+            // Get the IDs of all of the nurses
             st = conn.prepareStatement("SELECT professional_id FROM professionals WHERE nurse=?");
             st.setBoolean(1, true);
             rs = st.executeQuery();
 
-            // Iterate through the IDs and generate doctors for each one
+            // Iterate through the IDs and generate nurses for each one
             int i = 0;
             nurses = new HealthProfessional[rowCount];
             while (rs.next()) {
@@ -472,8 +475,9 @@ class HealthProfessional extends Person {
     }
 
     /**
+     * This method gets all of the doctors from the database.
      *
-     * @return
+     * @return An array of HealthProfessionals containing all doctors
      * @throws NonexistentRecordException
      */
     public static HealthProfessional[] getAllDoctors() throws NonexistentRecordException {

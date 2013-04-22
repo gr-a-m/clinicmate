@@ -407,6 +407,7 @@ class Patient extends Person {
             // Enter a UUID into the map for each record the patient has
             while (rs.next()) {
                 comments.put((UUID) rs.getObject("record_id"), new ArrayList<String>());
+                System.out.println("[DEBUG]: User has record: " + ((UUID)rs.getObject("record_id")).toString());
             }
 
             // For each record id, get the comments
@@ -418,6 +419,7 @@ class Patient extends Person {
                 // Iterate through the record's comments and add them
                 while (rs.next()) {
                     comments.get(id).add(rs.getString("comment"));
+                    System.out.println("[DEBUG] Comment for " + id + ": " + rs.getString("comment"));
                 }
             }
 

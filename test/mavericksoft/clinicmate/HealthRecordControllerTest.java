@@ -168,7 +168,6 @@ public class HealthRecordControllerTest {
             assert (reg.getIntercept() == 100.0 && reg.getSlope() == 30.0);
         } catch (NonexistentRecordException nre) {
             nre.printStackTrace();
-            System.out.println("[ERROR]: Failed to test linear regression.");
         }
     }
 }

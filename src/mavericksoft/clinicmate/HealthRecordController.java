@@ -1,10 +1,11 @@
 package mavericksoft.clinicmate;
-import org.apache.commons.math3.stat.regression.SimpleRegression;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
+
+import org.apache.commons.math3.stat.regression.SimpleRegression;
 
 /**
  * The HealthRecordController class manages patient health

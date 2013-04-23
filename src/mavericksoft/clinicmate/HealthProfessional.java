@@ -168,7 +168,8 @@ class HealthProfessional extends Person {
             // Delete from the mapping database as well
             st = conn.prepareStatement("DELETE FROM person_map WHERE pro_id=?");
             st.setString(1, this.employeeID.toString());
-            success = success & st.execute();
+            st.execute();
+            success = true;
         } catch (SQLException sqle) {
             System.out.println("Failed to open a connection to the database.");
             sqle.printStackTrace();

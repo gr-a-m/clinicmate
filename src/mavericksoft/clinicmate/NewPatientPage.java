@@ -225,10 +225,10 @@ public class NewPatientPage implements Initializable {
                 }
             }
             try{
-            HealthProfessional doc=doctors[i];
-            //add patient to selected doctor
-            doc.addPatient(id);
-            System.out.println("patient added to doctor "+doc.getName());
+                HealthProfessional doc=doctors[i];
+                //add patient to selected doctor
+                doc.addPatient(id);
+                System.out.println("patient added to doctor "+doc.getName());
             }catch(Exception ex){System.out.println("doc not found");}
             
             try{

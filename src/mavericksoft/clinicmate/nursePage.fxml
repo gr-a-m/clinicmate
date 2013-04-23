@@ -2,6 +2,7 @@
 
 <?import java.lang.*?>
 <?import java.util.*?>
+<?import javafx.collections.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -9,13 +10,12 @@
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="mavericksoft.clinicmate.NursePage">
   <children>
     <Label fx:id="patientsLabel" layoutX="15.0" layoutY="14.0" text="Patients:" />
-    <TextField fx:id="dateField" layoutX="381.0" layoutY="11.0" prefWidth="200.0" />
     <TextField id="bloodField" fx:id="systolicField" layoutX="381.0" layoutY="48.0" prefWidth="200.0" />
     <TextField fx:id="glucoseField" layoutX="386.0" layoutY="119.0" prefWidth="200.0" />
     <TextField fx:id="weightField" layoutX="386.0" layoutY="158.0" prefWidth="200.0" />
     <TextArea fx:id="observationArea" layoutX="175.0" layoutY="216.0" prefHeight="137.0" prefWidth="411.0" wrapText="true" />
     <Button fx:id="saveButton" layoutX="353.0" layoutY="365.0" mnemonicParsing="false" onAction="#save" text="Save" />
-    <Label fx:id="dateLabel" layoutX="174.0" layoutY="14.0" text="Date (MM/DD/YYYY)" />
+    <Label fx:id="dateLabel" layoutX="174.0" layoutY="14.0" text="Date" />
     <Label id="bloodLabel" fx:id="systolicLabel" layoutX="174.0" layoutY="51.0" text="Systolic pressure" />
     <Label fx:id="glucoseLabel" layoutX="175.0" layoutY="122.0" text="Glucose Level (mg/dL)" />
     <Label fx:id="weightLabel" layoutX="175.0" layoutY="161.0" text="Weight (lbs)" />
@@ -25,5 +25,11 @@
     <ListView fx:id="patientList" layoutX="15.0" layoutY="43.0" prefHeight="310.0" prefWidth="132.0" />
     <Label fx:id="diastolicLabel" layoutX="175.0" layoutY="84.0" text="Diastolic pressure" />
     <TextField fx:id="diastolicField" layoutX="381.0" layoutY="81.0" prefWidth="200.0" />
+    <ComboBox fx:id="dayComboBox" layoutX="439.0" layoutY="16.0" promptText="Day">
+    </ComboBox>
+    <ComboBox fx:id="yearComboBox" layoutX="510.0" layoutY="16.0" promptText="Year">
+    </ComboBox>
+    <ComboBox fx:id="monthComboBox" layoutX="368.0" layoutY="17.0" promptText="Month">
+    </ComboBox>
   </children>
 </AnchorPane>

@@ -11,20 +11,21 @@
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="mavericksoft.clinicmate.AdminPage">
   <children>
-    <TabPane prefHeight="298.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+    <TabPane prefHeight="300.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
       <tabs>
         <Tab fx:id="editDoctorsTab" text="Edit Doctors">
           <content>
             <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="369.0" prefWidth="600.0">
               <children>
-                <Button fx:id="deleteDoctorButton" layoutX="63.0" layoutY="163.0" mnemonicParsing="false" onAction="#deleteDoctor" text="Delete Doctor" />
+                <Button fx:id="deleteDoctorButton" layoutX="245.0" layoutY="29.0" mnemonicParsing="false" onAction="#deleteDoctor" text="Delete Doctor" />
                 <Label fx:id="doctorPatientsLabel" layoutX="378.0" layoutY="41.0" text="Patients">
                   <font>
                     <Font size="13.0" fx:id="x1" />
                   </font>
                 </Label>
-                <ComboBox fx:id="doctorComboBox" layoutX="63.0" layoutY="79.0" prefHeight="21.0" prefWidth="94.0" promptText="Doctor" />
-                <ListView fx:id="doctorListView" layoutX="301.0" layoutY="63.0" prefHeight="200.0" prefWidth="200.0" />
+                <ListView id="doctorListView" fx:id="doctorPatientList" layoutX="301.0" layoutY="63.0" prefHeight="200.0" prefWidth="200.0" />
+                <ListView fx:id="doctorList" layoutX="85.0" layoutY="63.0" onMouseClicked="#updateDoctorPatientList" prefHeight="200.0" prefWidth="200.0" />
+                <Label fx:id="doctorLabel" font="$x1" layoutX="165.0" layoutY="41.0" text="Doctor" />
               </children>
             </AnchorPane>
           </content>
@@ -50,10 +51,11 @@
           <content>
             <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="369.0" prefWidth="600.0">
               <children>
-                <Button id="deleteDoctorButton" fx:id="deleteNurseMenu" layoutX="63.0" layoutY="164.0" mnemonicParsing="false" onAction="#deleteNurse" text="Delete Nurse" />
+                <Button id="deleteDoctorButton" fx:id="deleteNurseMenu" layoutX="245.0" layoutY="29.0" mnemonicParsing="false" onAction="#deleteNurse" text="Delete Nurse" />
                 <Label id="doctorPatientsLabel" fx:id="nursePatientsLabel" font="$x1" layoutX="378.0" layoutY="41.0" text="Patients" />
-                <ComboBox fx:id="nurseComboBox" layoutX="63.0" layoutY="78.0" prefHeight="21.0" prefWidth="89.0" promptText="Nurse" />
-                <ListView fx:id="nurseListView" layoutX="301.0" layoutY="59.0" prefHeight="200.0" prefWidth="200.0" />
+                <ListView id="nurseListView" fx:id="nursePatientList" layoutX="301.0" layoutY="59.0" prefHeight="200.0" prefWidth="200.0" />
+                <ListView fx:id="nurseList" layoutX="80.0" layoutY="59.0" onMouseClicked="#updateNursePatientList" prefHeight="200.0" prefWidth="200.0" />
+                <Label id="doctorList" fx:id="nurseLabel" font="$x1" layoutX="166.0" layoutY="39.0" text="Nurse" />
               </children>
             </AnchorPane>
           </content>

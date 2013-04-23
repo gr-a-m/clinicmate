@@ -6,15 +6,19 @@ package mavericksoft.clinicmate;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
@@ -32,8 +36,6 @@ public class AdminPage implements Initializable {
     @FXML
     private Font x1;
     @FXML
-    private TextArea doctorPatientsArea;
-    @FXML
     private Tab addDoctorTab;
     @FXML
     private Button doctorCreateButton;
@@ -47,8 +49,6 @@ public class AdminPage implements Initializable {
     private Button deleteNurseMenu;
     @FXML
     private Label nursePatientsLabel;
-    @FXML
-    private TextArea nursePatientsArea;
     @FXML
     private Tab addNurseTab;
     @FXML
@@ -67,10 +67,6 @@ public class AdminPage implements Initializable {
     private Label nurseUsernameLabel;
     @FXML
     private TextField nurseUsernameField;
-    @FXML
-    private ComboBox<?> doctorComboBox;
-    @FXML
-    private ComboBox<?> nurseComboBox;
     @FXML
     private Label doctorFirstNameLabel;
     @FXML
@@ -91,6 +87,35 @@ public class AdminPage implements Initializable {
     private Label errorLabel;
     @FXML
     private Label successLabel;
+    
+    public HealthProfessional[] nurses;
+    public HealthProfessional[] doctors;
+    
+        private ListView<?> doctorListView;
+        private ListView<?> nurseListView;
+    @FXML
+    private Color x2;
+    @FXML
+    private Label notDeletedLabel;
+    @FXML
+    private Label deletedLabel;
+    
+    private Patient[] patients;
+    
+    private HealthProfessional currentNurse;
+    private HealthProfessional currentDoctor;
+    @FXML
+    private ListView<?> doctorPatientList;
+    @FXML
+    private ListView<?> doctorList;
+    @FXML
+    private Label doctorLabel;
+    @FXML
+    private ListView<?> nursePatientList;
+    @FXML
+    private ListView<?> nurseList;
+    @FXML
+    private Label nurseLabel;
 
     /**
      * Initializes the controller class.
@@ -98,24 +123,16 @@ public class AdminPage implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        //add nurses and doctors to ComboBoxes
-        HealthProfessional[] nurses;
-        HealthProfessional[] doctors;
-        try
-        {
-            doctors= ((HealthProfessional)PermissionsController.getInstance().getCurrentUser()).getAllDoctors();
-            for(int i=0;i<doctors.length;i++)
-            {
-                HealthProfessional doc=doctors[i];
-                doctorComboBox.getItems().addAll(doc.getName());
-            }
-        }
-        catch(Exception ex){System.out.println("No doctors found.");}
+        currentDoctor=null;
+        currentNurse=null;
+        updateNurseList();
+        updateDoctorList();
     }
     
     @FXML
     public void addDoctor(javafx.event.ActionEvent event) throws IOException
     {
+        resetLabels();
         try{
             if(PersonController.getInstance().createNurseOrDoctor(
                     doctorUsernameField.getText(),
@@ -125,21 +142,25 @@ public class AdminPage implements Initializable {
                     false,false,true))
             {
                 System.out.println("doctor created!");
-                errorLabel.setVisible(false);
                 successLabel.setVisible(true);
+                doctorUsernameField.setText("");
+                doctorFirstNameField.setText("");
+                doctorLastNameField.setText("");
+                doctorPasswordField.setText("");
+                updateDoctorList();
             }
         }
         catch(Exception e)
         {
             System.out.println("doctor not created");
             errorLabel.setVisible(true);
-            successLabel.setVisible(false);
         }
     }
     
     @FXML
     public void addNurse(javafx.event.ActionEvent event) throws IOException
     {
+        resetLabels();
         try{
             if(PersonController.getInstance().createNurseOrDoctor(
                     nurseUsernameField.getText(),
@@ -149,28 +170,61 @@ public class AdminPage implements Initializable {
                     false,true,false))
             {
                 System.out.println("nurse created!");
-                errorLabel.setVisible(false);
                 successLabel.setVisible(true);
+                nurseUsernameField.setText("");
+                nurseFirstNameField.setText("");
+                nurseLastNameField.setText("");
+                nursePasswordField.setText("");
+                updateNurseList();
             }
         }
         catch(Exception e)
         {
             System.out.println("nurse not created");
             errorLabel.setVisible(true);
-            successLabel.setVisible(false);
         }
     }
     
     @FXML
     public void deleteDoctor(javafx.event.ActionEvent event) throws IOException
     {
-        System.out.println("to be deleted");
+        resetLabels();
+        if(currentDoctor!=null)
+        {
+            if(currentDoctor.delete())
+            {
+                System.out.println("Deleted.");
+                currentDoctor=null;
+                deletedLabel.setVisible(true);
+                doctorPatientList.setItems(null);
+                updateDoctorList();
+            }
+            else
+            {
+                notDeletedLabel.setVisible(true);
+            }
+        }
     }
     
     @FXML
     public void deleteNurse(javafx.event.ActionEvent event) throws IOException
     {
-        System.out.println("to be deleted");
+        resetLabels();
+        if(currentNurse!=null)
+        {
+            if(currentNurse.delete())
+            {
+                System.out.println("Deleted.");
+                deletedLabel.setVisible(true);
+                currentNurse=null;
+                nursePatientList.setItems(null);
+                updateNurseList();
+            }
+            else
+            {
+                notDeletedLabel.setVisible(true);
+            }
+        }
     }
     
     @FXML
@@ -179,4 +233,142 @@ public class AdminPage implements Initializable {
         PermissionsController.getInstance().logout();
         new ClinicMatePage("loginPage.fxml",event,"Login");
     }
+    
+    public void resetLabels()
+    {
+        deletedLabel.setVisible(false);
+        notDeletedLabel.setVisible(false);
+        successLabel.setVisible(false);
+        errorLabel.setVisible(false);
+        //System.out.println("tab changed");
+    }
+    
+        public void tabChanged(javafx.event.ActionEvent event) throws IOException
+    {
+        deletedLabel.setVisible(false);
+        notDeletedLabel.setVisible(false);
+        successLabel.setVisible(false);
+        errorLabel.setVisible(false);
+        System.out.println("tab changed");
+    }
+    
+    @FXML
+    public void updateDoctorPatientList(MouseEvent event) throws ArrayIndexOutOfBoundsException
+    {
+        if(doctorList.getSelectionModel().getSelectedItem()!=null)
+            updateDoctorPatientList();
+    }
+    public void updateDoctorPatientList() throws NullPointerException
+    {
+        int index=doctorList.getSelectionModel().getSelectedIndex();
+        currentDoctor=doctors[index];
+        
+        patients= currentDoctor.getPatients();
+        ArrayList<String> patientList=new ArrayList<String>();
+            
+        for(Patient patient: patients)
+        {
+            patientList.add(patient.getLastName() + ", " + patient.getFirstName());
+        }
+        
+        ObservableList items=FXCollections.observableArrayList(patientList);
+        
+        try{
+            doctorPatientList.setItems(items);
+        }catch(Exception ex){System.out.println("list is empty");}
+    }
+    public void updateDoctorList()
+    {
+        ObservableList items;
+            try{
+            doctors= PersonController.getInstance().getAllDoctors();
+            }catch(Exception ex){}
+            if(doctors!=null)
+            {
+                ArrayList<String> docs=new ArrayList<String>();
+                for(HealthProfessional pro: doctors)
+                {
+                    docs.add(pro.getName());
+                }
+                items=FXCollections.observableArrayList(docs);
+                doctorList.setItems(items);
+            }
+    }
+    
+    @FXML
+    public void updateNursePatientList(MouseEvent event) throws ArrayIndexOutOfBoundsException
+    {
+        if(nurseList.getSelectionModel().getSelectedItem()!=null)
+            updateNursePatientList();
+    }
+    public void updateNursePatientList() throws NullPointerException
+    {
+        int index=nurseList.getSelectionModel().getSelectedIndex();
+        currentNurse=nurses[index];
+        
+        patients= currentNurse.getPatients();
+        ArrayList<String> patientList=new ArrayList<String>();
+            
+        for(Patient patient: patients)
+        {
+            patientList.add(patient.getLastName() + ", " + patient.getFirstName());
+        }
+        
+        ObservableList items=FXCollections.observableArrayList(patientList);
+        
+        try{
+            nursePatientList.setItems(items);
+        }catch(Exception ex){System.out.println("list is empty");}
+    }
+    public void updateNurseList()
+    {
+        ObservableList items;
+            try{
+            nurses= PersonController.getInstance().getAllNurses();
+            }catch(Exception ex){}
+            if(nurses!=null)
+            {
+                ArrayList<String> nurs=new ArrayList<String>();
+                for(HealthProfessional pro: nurses)
+                {
+                    nurs.add(pro.getName());
+                }
+                items=FXCollections.observableArrayList(nurs);
+                nurseList.setItems(items);
+            }
+    }
+    /*
+    public void updateLists()
+    {
+        //add nurses and doctors to the lists
+        //try
+        //{
+            ObservableList items=null,items2=null;
+            try{
+            doctors= PersonController.getInstance().getAllDoctors();
+            nurses= PersonController.getInstance().getAllNurses();
+            }catch(Exception ex){}
+            
+            if(doctors!=null)
+            {
+                ArrayList<String> docs=new ArrayList<String>();
+                for(HealthProfessional pro: doctors)
+                {
+                    docs.add(pro.getName());
+                }
+                items=FXCollections.observableArrayList(docs);
+                doctorList.setItems(items);
+            }
+            if(nurses!=null)
+            {
+                ArrayList<String> nurs=new ArrayList<String>();
+                for(HealthProfessional pro: nurses)
+                {
+                    nurs.add(pro.getName());
+                }
+                items2=FXCollections.observableArrayList(nurs);
+                nurseList.setItems(items2);
+            }            
+        //}catch(Exception ex){ex.printStackTrace();}
+    }*/
 }

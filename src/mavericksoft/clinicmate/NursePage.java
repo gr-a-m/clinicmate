@@ -74,6 +74,10 @@ public class NursePage implements Initializable {
     private ComboBox<?> yearComboBox;
     @FXML
     private ComboBox<String> monthComboBox;
+    @FXML
+    private Label errorLabel;
+    @FXML
+    private Label successLabel;
 
     /**
      * Initializes the controller class.
@@ -136,36 +140,79 @@ public class NursePage implements Initializable {
     @FXML
     public void save(javafx.event.ActionEvent event) throws IOException
     {
+        boolean save=true;
         Date date=null;
+        int diastolic=-1;
+        int systolic=-1;
+        int glucose=-1;
+        int weight=-1;
+        String observations="";
+        UUID id=null;
         try
         {
-            int month=months.indexOf(monthComboBox.getSelectionModel().selectedItemProperty().getValue());
-            int day=Integer.parseInt(dayComboBox.getSelectionModel().selectedItemProperty().getValue().toString());
-            int year=Integer.parseInt(yearComboBox.getSelectionModel().selectedItemProperty().getValue().toString())-1900;
-            date = new Date(year,month,day);
-            //System.out.println(month + "/" + day + "/" + year);
+            
+            if(monthComboBox.getSelectionModel().selectedItemProperty().getValue()==null ||
+                    dayComboBox.getSelectionModel().selectedItemProperty().getValue()==null ||
+                    yearComboBox.getSelectionModel().selectedItemProperty().getValue()==null)
+            {
+                System.out.println("NULL DATE");
+                save=false;
+            }
+                int month=months.indexOf(monthComboBox.getSelectionModel().selectedItemProperty().getValue())+1;
+                int day=Integer.parseInt(dayComboBox.getSelectionModel().selectedItemProperty().getValue().toString());
+                int year=Integer.parseInt(yearComboBox.getSelectionModel().selectedItemProperty().getValue().toString())-1900;
+                date = new Date(year,month,day);
+                System.out.println(month + "/" + day + "/" + year);
         }
         catch(Exception ex){}
         
-        int diastolic=Integer.parseInt(diastolicField.getText());
-        int systolic=Integer.parseInt(systolicField.getText());
-        int glucose=Integer.parseInt(glucoseField.getText());
-        int weight=Integer.parseInt(weightField.getText());
-        String observations=observationArea.getText();
+        if(diastolicField.getText().isEmpty() || systolicField.getText().isEmpty() ||
+                glucoseField.getText().isEmpty() || weightField.getText().isEmpty())
+        {
+            System.out.println("textfields are empty");
+            save=false;
+        }
+        else
+        {
+            diastolic=Integer.parseInt(diastolicField.getText());
+            systolic=Integer.parseInt(systolicField.getText());
+            glucose=Integer.parseInt(glucoseField.getText());
+            weight=Integer.parseInt(weightField.getText());
+            observations=observationArea.getText();
+        }
+
         
-        int index=patientList.getSelectionModel().getSelectedIndex();
-        Patient selectedPatient=patients[index];
-        UUID id=selectedPatient.getPatientID();
-        //System.out.println("selected:"+selectedPatient.getFirstName());
-        
-        HealthRecordController.getInstance().addRecord(id,date,diastolic,systolic,glucose,weight);
-        try{
-            HealthRecord[] records=HealthRecordController.getInstance().getRecordsForPatient(id);
-            UUID recordID = records[records.length-1].getRecordID();
-            HealthRecordController.getInstance().addComment(recordID,observations);
-        }catch(Exception ex){System.out.println("NonExistantRecordException");}
-        
-        System.out.println("nurse saved patient info");
+        if(patientList.getSelectionModel().getSelectedItem()==null)
+        {
+            save=false;
+            System.out.println("patient not selected");
+        }
+        else
+        {
+            int index=patientList.getSelectionModel().getSelectedIndex();
+            Patient selectedPatient=patients[index];
+            id=selectedPatient.getPatientID();
+            //System.out.println("selected:"+selectedPatient.getFirstName());
+        }
+
+        if(save)
+        {
+            try{
+                HealthRecordController.getInstance().addRecord(id,date,diastolic,systolic,glucose,weight);
+                //HealthRecord[] records=HealthRecordController.getInstance().getRecordsForPatient(id);
+                //UUID recordID = records[records.length-1].getRecordID();
+                //HealthRecordController.getInstance().addComment(recordID,observations);
+            }catch(Exception ex){System.out.println("NonExistantRecordException");}
+
+            System.out.println("nurse saved patient info");
+            successLabel.setVisible(true);
+            errorLabel.setVisible(false);
+        }
+        else
+        {
+            successLabel.setVisible(false);
+            errorLabel.setVisible(true);
+        }
     }
     
     @FXML

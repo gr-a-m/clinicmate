@@ -171,7 +171,7 @@ public class NewPatientPage implements Initializable {
         Date date=null;
         try
         {
-            int month=months.indexOf(monthComboBox.getSelectionModel().selectedItemProperty().getValue());
+            int month=months.indexOf(monthComboBox.getSelectionModel().selectedItemProperty().getValue())+1;
             int day=Integer.parseInt(dayComboBox.getSelectionModel().selectedItemProperty().getValue().toString());
             int year=Integer.parseInt(yearComboBox.getSelectionModel().selectedItemProperty().getValue().toString())-1900;
             date = new Date(year,month,day);

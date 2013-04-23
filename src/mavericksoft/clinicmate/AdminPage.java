@@ -91,8 +91,6 @@ public class AdminPage implements Initializable {
     public HealthProfessional[] nurses;
     public HealthProfessional[] doctors;
     
-        private ListView<?> doctorListView;
-        private ListView<?> nurseListView;
     @FXML
     private Color x2;
     @FXML

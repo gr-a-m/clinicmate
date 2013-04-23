@@ -8,17 +8,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -154,6 +149,8 @@ public class PatientInfoPage implements Initializable
         {
             invalidLabel1.setVisible(false);
             patient.setFirstName(firstName);
+            System.out.println("patient new name:"+firstName);
+            System.out.println(patient.getFirstName());
         }
         if(lastName.isEmpty())
         {

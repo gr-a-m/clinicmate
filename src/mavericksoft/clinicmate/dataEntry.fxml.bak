@@ -9,21 +9,20 @@
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="mavericksoft.clinicmate.DataEntryPage">
   <children>
-    <TextField fx:id="dateField" layoutX="304.0" layoutY="72.0" prefWidth="200.0" />
-    <TextField fx:id="bloodPressureField" layoutX="304.0" layoutY="100.0" prefWidth="200.0" />
-    <TextField fx:id="glucoseField" layoutX="304.0" layoutY="128.0" prefWidth="200.0" />
-    <TextField fx:id="weightField" layoutX="304.0" layoutY="157.0" prefWidth="200.0" />
-    <Label fx:id="dateLabel" layoutX="100.0" layoutY="76.0" prefWidth="147.0" text="Date (MM/DD/YYYY)" />
-    <Label id="dateLabel" fx:id="bloodPressureLabel" layoutX="100.0" layoutY="103.0" prefWidth="182.0" text="Blood Pressure (Systolic/Diastolic)" />
-    <Label id="dateLabel" fx:id="glucoseLabel" layoutX="100.0" layoutY="131.0" prefWidth="147.0" text="Glucose Level (mg/dL)" />
-    <Label id="dateLabel" fx:id="weightLabel" layoutX="100.0" layoutY="159.0" prefWidth="147.0" text="Weight" />
-    <Label fx:id="title" layoutX="55.0" layoutY="31.0" text="Enter the date, and your health information for the day">
-      <font>
-        <Font size="13.0" />
-      </font>
-    </Label>
-    <TextArea fx:id="observationArea" layoutX="43.0" layoutY="223.0" prefHeight="128.0" prefWidth="461.0" wrapText="true" />
-    <Label fx:id="observationsLabel" layoutX="55.0" layoutY="200.0" text="Observations:" />
-    <Button fx:id="doneButton" layoutX="272.0" layoutY="358.0" mnemonicParsing="false" text="Done" />
+    <TextField id="bloodField" fx:id="systolicField" layoutX="298.0" layoutY="47.0" prefWidth="200.0" />
+    <TextField fx:id="glucoseField" layoutX="298.0" layoutY="121.0" prefWidth="200.0" />
+    <TextField fx:id="weightField" layoutX="298.0" layoutY="157.0" prefWidth="200.0" />
+    <TextArea id="observationArea" fx:id="observationsArea" layoutX="92.0" layoutY="215.0" prefHeight="137.0" prefWidth="411.0" wrapText="true" />
+    <Button id="saveButton" layoutX="270.0" layoutY="364.0" mnemonicParsing="false" onAction="#save" text="Save" />
+    <Label fx:id="dateLabel" layoutX="91.0" layoutY="18.0" text="Date" />
+    <Label id="bloodLabel" fx:id="systolicLabel" layoutX="91.0" layoutY="50.0" text="Systolic pressure" />
+    <Label fx:id="glucoseLabel" layoutX="91.0" layoutY="124.0" text="Glucose Level (mg/dL)" />
+    <Label fx:id="weightLabel" layoutX="92.0" layoutY="160.0" text="Weight (lbs)" />
+    <Label fx:id="observationsLabel" layoutX="92.0" layoutY="192.0" text="Observations/Notes:" />
+    <Label fx:id="diastolicLabel" layoutX="91.0" layoutY="86.0" text="Diastolic pressure" />
+    <TextField fx:id="diastolicField" layoutX="298.0" layoutY="83.0" prefWidth="200.0" />
+    <ComboBox id="dayComboBox" fx:id="dayCombo" layoutX="366.0" layoutY="15.0" promptText="Day" />
+    <ComboBox id="yearComboBox" fx:id="yearCombo" layoutX="416.0" layoutY="15.0" prefHeight="21.0" prefWidth="64.0" promptText="Year" />
+    <ComboBox id="monthComboBox" fx:id="monthCombo" layoutX="303.0" layoutY="15.0" prefHeight="21.0" prefWidth="63.0" promptText="Month" />
   </children>
 </AnchorPane>

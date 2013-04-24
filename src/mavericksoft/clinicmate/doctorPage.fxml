@@ -15,7 +15,7 @@
           <content>
             <AnchorPane id="Content" fx:id="dataAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="442.0" prefWidth="777.0">
               <children>
-                <TableView layoutX="14.0" layoutY="14.0" prefHeight="373.0" prefWidth="390.0">
+                <TableView fx:id="table" layoutX="14.0" layoutY="14.0" prefHeight="373.0" prefWidth="390.0">
                   <columns>
                     <TableColumn prefWidth="75.0" text="Column X" />
                     <TableColumn prefWidth="75.0" text="Column X" />
@@ -46,7 +46,8 @@
                                 <NumberAxis side="LEFT" />
                               </yAxis>
                             </LineChart>
-                            <ToggleButton id="linearRegToggle" fx:id="bloodLinearRegToggle" layoutX="327.0" layoutY="407.0" mnemonicParsing="false" text="Linear Regression" />
+                            <ToggleButton id="linearRegToggle" fx:id="bloodLinearRegToggle" layoutX="410.0" layoutY="407.0" mnemonicParsing="false" text="Linear Regression" />
+                            <ToggleButton id="linearRegToggle" fx:id="bloodNonLinToggle" layoutX="231.0" layoutY="407.0" mnemonicParsing="false" text="Non-Linear Regression" />
                           </children>
                         </AnchorPane>
                       </content>
@@ -63,7 +64,8 @@
                                 <NumberAxis side="LEFT" />
                               </yAxis>
                             </LineChart>
-                            <ToggleButton id="linearRegToggle" fx:id="weightLinearRegToggle" layoutX="327.0" layoutY="407.0" mnemonicParsing="false" text="Linear Regression" />
+                            <ToggleButton id="linearRegToggle" fx:id="weightLinearRegToggle" layoutX="423.0" layoutY="407.0" mnemonicParsing="false" text="Linear Regression" />
+                            <ToggleButton id="linearRegToggle" fx:id="weightNonLinToggle" layoutX="221.0" layoutY="407.0" mnemonicParsing="false" text="Non-Linear Regression" />
                           </children>
                         </AnchorPane>
                       </content>
@@ -80,7 +82,8 @@
                                 <NumberAxis side="LEFT" />
                               </yAxis>
                             </LineChart>
-                            <ToggleButton id="linearRegToggle" fx:id="glucoseLinearRegToggle" layoutX="316.0" layoutY="407.0" mnemonicParsing="false" text="Linear Regression" />
+                            <ToggleButton id="linearRegToggle" fx:id="glucoseLinearRegToggle" layoutX="415.0" layoutY="408.0" mnemonicParsing="false" text="Linear Regression" />
+                            <ToggleButton id="linearRegToggle" fx:id="glucoseNonLinToggle" layoutX="210.0" layoutY="408.0" mnemonicParsing="false" text="Non-Linear Regression" />
                           </children>
                         </AnchorPane>
                       </content>

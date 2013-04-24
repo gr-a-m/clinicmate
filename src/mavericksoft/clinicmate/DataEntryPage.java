@@ -153,7 +153,8 @@ public class DataEntryPage implements Initializable {
         if(save)
         {
             try{
-                HealthRecordController.getInstance().addRecord(id,date,diastolic,systolic,glucose,weight);
+                HealthRecord record = HealthRecordController.getInstance().addRecord(id,date,diastolic,systolic,glucose,weight);
+                HealthRecordController.getInstance().addComment(record.getRecordID(),observations);
                 //HealthRecord[] records=HealthRecordController.getInstance().getRecordsForPatient(id);
                 //UUID recordID = records[records.length-1].getRecordID();
                 //HealthRecordController.getInstance().addComment(recordID,observations);

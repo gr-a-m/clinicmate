@@ -436,7 +436,7 @@ class Patient extends Person {
                         rs.getInt("sys_blood_pressure"),
                         rs.getInt("glucose"),
                         rs.getInt("weight"),
-                        comments.get(rs.getObject("record_id")),
+                        comments.get((UUID)rs.getObject("record_id")),
                         new Date(rs.getTimestamp("created_at").getTime())
                 ));
             }

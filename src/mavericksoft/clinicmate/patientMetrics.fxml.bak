@@ -15,7 +15,7 @@
           <content>
             <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
               <children>
-                <TableView layoutX="14.0" layoutY="14.0" prefHeight="307.0" prefWidth="572.0">
+                <TableView id="chart" fx:id="table" layoutX="14.0" layoutY="14.0" prefHeight="307.0" prefWidth="572.0">
                   <columns>
                     <TableColumn prefWidth="75.0" text="Column X" />
                     <TableColumn prefWidth="75.0" text="Column X" />
@@ -35,7 +35,7 @@
                       <content>
                         <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                           <children>
-                            <LineChart id="LineChartNxN" layoutX="14.0" layoutY="14.0" prefHeight="307.0">
+                            <LineChart id="LineChartNxN" fx:id="bloodChart" layoutX="14.0" layoutY="14.0" prefHeight="307.0">
                               <xAxis>
                                 <NumberAxis side="BOTTOM" />
                               </xAxis>
@@ -53,7 +53,7 @@
                         <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                           <children>
                             <ToggleButton fx:id="weightLinearRegToggle" layoutX="488.0" layoutY="150.0" mnemonicParsing="false" rotate="90.0" text="Linear Regression" />
-                            <LineChart id="LineChartNxN" layoutX="14.0" layoutY="14.0" prefHeight="307.0">
+                            <LineChart id="LineChartNxN" fx:id="weightChart" layoutX="14.0" layoutY="14.0" prefHeight="307.0">
                               <xAxis>
                                 <NumberAxis side="BOTTOM" />
                               </xAxis>
@@ -69,7 +69,7 @@
                       <content>
                         <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="307.0" prefWidth="555.0">
                           <children>
-                            <ScatterChart id="ScatterChartNxN" layoutX="14.0" layoutY="14.0" prefHeight="307.0">
+                            <ScatterChart id="ScatterChartNxN" fx:id="glucoseChart" layoutX="14.0" layoutY="14.0" prefHeight="307.0">
                               <xAxis>
                                 <NumberAxis side="BOTTOM" />
                               </xAxis>
@@ -90,6 +90,6 @@
         </Tab>
       </tabs>
     </TabPane>
-    <Button fx:id="doneButton" layoutX="272.0" layoutY="365.0" mnemonicParsing="false" text="Done" />
+    <Button fx:id="doneButton" layoutX="272.0" layoutY="365.0" mnemonicParsing="false" onAction="#done" text="Done" />
   </children>
 </AnchorPane>

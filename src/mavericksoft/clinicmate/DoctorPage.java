@@ -7,7 +7,9 @@ package mavericksoft.clinicmate;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -18,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.AnchorPane;
@@ -76,6 +79,16 @@ public class DoctorPage implements Initializable {
     private Button logOutButton;
     @FXML
     private ListView<?> patientList;
+    
+    public Patient[] patients;
+    @FXML
+    private TableView<?> table;
+    @FXML
+    private ToggleButton bloodNonLinToggle;
+    @FXML
+    private ToggleButton weightNonLinToggle;
+    @FXML
+    private ToggleButton glucoseNonLinToggle;
 
     /**
      * Initializes the controller class.
@@ -83,7 +96,7 @@ public class DoctorPage implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        Patient[] patients= ((HealthProfessional)PermissionsController.getInstance().getCurrentUser()).getPatients();
+        patients= ((HealthProfessional)PermissionsController.getInstance().getCurrentUser()).getPatients();
         ArrayList<String> patientArray=new ArrayList<String>();
         //System.out.println("numOfPatients:"+patients.length);
         
@@ -99,9 +112,28 @@ public class DoctorPage implements Initializable {
     @FXML
     private void save(javafx.event.ActionEvent event) throws IOException
     {
-        System.out.println("Doctor saved info");
-        System.out.println(addCommentsArea.getText());
-        addCommentsArea.getText();
+        Date date=null;
+        UUID id=null;
+
+        
+        if(patientList.getSelectionModel().getSelectedItem()==null)
+        {
+            System.out.println("patient not selected");
+        }
+        else
+        {
+            int index=patientList.getSelectionModel().getSelectedIndex();
+            Patient selectedPatient=patients[index];
+            id=selectedPatient.getPatientID();
+            String observations=addCommentsArea.getText();
+            
+            try{
+                //HealthRecord record = HealthRecordController.getInstance().addRecord(id,date,diastolic,systolic,glucose,weight);
+                //HealthRecordController.getInstance().addComment(record.getRecordID(),observations);
+            }catch(Exception ex){System.out.println("NonExistantRecordException");}
+
+            System.out.println("doctor saved patient info");
+        }
     }
     
     @FXML

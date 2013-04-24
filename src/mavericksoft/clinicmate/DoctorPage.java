@@ -247,6 +247,8 @@ public class DoctorPage implements Initializable {
                 HealthRecord hr = currentPatient.getHealthRecords()[hrIndex];
                 String comments = "";
 
+                // I put this hashmap hack in there because some comments are
+                // stored twice -- we should fix that. TODO
                 HashMap<String, Boolean> commentMap = new HashMap<String, Boolean>();
 
                 if (hr.getComments().size() > 0) {

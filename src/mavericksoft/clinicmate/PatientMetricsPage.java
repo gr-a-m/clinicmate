@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -62,27 +63,24 @@ public class PatientMetricsPage implements Initializable
     public void initialize(URL url, ResourceBundle rb)
     {
         table.setEditable(false);
-        
-        ObservableList<Row> data=null;
-        
-        
-
+        ObservableList<PatientMetricsPage.Row> data = FXCollections.observableArrayList();
         Patient currentPatient = (Patient)PermissionsController.getInstance().getCurrentUser();
-        HealthRecord[] records= currentPatient.getHealthRecords();
-        //HealthRecord[] records=null;
+        HealthRecord[] records = currentPatient.getHealthRecords();
+
         if(records!=null)
         {
-            for(HealthRecord record: records)
+            for(HealthRecord record : records)
             {
-                //data.add(new Row(record.getDate(),record.getDiaBloodPressure(),record.getSysBloodPressure(),
-                //record.getGlucose(),record.getWeight()));
+                data.add(new Row(record.getDate(),
+                        record.getDiaBloodPressure(),
+                        record.getSysBloodPressure(),
+                        record.getGlucose(),
+                        record.getWeight()));
             }
         }
 
-        //table.setItems(data);
+        table.setItems(data);
         //ArrayList<String> getComments();
-        
-        
     }
     
     public static class Row

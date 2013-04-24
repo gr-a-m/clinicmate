@@ -24,6 +24,7 @@
                     <TableColumn prefWidth="75.0" text="Weight" fx:id="weightColumn" />
                   </columns>
                 </TableView>
+                <TextArea fx:id="recordComments" layoutX="477" layoutY="50" prefWidth="267.0" editable="false" />
                 <Label fx:id="addCommentsLabel" layoutX="477.0" layoutY="239.0" text="Add Comments/Prescriptions:" />
                 <Button fx:id="saveButton" layoutX="181.0" layoutY="408.0" mnemonicParsing="false" onAction="#save" text="Save" />
                 <TextArea fx:id="addCommentsArea" layoutX="476.0" layoutY="259.0" prefWidth="267.0" wrapText="true" />

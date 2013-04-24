@@ -66,21 +66,21 @@ public class PatientMetricsPage implements Initializable
         ObservableList<Row> data=null;
         
         
-        try {
-            HealthRecord[] records=(Patient.getById(((Patient)PermissionsController.getInstance().getCurrentUser()).getPatientID())).getHealthRecords();
-            //HealthRecord[] records=null;
-            if(records!=null)
+
+        Patient currentPatient = (Patient)PermissionsController.getInstance().getCurrentUser();
+        HealthRecord[] records= currentPatient.getHealthRecords();
+        //HealthRecord[] records=null;
+        if(records!=null)
+        {
+            for(HealthRecord record: records)
             {
-                for(HealthRecord record: records)
-                {
-                    //data.add(new Row(record.getDate(),record.getDiaBloodPressure(),record.getSysBloodPressure(),
-                    //record.getGlucose(),record.getWeight()));
-                }
+                //data.add(new Row(record.getDate(),record.getDiaBloodPressure(),record.getSysBloodPressure(),
+                //record.getGlucose(),record.getWeight()));
             }
-            
-            //table.setItems(data);
-            //ArrayList<String> getComments();
-        }catch(NonexistentRecordException ex){}
+        }
+
+        //table.setItems(data);
+        //ArrayList<String> getComments();
         
         
     }

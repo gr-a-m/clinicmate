@@ -6,12 +6,12 @@ package mavericksoft.clinicmate;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.ResourceBundle;
-import java.util.UUID;
+import java.util.*;
+
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,6 +29,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 /**
  * FXML Controller class
  *
@@ -41,6 +44,8 @@ public class DoctorPage implements Initializable {
     private Tab dataTab;
     @FXML
     private AnchorPane dataAnchorPane;
+    @FXML
+    private TextArea recordComments;
     @FXML
     private TextArea addCommentsArea;
     @FXML
@@ -131,6 +136,7 @@ public class DoctorPage implements Initializable {
         glucoseColumn.setCellValueFactory(new PropertyValueFactory<Row,String>("glucose"));
         weightColumn.setCellValueFactory(new PropertyValueFactory<Row,String>("weight"));
         //table.getColumns().setAll(dateColumn,systolicColumn,diastolicColumn,glucoseColumn,weightColumn);
+        table.getSelectionModel().getSelectedIndices().addListener(new HealthRecordRowListener());
     }
     
     public static class Row
@@ -184,11 +190,12 @@ public class DoctorPage implements Initializable {
             Patient selectedPatient=patients[index];
             id=selectedPatient.getPatientID();
             String observations=addCommentsArea.getText();
-            
-            try{
-                //HealthRecord record = HealthRecordController.getInstance().addRecord(id,date,diastolic,systolic,glucose,weight);
-                //HealthRecordController.getInstance().addComment(record.getRecordID(),observations);
-            }catch(Exception ex){System.out.println("NonExistantRecordException");}
+            int hrIndex = table.getSelectionModel().getSelectedIndex();
+
+            if (hrIndex != -1) {
+                HealthRecordController.getInstance().addComment(selectedPatient.getHealthRecords()[hrIndex].getRecordID(), observations);
+                table.getSelectionModel().select(hrIndex);
+            }
 
             System.out.println("doctor saved patient info");
         }
@@ -205,25 +212,55 @@ public class DoctorPage implements Initializable {
     public void updateTable(MouseEvent event)
     {
         int index=patientList.getSelectionModel().getSelectedIndex();
-        Patient currentPatient=patients[index];
+
+        if (index != -1) {
+            Patient currentPatient=patients[index];
         
-        ObservableList<DoctorPage.Row> data=FXCollections.observableArrayList();
-        
-        try {
-            HealthRecord[] records=currentPatient.getHealthRecords();
-            
-            if(records!=null)
-            {
-                for(HealthRecord record: records)
+            ObservableList<DoctorPage.Row> data=FXCollections.observableArrayList();
+
+            try {
+                HealthRecord[] records=currentPatient.getHealthRecords();
+
+                if(records!=null)
                 {
-                    currentRecord=record;
-                    data.add(new Row(record.getDate(),record.getDiaBloodPressure(),record.getSysBloodPressure(),record.getGlucose(),record.getWeight()));
+                    for(HealthRecord record : records)
+                    {
+                        currentRecord=record;
+                        data.add(new Row(record.getDate(),record.getDiaBloodPressure(),record.getSysBloodPressure(),record.getGlucose(),record.getWeight()));
+                    }
                 }
+
+                if(data.isEmpty()){System.out.println("empty data");}
+                table.setItems(data);
+                //ArrayList<String> getComments();
+            }catch(Exception ex){System.out.println("exception");}
+        }
+    }
+
+    private class HealthRecordRowListener implements ListChangeListener<Integer> {
+        public void onChanged(Change<? extends Integer> change) {
+            int index=patientList.getSelectionModel().getSelectedIndex();
+            Patient currentPatient = patients[index];
+
+            int hrIndex = table.getSelectionModel().getSelectedIndex();
+            if (hrIndex != -1) {
+                HealthRecord hr = currentPatient.getHealthRecords()[hrIndex];
+                String comments = "";
+
+                HashMap<String, Boolean> commentMap = new HashMap<String, Boolean>();
+
+                if (hr.getComments().size() > 0) {
+                    for (String comment : hr.getComments()) {
+                        commentMap.put(comment, true);
+                    }
+                }
+
+                for (String comment : commentMap.keySet()) {
+                    comments += (comment + "\n");
+                }
+
+                recordComments.setText(comments);
             }
-            
-            if(data.isEmpty()){System.out.println("empty data");}
-            table.setItems(data);
-            //ArrayList<String> getComments();
-        }catch(Exception ex){System.out.println("exception");}
+        }
     }
 }

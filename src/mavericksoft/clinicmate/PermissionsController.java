@@ -15,7 +15,7 @@ package mavericksoft.clinicmate;
 
 public class PermissionsController 
 {
-	private static Permissions permission;
+	private Permissions permission;
 	private Person currentUser;
 	private static PermissionsController instance;
 	
@@ -36,8 +36,8 @@ public class PermissionsController
 		boolean logged = false;
 		
 		// Only allow a new user to log in if the previous user has logged out.
-		if(currentUser == null && permission == null)
-		{
+		//if(currentUser == null && permission == null)
+		//{
 			//if username and password pair is valid, set logged to true and set current user and current user's permissions
 	
 			permission = Person.getPermissions(userName);
@@ -67,7 +67,7 @@ public class PermissionsController
 					return false;
 				}
 			}
-		} // end of logging new user in
+		//} // end of logging new user in
 		
 		return logged;
 		

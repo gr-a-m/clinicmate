@@ -51,7 +51,7 @@ public class LoginPage implements Initializable {
         {
             if(PermissionsController.getInstance().logon(usernameField.getText(),passwordField.getText()))
             {
-                // successfull login
+                // successful login
                 invalidLoginLabel.setVisible(false);
                 if(PermissionsController.getInstance().currentUserPermissions()==Permissions.ADMIN)
                 {

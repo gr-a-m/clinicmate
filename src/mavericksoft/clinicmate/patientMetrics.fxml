@@ -38,7 +38,7 @@
                       <content>
                         <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                           <children>
-                            <LineChart id="LineChartNxN" fx:id="bloodChart" layoutX="14.0" layoutY="14.0" prefHeight="307.0">
+                            <LineChart fx:id="bloodChart" layoutX="14.0" layoutY="14.0" prefHeight="307.0">
                               <xAxis>
                                 <CategoryAxis side="BOTTOM" />
                               </xAxis>
@@ -46,7 +46,7 @@
                                 <NumberAxis side="LEFT" />
                               </yAxis>
                             </LineChart>
-                            <ToggleButton id="linearRegressionButton" fx:id="bloodLinearRegToggle" layoutX="488.0" layoutY="150.0" mnemonicParsing="false" rotate="90.0" text="Linear Regression" />
+                            <ToggleButton id="linearRegressionButton" fx:id="bloodLinearRegToggle" layoutX="488.0" layoutY="150.0" mnemonicParsing="false" onAction="#genRegBlood" rotate="90.0" text="Linear Regression" />
                           </children>
                         </AnchorPane>
                       </content>
@@ -55,8 +55,8 @@
                       <content>
                         <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                           <children>
-                            <ToggleButton fx:id="weightLinearRegToggle" layoutX="488.0" layoutY="150.0" mnemonicParsing="false" rotate="90.0" text="Linear Regression" />
-                            <LineChart id="LineChartNxN" fx:id="weightChart" layoutX="14.0" layoutY="14.0" prefHeight="307.0">
+                            <ToggleButton fx:id="weightLinearRegToggle" layoutX="488.0" layoutY="150.0" mnemonicParsing="false" onAction="#genRegWeight" rotate="90.0" text="Linear Regression" />
+                            <LineChart fx:id="weightChart" layoutX="14.0" layoutY="14.0" prefHeight="307.0">
                               <xAxis>
                                 <CategoryAxis side="BOTTOM" />
                               </xAxis>
@@ -72,8 +72,8 @@
                       <content>
                         <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="307.0" prefWidth="555.0">
                           <children>
-                            <ToggleButton fx:id="glucoseLinearRegToggle" layoutX="488.0" layoutY="150.0" mnemonicParsing="false" rotate="90.0" text="Linear Regression" />
-                            <LineChart id="LineChartNxN" fx:id="glucoseChart" layoutX="14.0" layoutY="14.0" prefHeight="293.0" prefWidth="510.0">
+                            <ToggleButton fx:id="glucoseLinearRegToggle" layoutX="488.0" layoutY="150.0" mnemonicParsing="false" onAction="#genRegGluc" rotate="90.0" text="Linear Regression" />
+                            <LineChart fx:id="glucoseChart" layoutX="14.0" layoutY="14.0" prefHeight="293.0" prefWidth="510.0">
                               <xAxis>
                                 <CategoryAxis side="BOTTOM" />
                               </xAxis>

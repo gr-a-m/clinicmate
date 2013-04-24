@@ -126,14 +126,14 @@ public class PatientMetricsPage implements Initializable
                         }
                     }
 
-                    System.out.println("1");
+                    //System.out.println("1");
 
                     XYChart.Series<String, Integer> diaSeries = new XYChart.Series<String, Integer>(diaData);
                     XYChart.Series<String, Integer> sysSeries = new XYChart.Series<String, Integer>(sysData);
                     XYChart.Series<String, Integer> weightSeries = new XYChart.Series(weightData);
                     XYChart.Series<String, Integer> glucSeries = new XYChart.Series(glucData);
 
-                    System.out.println("2");
+                    //System.out.println("2");
 
                     bloodChart.setData(FXCollections.observableArrayList(diaSeries, sysSeries));
                     weightChart.setData(FXCollections.observableArrayList(weightSeries));

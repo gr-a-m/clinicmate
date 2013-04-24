@@ -40,7 +40,7 @@
                           <children>
                             <LineChart id="LineChartNxN" fx:id="bloodChart" layoutX="14.0" layoutY="14.0" prefHeight="307.0">
                               <xAxis>
-                                <NumberAxis side="BOTTOM" />
+                                <CategoryAxis side="BOTTOM" />
                               </xAxis>
                               <yAxis>
                                 <NumberAxis side="LEFT" />
@@ -58,7 +58,7 @@
                             <ToggleButton fx:id="weightLinearRegToggle" layoutX="488.0" layoutY="150.0" mnemonicParsing="false" rotate="90.0" text="Linear Regression" />
                             <LineChart id="LineChartNxN" fx:id="weightChart" layoutX="14.0" layoutY="14.0" prefHeight="307.0">
                               <xAxis>
-                                <NumberAxis side="BOTTOM" />
+                                <CategoryAxis side="BOTTOM" />
                               </xAxis>
                               <yAxis>
                                 <NumberAxis side="LEFT" />
@@ -72,15 +72,15 @@
                       <content>
                         <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="307.0" prefWidth="555.0">
                           <children>
-                            <ScatterChart id="ScatterChartNxN" fx:id="glucoseChart" layoutX="14.0" layoutY="14.0" prefHeight="307.0">
+                            <ToggleButton fx:id="glucoseLinearRegToggle" layoutX="488.0" layoutY="150.0" mnemonicParsing="false" rotate="90.0" text="Linear Regression" />
+                            <LineChart id="LineChartNxN" fx:id="glucoseChart" layoutX="14.0" layoutY="14.0" prefHeight="293.0" prefWidth="510.0">
                               <xAxis>
-                                <NumberAxis side="BOTTOM" />
+                                <CategoryAxis side="BOTTOM" />
                               </xAxis>
                               <yAxis>
                                 <NumberAxis side="LEFT" />
                               </yAxis>
-                            </ScatterChart>
-                            <ToggleButton fx:id="glucoseLinearRegToggle" layoutX="488.0" layoutY="150.0" mnemonicParsing="false" rotate="90.0" text="Linear Regression" />
+                            </LineChart>
                           </children>
                         </AnchorPane>
                       </content>

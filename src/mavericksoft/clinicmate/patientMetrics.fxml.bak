@@ -17,8 +17,11 @@
               <children>
                 <TableView id="chart" fx:id="table" layoutX="14.0" layoutY="14.0" prefHeight="307.0" prefWidth="572.0">
                   <columns>
-                    <TableColumn prefWidth="75.0" text="Column X" />
-                    <TableColumn prefWidth="75.0" text="Column X" />
+                    <TableColumn prefWidth="75.0" text="Date" fx:id="dateColumn" />
+                    <TableColumn prefWidth="75.0" text="Systolic" fx:id="systolicColumn" />
+                    <TableColumn prefWidth="75.0" text="Diastolic" fx:id="diastolicColumn" />
+                    <TableColumn prefWidth="75.0" text="Glucose" fx:id="glucoseColumn" />
+                    <TableColumn prefWidth="75.0" text="Weight" fx:id="weightColumn" />
                   </columns>
                 </TableView>
               </children>

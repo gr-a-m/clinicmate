@@ -17,8 +17,11 @@
               <children>
                 <TableView fx:id="table" layoutX="14.0" layoutY="14.0" prefHeight="373.0" prefWidth="390.0">
                   <columns>
-                    <TableColumn prefWidth="75.0" text="Column X" />
-                    <TableColumn prefWidth="75.0" text="Column X" />
+                    <TableColumn prefWidth="75.0" text="Date" fx:id="dateColumn" />
+                    <TableColumn prefWidth="75.0" text="Systolic" fx:id="systolicColumn" />
+                    <TableColumn prefWidth="75.0" text="Diastolic" fx:id="diastolicColumn" />
+                    <TableColumn prefWidth="75.0" text="Glucose" fx:id="glucoseColumn" />
+                    <TableColumn prefWidth="75.0" text="Weight" fx:id="weightColumn" />
                   </columns>
                 </TableView>
                 <Label fx:id="addCommentsLabel" layoutX="477.0" layoutY="239.0" text="Add Comments/Prescriptions:" />
@@ -98,6 +101,6 @@
     </TabPane>
     <Label fx:id="patientsLabel" layoutX="15.0" layoutY="22.0" text="Patients:" />
     <Button fx:id="logOutButton" layoutX="47.0" layoutY="442.0" mnemonicParsing="false" onAction="#logOut" text="Log Out" />
-    <ListView fx:id="patientList" layoutX="15.0" layoutY="44.0" prefHeight="373.0" prefWidth="144.0" />
+    <ListView fx:id="patientList" layoutX="15.0" layoutY="44.0" onMouseClicked="#updateTable" prefHeight="373.0" prefWidth="144.0" />
   </children>
 </AnchorPane>

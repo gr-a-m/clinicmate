@@ -16,6 +16,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -63,7 +64,7 @@ public class DoctorPage implements Initializable {
     @FXML
     private AnchorPane bloodAnchorPane;
     @FXML
-    private LineChart<?, ?> bloodChart;
+    private LineChart<Integer, Integer> bloodChart;
     @FXML
     private ToggleButton bloodLinearRegToggle;
     @FXML
@@ -71,7 +72,7 @@ public class DoctorPage implements Initializable {
     @FXML
     private AnchorPane weightAnchorPane;
     @FXML
-    private LineChart<?, ?> weightChart;
+    private LineChart<Integer, Integer> weightChart;
     @FXML
     private ToggleButton weightLinearRegToggle;
     @FXML
@@ -79,7 +80,7 @@ public class DoctorPage implements Initializable {
     @FXML
     private AnchorPane glucoseAchorPane;
     @FXML
-    private LineChart<?, ?> glucoseChart;
+    private LineChart<Integer, Integer> glucoseChart;
     @FXML
     private ToggleButton glucoseLinearRegToggle;
     @FXML
@@ -90,12 +91,6 @@ public class DoctorPage implements Initializable {
     private ListView<?> patientList;
     @FXML
     private TableView<Row> table;
-    @FXML
-    private ToggleButton bloodNonLinToggle;
-    @FXML
-    private ToggleButton weightNonLinToggle;
-    @FXML
-    private ToggleButton glucoseNonLinToggle;
     @FXML
     private TableColumn<Row,String> dateColumn;
     @FXML
@@ -137,6 +132,8 @@ public class DoctorPage implements Initializable {
         weightColumn.setCellValueFactory(new PropertyValueFactory<Row,String>("weight"));
         //table.getColumns().setAll(dateColumn,systolicColumn,diastolicColumn,glucoseColumn,weightColumn);
         table.getSelectionModel().getSelectedIndices().addListener(new HealthRecordRowListener());
+
+
     }
     
     public static class Row
@@ -228,12 +225,61 @@ public class DoctorPage implements Initializable {
                         currentRecord=record;
                         data.add(new Row(record.getDate(),record.getDiaBloodPressure(),record.getSysBloodPressure(),record.getGlucose(),record.getWeight()));
                     }
+
+                    // Create lines for the charts
+                    ObservableList<XYChart.Data<Integer, Integer>> sysData = FXCollections.observableArrayList();
+                    ObservableList<XYChart.Data<Integer, Integer>> diaData = FXCollections.observableArrayList();
+                    ObservableList<XYChart.Data<Integer, Integer>> glucData = FXCollections.observableArrayList();
+                    ObservableList<XYChart.Data<Integer, Integer>> weightData = FXCollections.observableArrayList();
+
+                    Date beginDate = null;
+                    Date endDate = null;
+
+                    for (HealthRecord record : records) {
+                        if (beginDate == null) {
+                            beginDate = record.getDate();
+                            endDate = record.getDate();
+                        } else {
+                            if (record.getDate().getTime() < beginDate.getTime()) {
+                                beginDate = record.getDate();
+                            } else if (record.getDate().getTime() > endDate.getTime()) {
+                                endDate = record.getDate();
+                            }
+                        }
+                    }
+
+                    for (HealthRecord record : records) {
+                        if (record.getDate().getTime() <= endDate.getTime() &&
+                                record.getDate().getTime() >= beginDate.getTime()) {
+                            int dayOffset = (int) ((record.getDate().getTime() - beginDate.getTime()) / (1000*60*60*24));
+                            sysData.add(new XYChart.Data<Integer, Integer>(dayOffset, record.getSysBloodPressure()));
+                            diaData.add(new XYChart.Data<Integer, Integer>(dayOffset, record.getDiaBloodPressure()));
+                            glucData.add(new XYChart.Data<Integer, Integer>(dayOffset, record.getGlucose()));
+                            weightData.add(new XYChart.Data<Integer, Integer>(dayOffset, record.getWeight()));
+                            System.out.println("sys: " + dayOffset + " " + record.getSysBloodPressure());
+                            System.out.println("dia: " + dayOffset + " " + record.getDiaBloodPressure());
+                            System.out.println("gluc: " + dayOffset + " " + record.getGlucose());
+                            System.out.println("weight: " + dayOffset + " " + record.getWeight());
+                        }
+                    }
+
+                    System.out.println("1");
+
+                    XYChart.Series<Integer, Integer> diaSeries = new XYChart.Series<Integer, Integer>(diaData);
+                    XYChart.Series<Integer, Integer> sysSeries = new XYChart.Series<Integer, Integer>(sysData);
+                    XYChart.Series<Integer, Integer> weightSeries = new XYChart.Series(weightData);
+                    XYChart.Series<Integer, Integer> glucSeries = new XYChart.Series(glucData);
+
+                    System.out.println("2");
+
+                    bloodChart.setData(FXCollections.observableArrayList(diaSeries, sysSeries));
+                    weightChart.setData(FXCollections.observableArrayList(weightSeries));
+                    glucoseChart.setData(FXCollections.observableArrayList(glucSeries));
                 }
 
                 if(data.isEmpty()){System.out.println("empty data");}
                 table.setItems(data);
-                //ArrayList<String> getComments();
-            }catch(Exception ex){System.out.println("exception");}
+            }catch(Exception ex){ex.printStackTrace();}
         }
     }
 
@@ -264,5 +310,20 @@ public class DoctorPage implements Initializable {
                 recordComments.setText(comments);
             }
         }
+    }
+
+    @FXML
+    public void genRegBlood() {
+        System.out.println("Generate regression for BP");
+    }
+
+    @FXML
+    public void genRegWeight() {
+        System.out.println("Generate regression for Weight");
+    }
+
+    @FXML
+    public void genRegGluc() {
+        System.out.println("Generate regression for Gluc");
     }
 }

@@ -156,8 +156,7 @@ class HealthRecordController {
         // Create an apache commons regression object
         SimpleRegression regression = new SimpleRegression();
 
-        Calendar beginDay = Calendar.getInstance();
-        beginDay.setTime(startDate);
+        int beginDay = (int) (startDate.getTime() / (1000*60*60*24));
 
         // Get the HealthRecords, then only pick the ones between the start and
         // end dates for the regression.
@@ -176,19 +175,19 @@ class HealthRecordController {
         for (HealthRecord record : validRecords) {
             Calendar recCalendar = Calendar.getInstance();
             recCalendar.setTime(record.getDate());
-            int day = recCalendar.get(Calendar.DAY_OF_YEAR);
+            int day = (int) ((record.getDate().getTime()) / (1000*60*60*24));
 
             // Add different values depending on what type of regression is
             // needed
             switch (type) {
                 case GLUCOSE:
-                    regression.addData(day - beginDay.get(Calendar.DAY_OF_YEAR), record.getGlucose());
+                    regression.addData(day - beginDay, record.getGlucose());
                     break;
                 case SYS:
-                    regression.addData(day - beginDay.get(Calendar.DAY_OF_YEAR), record.getSysBloodPressure());
+                    regression.addData(day - beginDay, record.getSysBloodPressure());
                     break;
                 case DIA:
-                    regression.addData(day - beginDay.get(Calendar.DAY_OF_YEAR), record.getDiaBloodPressure());
+                    regression.addData(day - beginDay, record.getDiaBloodPressure());
                     break;
                 default:
                     System.out.println("[ERROR]: Invalid regression type " +

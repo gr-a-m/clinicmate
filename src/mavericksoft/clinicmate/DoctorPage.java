@@ -29,6 +29,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import org.apache.commons.math3.stat.regression.SimpleRegression;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -256,21 +257,13 @@ public class DoctorPage implements Initializable {
                             diaData.add(new XYChart.Data<String, Integer>(record.getDate().toString(), record.getDiaBloodPressure()));
                             glucData.add(new XYChart.Data<String, Integer>(record.getDate().toString(), record.getGlucose()));
                             weightData.add(new XYChart.Data<String, Integer>(record.getDate().toString(), record.getWeight()));
-                            System.out.println("sys: " + dayOffset + " " + record.getSysBloodPressure());
-                            System.out.println("dia: " + dayOffset + " " + record.getDiaBloodPressure());
-                            System.out.println("gluc: " + dayOffset + " " + record.getGlucose());
-                            System.out.println("weight: " + dayOffset + " " + record.getWeight());
                         }
                     }
-
-                    System.out.println("1");
 
                     XYChart.Series<String, Integer> diaSeries = new XYChart.Series<String, Integer>(diaData);
                     XYChart.Series<String, Integer> sysSeries = new XYChart.Series<String, Integer>(sysData);
                     XYChart.Series<String, Integer> weightSeries = new XYChart.Series(weightData);
                     XYChart.Series<String, Integer> glucSeries = new XYChart.Series(glucData);
-
-                    System.out.println("2");
 
                     bloodChart.setData(FXCollections.observableArrayList(diaSeries, sysSeries));
                     weightChart.setData(FXCollections.observableArrayList(weightSeries));
@@ -314,16 +307,137 @@ public class DoctorPage implements Initializable {
 
     @FXML
     public void genRegBlood() {
-        System.out.println("Generate regression for BP");
+        int index=patientList.getSelectionModel().getSelectedIndex();
+
+        if (index != -1) {
+            Patient currentPatient = patients[index];
+            HealthRecord[] records = currentPatient.getHealthRecords();
+
+            if (bloodChart.getData().size() == 4) {
+                bloodChart.getData().remove(2, 4);
+                return;
+            }
+
+            Date beginDate = null;
+            Date endDate = null;
+
+            for (HealthRecord record : records) {
+                if (beginDate == null) {
+                    beginDate = record.getDate();
+                    endDate = record.getDate();
+                }
+
+                if (record.getDate().getTime() < beginDate.getTime()) {
+                    beginDate = record.getDate();
+                } else if (record.getDate().getTime() > endDate.getTime()) {
+                    endDate = record.getDate();
+                }
+            }
+
+            try {
+                SimpleRegression reg = HealthRecordController.getInstance().linearRegression(currentPatient.getPatientID(), beginDate, endDate, RegressionTypes.DIA);
+                ObservableList<XYChart.Data<String, Integer>> diaData = FXCollections.observableArrayList();
+                int dayOffset = (int) ((beginDate.getTime() - endDate.getTime()) / (1000*60*60*24));
+                diaData.add(new XYChart.Data<String, Integer>(beginDate.toString(), (((int) reg.getIntercept()))));
+                diaData.add(new XYChart.Data<String, Integer>(endDate.toString(), (((int) reg.getIntercept()) + ((int) (reg.getSlope() * dayOffset)))));
+                XYChart.Series<String, Integer> diaSeries = new XYChart.Series<String, Integer>(diaData);
+                bloodChart.getData().add(diaSeries);
+
+                reg = HealthRecordController.getInstance().linearRegression(currentPatient.getPatientID(), beginDate, endDate, RegressionTypes.SYS);
+                ObservableList<XYChart.Data<String, Integer>> sysData = FXCollections.observableArrayList();
+                sysData.add(new XYChart.Data<String, Integer>(beginDate.toString(), (((int) reg.getIntercept()))));
+                sysData.add(new XYChart.Data<String, Integer>(endDate.toString(), (((int) reg.getIntercept()) + ((int) (reg.getSlope() * dayOffset)))));
+                XYChart.Series<String, Integer> sysSeries = new XYChart.Series<String, Integer>(sysData);
+                bloodChart.getData().add(sysSeries);
+            } catch (NonexistentRecordException nre) {
+                nre.printStackTrace();
+            }
+        }
     }
 
     @FXML
     public void genRegWeight() {
-        System.out.println("Generate regression for Weight");
+        int index=patientList.getSelectionModel().getSelectedIndex();
+
+        if (index != -1) {
+            Patient currentPatient = patients[index];
+            HealthRecord[] records = currentPatient.getHealthRecords();
+
+            if (weightChart.getData().size() == 2) {
+                weightChart.getData().remove(1);
+                return;
+            }
+
+            Date beginDate = null;
+            Date endDate = null;
+
+            for (HealthRecord record : records) {
+                if (beginDate == null) {
+                    beginDate = record.getDate();
+                    endDate = record.getDate();
+                }
+
+                if (record.getDate().getTime() < beginDate.getTime()) {
+                    beginDate = record.getDate();
+                } else if (record.getDate().getTime() > endDate.getTime()) {
+                    endDate = record.getDate();
+                }
+            }
+
+            try {
+                SimpleRegression reg = HealthRecordController.getInstance().linearRegression(currentPatient.getPatientID(), beginDate, endDate, RegressionTypes.WEIGHT);
+                ObservableList<XYChart.Data<String, Integer>> weightData = FXCollections.observableArrayList();
+                int dayOffset = (int) ((beginDate.getTime() - endDate.getTime()) / (1000*60*60*24));
+                weightData.add(new XYChart.Data<String, Integer>(beginDate.toString(), (((int) reg.getIntercept()))));
+                weightData.add(new XYChart.Data<String, Integer>(endDate.toString(), (((int) reg.getIntercept()) + ((int) (reg.getSlope() * dayOffset)))));
+                XYChart.Series<String, Integer> weightSeries = new XYChart.Series<String, Integer>(weightData);
+                weightChart.getData().add(weightSeries);
+            } catch (NonexistentRecordException nre) {
+                nre.printStackTrace();
+            }
+        }
     }
 
     @FXML
     public void genRegGluc() {
-        System.out.println("Generate regression for Gluc");
+        int index=patientList.getSelectionModel().getSelectedIndex();
+
+        if (index != -1) {
+            Patient currentPatient = patients[index];
+            HealthRecord[] records = currentPatient.getHealthRecords();
+
+            if (glucoseChart.getData().size() == 2) {
+                glucoseChart.getData().remove(1);
+                return;
+            }
+
+            Date beginDate = null;
+            Date endDate = null;
+
+            for (HealthRecord record : records) {
+                if (beginDate == null) {
+                    beginDate = record.getDate();
+                    endDate = record.getDate();
+                }
+
+                if (record.getDate().getTime() < beginDate.getTime()) {
+                    beginDate = record.getDate();
+                } else if (record.getDate().getTime() > endDate.getTime()) {
+                    endDate = record.getDate();
+                }
+            }
+
+            try {
+                SimpleRegression reg = HealthRecordController.getInstance().linearRegression(currentPatient.getPatientID(), beginDate, endDate, RegressionTypes.GLUCOSE);
+                ObservableList<XYChart.Data<String, Integer>> glucData = FXCollections.observableArrayList();
+                int dayOffset = (int) ((beginDate.getTime() - endDate.getTime()) / (1000*60*60*24));
+                glucData.add(new XYChart.Data<String, Integer>(beginDate.toString(), (((int) reg.getIntercept()))));
+                glucData.add(new XYChart.Data<String, Integer>(endDate.toString(), (((int) reg.getIntercept()) + ((int) (reg.getSlope() * dayOffset)))));
+                XYChart.Series<String, Integer> glucSeries = new XYChart.Series<String, Integer>(glucData);
+                glucoseChart.getData().add(glucSeries);
+            } catch (NonexistentRecordException nre) {
+                nre.printStackTrace();
+            }
+        }
     }
 }

@@ -9,5 +9,6 @@ package mavericksoft.clinicmate;
 public enum RegressionTypes {
     GLUCOSE,
     DIA,
-    SYS
+    SYS,
+    WEIGHT
 }

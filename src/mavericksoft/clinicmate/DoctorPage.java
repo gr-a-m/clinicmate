@@ -64,7 +64,7 @@ public class DoctorPage implements Initializable {
     @FXML
     private AnchorPane bloodAnchorPane;
     @FXML
-    private LineChart<Integer, Integer> bloodChart;
+    private LineChart<String, Integer> bloodChart;
     @FXML
     private ToggleButton bloodLinearRegToggle;
     @FXML
@@ -72,7 +72,7 @@ public class DoctorPage implements Initializable {
     @FXML
     private AnchorPane weightAnchorPane;
     @FXML
-    private LineChart<Integer, Integer> weightChart;
+    private LineChart<String, Integer> weightChart;
     @FXML
     private ToggleButton weightLinearRegToggle;
     @FXML
@@ -80,7 +80,7 @@ public class DoctorPage implements Initializable {
     @FXML
     private AnchorPane glucoseAchorPane;
     @FXML
-    private LineChart<Integer, Integer> glucoseChart;
+    private LineChart<String, Integer> glucoseChart;
     @FXML
     private ToggleButton glucoseLinearRegToggle;
     @FXML
@@ -227,10 +227,10 @@ public class DoctorPage implements Initializable {
                     }
 
                     // Create lines for the charts
-                    ObservableList<XYChart.Data<Integer, Integer>> sysData = FXCollections.observableArrayList();
-                    ObservableList<XYChart.Data<Integer, Integer>> diaData = FXCollections.observableArrayList();
-                    ObservableList<XYChart.Data<Integer, Integer>> glucData = FXCollections.observableArrayList();
-                    ObservableList<XYChart.Data<Integer, Integer>> weightData = FXCollections.observableArrayList();
+                    ObservableList<XYChart.Data<String, Integer>> sysData = FXCollections.observableArrayList();
+                    ObservableList<XYChart.Data<String, Integer>> diaData = FXCollections.observableArrayList();
+                    ObservableList<XYChart.Data<String, Integer>> glucData = FXCollections.observableArrayList();
+                    ObservableList<XYChart.Data<String, Integer>> weightData = FXCollections.observableArrayList();
 
                     Date beginDate = null;
                     Date endDate = null;
@@ -252,10 +252,10 @@ public class DoctorPage implements Initializable {
                         if (record.getDate().getTime() <= endDate.getTime() &&
                                 record.getDate().getTime() >= beginDate.getTime()) {
                             int dayOffset = (int) ((record.getDate().getTime() - beginDate.getTime()) / (1000*60*60*24));
-                            sysData.add(new XYChart.Data<Integer, Integer>(dayOffset, record.getSysBloodPressure()));
-                            diaData.add(new XYChart.Data<Integer, Integer>(dayOffset, record.getDiaBloodPressure()));
-                            glucData.add(new XYChart.Data<Integer, Integer>(dayOffset, record.getGlucose()));
-                            weightData.add(new XYChart.Data<Integer, Integer>(dayOffset, record.getWeight()));
+                            sysData.add(new XYChart.Data<String, Integer>(record.getDate().toString(), record.getSysBloodPressure()));
+                            diaData.add(new XYChart.Data<String, Integer>(record.getDate().toString(), record.getDiaBloodPressure()));
+                            glucData.add(new XYChart.Data<String, Integer>(record.getDate().toString(), record.getGlucose()));
+                            weightData.add(new XYChart.Data<String, Integer>(record.getDate().toString(), record.getWeight()));
                             System.out.println("sys: " + dayOffset + " " + record.getSysBloodPressure());
                             System.out.println("dia: " + dayOffset + " " + record.getDiaBloodPressure());
                             System.out.println("gluc: " + dayOffset + " " + record.getGlucose());
@@ -265,10 +265,10 @@ public class DoctorPage implements Initializable {
 
                     System.out.println("1");
 
-                    XYChart.Series<Integer, Integer> diaSeries = new XYChart.Series<Integer, Integer>(diaData);
-                    XYChart.Series<Integer, Integer> sysSeries = new XYChart.Series<Integer, Integer>(sysData);
-                    XYChart.Series<Integer, Integer> weightSeries = new XYChart.Series(weightData);
-                    XYChart.Series<Integer, Integer> glucSeries = new XYChart.Series(glucData);
+                    XYChart.Series<String, Integer> diaSeries = new XYChart.Series<String, Integer>(diaData);
+                    XYChart.Series<String, Integer> sysSeries = new XYChart.Series<String, Integer>(sysData);
+                    XYChart.Series<String, Integer> weightSeries = new XYChart.Series(weightData);
+                    XYChart.Series<String, Integer> glucSeries = new XYChart.Series(glucData);
 
                     System.out.println("2");
 

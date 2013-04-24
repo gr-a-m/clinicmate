@@ -44,7 +44,7 @@
                           <children>
                             <LineChart fx:id="bloodChart" layoutX="14.0" layoutY="15.0" prefHeight="357.0" prefWidth="704.0">
                               <xAxis>
-                                <NumberAxis side="BOTTOM" />
+                                  <CategoryAxis side="BOTTOM" />
                               </xAxis>
                               <yAxis>
                                 <NumberAxis side="LEFT" />
@@ -61,7 +61,7 @@
                           <children>
                             <LineChart fx:id="weightChart" layoutX="14.0" layoutY="14.0" prefHeight="357.0" prefWidth="704.0">
                               <xAxis>
-                                <NumberAxis side="BOTTOM" />
+                                  <CategoryAxis side="BOTTOM" />
                               </xAxis>
                               <yAxis>
                                 <NumberAxis side="LEFT" />
@@ -78,7 +78,7 @@
                           <children>
                             <LineChart fx:id="glucoseChart" layoutX="14.0" layoutY="14.0" prefHeight="362.0" prefWidth="704.0">
                               <xAxis>
-                                <NumberAxis side="BOTTOM" />
+                                <CategoryAxis side="BOTTOM" />
                               </xAxis>
                               <yAxis>
                                 <NumberAxis side="LEFT" />

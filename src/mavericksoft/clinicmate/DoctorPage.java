@@ -185,6 +185,7 @@ public class DoctorPage implements Initializable {
         else
         {
             int index=patientList.getSelectionModel().getSelectedIndex();
+            System.out.println("index:"+index);
             Patient selectedPatient=patients[index];
             id=selectedPatient.getPatientID();
             String observations=addCommentsArea.getText();

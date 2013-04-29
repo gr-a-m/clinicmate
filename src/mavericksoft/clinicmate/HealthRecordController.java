@@ -50,14 +50,14 @@ class HealthRecordController {
         boolean added = false;
 
         // Only nurses and doctors can comment on a patient's record
-        if((PermissionsController.getInstance()).currentUserPermissions() == Permissions.NURSE || (PermissionsController.getInstance()).currentUserPermissions() == Permissions.DOCTOR)
-        {
+        //if((PermissionsController.getInstance()).currentUserPermissions() == Permissions.NURSE || (PermissionsController.getInstance()).currentUserPermissions() == Permissions.DOCTOR)
+        //{
             HealthRecord hr = HealthRecord.getById(recordID);
 
             hr.addComment(comment);
             hr.save();
             added = true;
-        }
+        //}
 
         return added;
     }

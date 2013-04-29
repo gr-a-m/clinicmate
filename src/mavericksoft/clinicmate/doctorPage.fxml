@@ -24,10 +24,11 @@
                     <TableColumn prefWidth="75.0" text="Weight" fx:id="weightColumn" />
                   </columns>
                 </TableView>
-                <TextArea fx:id="recordComments" layoutX="477" layoutY="50" prefWidth="267.0" editable="false" />
+                <TextArea fx:id="recordComments" editable="false" layoutX="477.0" layoutY="50.0" prefWidth="267.0" />
                 <Label fx:id="addCommentsLabel" layoutX="477.0" layoutY="239.0" text="Add Comments/Prescriptions:" />
                 <Button fx:id="saveButton" layoutX="181.0" layoutY="408.0" mnemonicParsing="false" onAction="#save" text="Save" />
                 <TextArea fx:id="addCommentsArea" layoutX="476.0" layoutY="259.0" prefWidth="267.0" wrapText="true" />
+                <Label fx:id="commentsLabel" layoutX="477.0" layoutY="22.0" text="Current comments:" />
               </children>
             </AnchorPane>
           </content>
@@ -44,13 +45,13 @@
                           <children>
                             <LineChart fx:id="bloodChart" layoutX="14.0" layoutY="15.0" prefHeight="357.0" prefWidth="704.0">
                               <xAxis>
-                                  <CategoryAxis side="BOTTOM" />
+                                <CategoryAxis side="BOTTOM" />
                               </xAxis>
                               <yAxis>
                                 <NumberAxis side="LEFT" />
                               </yAxis>
                             </LineChart>
-                            <ToggleButton id="linearRegToggle" fx:id="bloodLinearRegToggle" layoutX="310.0" layoutY="407.0" mnemonicParsing="false" text="Linear Regression" onAction="#genRegBlood" />
+                            <ToggleButton id="linearRegToggle" fx:id="bloodLinearRegToggle" layoutX="310.0" layoutY="407.0" mnemonicParsing="false" onAction="#genRegBlood" text="Linear Regression" />
                           </children>
                         </AnchorPane>
                       </content>
@@ -61,13 +62,13 @@
                           <children>
                             <LineChart fx:id="weightChart" layoutX="14.0" layoutY="14.0" prefHeight="357.0" prefWidth="704.0">
                               <xAxis>
-                                  <CategoryAxis side="BOTTOM" />
+                                <CategoryAxis side="BOTTOM" />
                               </xAxis>
                               <yAxis>
                                 <NumberAxis side="LEFT" />
                               </yAxis>
                             </LineChart>
-                            <ToggleButton id="linearRegToggle" fx:id="weightLinearRegToggle" onAction="#genRegWeight" layoutX="323.0" layoutY="407.0" mnemonicParsing="false" text="Linear Regression" />
+                            <ToggleButton id="linearRegToggle" fx:id="weightLinearRegToggle" layoutX="323.0" layoutY="407.0" mnemonicParsing="false" onAction="#genRegWeight" text="Linear Regression" />
                           </children>
                         </AnchorPane>
                       </content>
@@ -84,7 +85,7 @@
                                 <NumberAxis side="LEFT" />
                               </yAxis>
                             </LineChart>
-                            <ToggleButton id="linearRegToggle" fx:id="glucoseLinearRegToggle" onAction="#genRegGluc" layoutX="315.0" layoutY="408.0" mnemonicParsing="false" text="Linear Regression" />
+                            <ToggleButton id="linearRegToggle" fx:id="glucoseLinearRegToggle" layoutX="315.0" layoutY="408.0" mnemonicParsing="false" onAction="#genRegGluc" text="Linear Regression" />
                           </children>
                         </AnchorPane>
                       </content>
